@@ -6,6 +6,8 @@
 	export let form;
 
 	$: error = form?.error;
+
+	let isLoading = false;
 </script>
 
 <div class="flex min-h-full flex-1 flex-col mt-20 sm:px-6 lg:px-8">
@@ -17,7 +19,18 @@
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
 		<div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-			<form class="space-y-6" method="POST" use:enhance>
+			<form
+				class="space-y-6"
+				method="POST"
+				use:enhance={() => {
+					isLoading = true;
+
+					return async ({ update }) => {
+						await update();
+						isLoading = false;
+					};
+				}}
+			>
 				<div>
 					<Input
 						label="Email address"
@@ -44,7 +57,13 @@
 					{/if}
 				</div>
 
-				<Button type="submit">Sign in</Button>
+				<Button type="submit" disabled={isLoading}>
+					{#if isLoading}
+						<span>Loading...</span>
+					{:else}
+						<span>Sign in</span>
+					{/if}
+				</Button>
 
 				<div class="text-sm text-slate-500">
 					Don't have an account?{' '}

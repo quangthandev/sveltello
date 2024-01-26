@@ -10,6 +10,12 @@ export const actions = {
 		const errors = await validate(email, password);
 
 		if (errors) {
+			if (errors.email) {
+				return fail(400, {
+					error: errors.email
+				});
+			}
+
 			return fail(422);
 		}
 
