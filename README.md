@@ -1,22 +1,24 @@
-# create-svelte
+## Introduction
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+A demo Trello clone fullstack application built with SvelteKit. UI and domain modeling are inspired by the Remix-run repository [https://github.com/remix-run/example-trellix](https://github.com/remix-run/example-trellix).
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`):
+
+- Create .env file:
+
+```bash
+DATABASE_URL=[your_db_url]
+```
+
+- Migrate prisma schema
+
+```bash
+npx prisma migrate dev
+```
+
+- Start a development server:
 
 ```bash
 npm run dev
