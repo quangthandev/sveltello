@@ -16,7 +16,7 @@
 		action="?/createColumn"
 		class="p-2 flex-shrink-0 flex flex-col gap-5 overflow-hidden max-h-full w-80 border rounded-xl shadow bg-slate-100"
 		use:clickOutside
-		on:click_outside={() => {
+		on:clickOutside={() => {
 			editing = false;
 		}}
 	>
