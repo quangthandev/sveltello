@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { clickOutside } from './actions';
-	import Button from '$lib/components/Button.svelte';
 
 	export let boardId: number;
 
@@ -35,8 +34,12 @@
 			}}
 		/>
 		<div class="flex justify-between">
-			<Button>Save</Button>
-			<Button on:click={() => (editing = false)}>Cancel</Button>
+			<button
+				class="rounded-md bg-blue-400 px-1 py-1 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+			>
+				Add Column
+			</button>
+			<button on:click={() => (editing = false)}>Cancel</button>
 		</div>
 	</form>
 {:else}
