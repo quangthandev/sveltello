@@ -3,7 +3,6 @@
 	import { draggable, droppable } from './actions';
 	import { invalidateAll } from '$app/navigation';
 	import { createEventDispatcher } from 'svelte';
-	import type { ActionData } from '../$types';
 
 	export let title: string;
 	export let content: string | null;
@@ -16,24 +15,40 @@
 	type AcceptDrop = 'none' | 'top' | 'bottom';
 	let acceptDrop: AcceptDrop = 'none';
 
-	let listItemEl: HTMLLIElement;
+	let droppableEl: HTMLLIElement;
+	let draggedEl: HTMLDivElement | null;
 
 	const dispatch = createEventDispatcher();
 </script>
 
 <li
-	bind:this={listItemEl}
+	bind:this={droppableEl}
 	use:droppable
 	on:dragOver={(event) => {
-		const rect = listItemEl.getBoundingClientRect();
+		// Do not accept drop if the current dragged element is the child of dropzone
+		if (draggedEl && draggedEl.parentNode === droppableEl) {
+			return (acceptDrop = 'none');
+		}
+
+		const rect = droppableEl.getBoundingClientRect();
 		const midpoint = (rect.top + rect.bottom) / 2;
 		acceptDrop = event.detail.clientY <= midpoint ? 'top' : 'bottom';
 	}}
 	on:dragLeave={() => (acceptDrop = 'none')}
 	on:dropItem={async (event) => {
+		if (acceptDrop === 'none') {
+			return;
+		}
+
 		const transfer = event.detail;
 
 		const droppedOrder = acceptDrop === 'top' ? previousOrder : nextOrder;
+
+		// Prevent API request if order has not been changed
+		if (droppedOrder === transfer.order) {
+			return (acceptDrop = 'none');
+		}
+
 		const moveOrder = (droppedOrder + order) / 2;
 
 		const mutation = {
@@ -65,7 +80,11 @@
 	<div
 		draggable="true"
 		class="bg-white shadow shadow-slate-300 border-slate-300 text-sm rounded-lg w-full py-1 px-2 relative"
-		use:draggable={{ id, title }}
+		use:draggable={{ id, title, order }}
+		on:dragStart={(event) => {
+			draggedEl = event.detail.draggedEl;
+		}}
+		on:dragEnd={() => (draggedEl = null)}
 	>
 		<h3>{title}</h3>
 		{#if content}

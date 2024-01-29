@@ -34,12 +34,8 @@
 <div
 	class={'flex-shrink-0 flex flex-col overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-slate-100 ' +
 		(acceptDrop ? `outline outline-2 outline-red-500` : ``)}
-	use:droppable
-	on:dragOver={() => {
-		if (items.length === 0) {
-			acceptDrop = true;
-		}
-	}}
+	use:droppable={{ enabled: items.length === 0 }}
+	on:dragOver={() => (acceptDrop = true)}
 	on:dragLeave={() => {
 		acceptDrop = false;
 	}}
@@ -79,7 +75,7 @@
 		</EditableText>
 	</div>
 
-	<ul bind:this={listEl} class="flex-grow overflow-auto">
+	<ol bind:this={listEl} class="flex-grow overflow-auto">
 		{#each sortedItems as item, index (item.id)}
 			<Card
 				title={item.title}
@@ -93,7 +89,7 @@
 				on:deleted={(event) => (deleting = deleting.filter((id) => id !== event.detail.id))}
 			/>
 		{/each}
-	</ul>
+	</ol>
 
 	{#if editing}
 		<NewCard

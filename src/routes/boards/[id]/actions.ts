@@ -21,22 +21,56 @@ export function clickOutside(node: HTMLElement): ActionReturn<unknown, ClickOuts
 	};
 }
 
-export function draggable(node: HTMLDivElement, params: { id: string; title: string }) {
+interface DraggableAttributes {
+	'on:dragStart': (e: CustomEvent) => void;
+	'on:dragEnd': () => void;
+}
+
+type DraggableOptions = {
+	id: string;
+	title: string;
+	order: number;
+};
+
+export function draggable(
+	node: HTMLDivElement,
+	options: DraggableOptions
+): ActionReturn<DraggableOptions, DraggableAttributes> {
 	const handleDragStart = (event: DragEvent) => {
 		if (event.dataTransfer) {
-			event.dataTransfer.setData(
-				CONTENT_TYPES.card,
-				JSON.stringify({ id: params.id, title: params.title })
-			);
+			const { id, title, order } = options;
+			event.dataTransfer.setData(CONTENT_TYPES.card, JSON.stringify({ id, title, order }));
 			event.dataTransfer.effectAllowed = 'move';
+			node.dispatchEvent(
+				new CustomEvent('dragStart', {
+					detail: {
+						draggedEl: node
+					}
+				})
+			);
 		}
 	};
 
+	const handleDragEnd = () => {
+		node.dispatchEvent(
+			new CustomEvent('dragEnd', {
+				detail: {
+					draggedEl: node
+				}
+			})
+		);
+	};
+
 	node.addEventListener('dragstart', handleDragStart);
+	node.addEventListener('dragend', handleDragEnd);
 
 	return {
+		update(newOptions) {
+			options = newOptions;
+		},
 		destroy() {
 			node.removeEventListener('dragstart', handleDragStart);
+			node.removeEventListener('dragend', handleDragEnd);
 		}
 	};
 }
@@ -47,11 +81,17 @@ interface DroppableAttributes {
 	'on:dropItem': (e: CustomEvent) => void;
 }
 
-export function droppable(node: HTMLElement): ActionReturn<unknown, DroppableAttributes> {
+type DroppableOptions = {
+	enabled: boolean;
+};
+
+export function droppable(
+	node: HTMLElement,
+	options: DroppableOptions = { enabled: true }
+): ActionReturn<DroppableOptions, DroppableAttributes> {
 	const handleDragOver = (event: DragEvent) => {
 		if (event.dataTransfer && event.dataTransfer.types.includes(CONTENT_TYPES.card)) {
 			event.preventDefault();
-			event.stopPropagation();
 
 			node.dispatchEvent(
 				new CustomEvent('dragOver', {
@@ -83,15 +123,30 @@ export function droppable(node: HTMLElement): ActionReturn<unknown, DroppableAtt
 		}
 	};
 
-	node.addEventListener('dragover', handleDragOver);
-	node.addEventListener('dragleave', handleDragLeave);
-	node.addEventListener('drop', handleDrop);
+	function createListeners() {
+		node.addEventListener('dragover', handleDragOver);
+		node.addEventListener('dragleave', handleDragLeave);
+		node.addEventListener('drop', handleDrop);
+	}
+
+	function destroyListeners() {
+		node.removeEventListener('dragover', handleDragOver);
+		node.removeEventListener('dragleave', handleDragLeave);
+		node.removeEventListener('drop', handleDrop);
+	}
+
+	if (options.enabled) {
+		createListeners();
+	}
 
 	return {
-		destroy() {
-			node.removeEventListener('dragover', handleDragOver);
-			node.removeEventListener('dragleave', handleDragLeave);
-			node.removeEventListener('drop', handleDrop);
-		}
+		update(options) {
+			if (options.enabled) {
+				createListeners();
+			} else {
+				destroyListeners();
+			}
+		},
+		destroy: destroyListeners
 	};
 }
