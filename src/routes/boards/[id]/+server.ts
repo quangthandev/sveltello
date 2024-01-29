@@ -14,7 +14,7 @@ export async function POST({ request, cookies, params }) {
 			id,
 			title,
 			columnId,
-			order: parseInt(order),
+			order: order,
 			boardId: parseInt(boardId)
 		},
 		userId
