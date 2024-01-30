@@ -48,6 +48,7 @@
 >
 	<h1 class="">
 		<EditableText
+			action="?/updateBoardName"
 			value={data.board.name}
 			fieldName="name"
 			inputClassName="mx-8 my-4 text-2xl font-medium border border-slate-400 rounded-lg py-1 px-2 text-black"

@@ -1,6 +1,13 @@
 import { requireAuthCookie } from '$lib/auth.js';
 import { error } from '@sveltejs/kit';
-import { createColumn, deleteCard, getBoard, updateBoardName, upsertItem } from './queries.js';
+import {
+	createColumn,
+	deleteCard,
+	getBoard,
+	updateBoardName,
+	updateColumnName,
+	upsertItem
+} from './queries.js';
 
 export async function load({ cookies, params }) {
 	const userId = requireAuthCookie(cookies);
@@ -36,6 +43,15 @@ export const actions = {
 		const boardId = data.get('boardId')?.toString() || '';
 
 		await createColumn(parseInt(boardId), name, userId);
+	},
+	updateColumnName: async ({ request, cookies }) => {
+		const userId = requireAuthCookie(cookies);
+
+		const data = await request.formData();
+		const columnId = data.get('columnId')?.toString() || '';
+		const name = data.get('name')?.toString() || '';
+
+		await updateColumnName(columnId, name, userId);
 	},
 	createCard: async ({ request, cookies, params }) => {
 		const userId = requireAuthCookie(cookies);

@@ -36,6 +36,13 @@ export async function createColumn(boardId: number, name: string, accountId: str
 	});
 }
 
+export async function updateColumnName(id: string, name: string, accountId: string) {
+	return prisma.column.update({
+		where: { id, Board: { accountId } },
+		data: { name }
+	});
+}
+
 export function upsertItem(mutation: ItemMutation & { boardId: number }, accountId: string) {
 	return prisma.item.upsert({
 		where: {

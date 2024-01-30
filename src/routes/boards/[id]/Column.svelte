@@ -66,6 +66,7 @@
 >
 	<div class="p-2">
 		<EditableText
+			action="?/updateColumnName"
 			fieldName="name"
 			value={name}
 			inputClassName="border border-slate-400 w-full rounded-lg py-1 px-2 font-medium text-black"

@@ -6,6 +6,7 @@
 	export let fieldName: string;
 	export let inputClassName: string;
 	export let buttonClassName: string;
+	export let action: string;
 
 	let edit: boolean = false;
 
@@ -16,7 +17,7 @@
 {#if edit}
 	<form
 		method="post"
-		action="?/updateBoardName"
+		{action}
 		use:enhance={() => {
 			return async ({ update }) => {
 				value = inputEl.value;
