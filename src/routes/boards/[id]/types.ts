@@ -25,3 +25,5 @@ export type MutationFromFields<
 > = {
 	[K in keyof T]: ConstructorToType<T[K]['type']>;
 };
+
+export type AcceptDrop = 'none' | 'top' | 'bottom';

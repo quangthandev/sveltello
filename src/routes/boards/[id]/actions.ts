@@ -28,6 +28,7 @@ interface DraggableAttributes {
 
 type DraggableOptions = {
 	id: string;
+	columnId: string;
 	title: string;
 	order: number;
 };
@@ -38,8 +39,11 @@ export function draggable(
 ): ActionReturn<DraggableOptions, DraggableAttributes> {
 	const handleDragStart = (event: DragEvent) => {
 		if (event.dataTransfer) {
-			const { id, title, order } = options;
-			event.dataTransfer.setData(CONTENT_TYPES.card, JSON.stringify({ id, title, order }));
+			const { id, columnId, title, order } = options;
+			event.dataTransfer.setData(
+				CONTENT_TYPES.card,
+				JSON.stringify({ id, columnId, title, order })
+			);
 			event.dataTransfer.effectAllowed = 'move';
 			node.dispatchEvent(
 				new CustomEvent('dragStart', {

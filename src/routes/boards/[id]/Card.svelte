@@ -3,6 +3,7 @@
 	import { draggable, droppable } from './actions';
 	import { invalidateAll } from '$app/navigation';
 	import { createEventDispatcher } from 'svelte';
+	import type { AcceptDrop } from './types';
 
 	export let title: string;
 	export let content: string | null;
@@ -12,7 +13,6 @@
 	export let nextOrder: number;
 	export let previousOrder: number;
 
-	type AcceptDrop = 'none' | 'top' | 'bottom';
 	let acceptDrop: AcceptDrop = 'none';
 
 	let droppableEl: HTMLLIElement;
@@ -58,6 +58,13 @@
 			title: transfer.title
 		};
 
+		acceptDrop = 'none';
+
+		dispatch('updating', {
+			...mutation,
+			sourceColumnId: transfer.columnId
+		});
+
 		await fetch('?/updateCard', {
 			method: 'POST',
 			body: JSON.stringify(mutation),
@@ -66,9 +73,11 @@
 			}
 		});
 
-		invalidateAll();
+		await invalidateAll();
 
-		acceptDrop = 'none';
+		dispatch('updated', {
+			...mutation
+		});
 	}}
 	class={'border-t-2 border-b-2 -mb-[2px] last:mb-0 cursor-grab active:cursor-grabbing px-2 py-1 ' +
 		(acceptDrop === 'top'
@@ -80,7 +89,7 @@
 	<div
 		draggable="true"
 		class="bg-white shadow shadow-slate-300 border-slate-300 text-sm rounded-lg w-full py-1 px-2 relative"
-		use:draggable={{ id, title, order }}
+		use:draggable={{ id, columnId, title, order }}
 		on:dragStart={(event) => {
 			draggedEl = event.detail.draggedEl;
 		}}

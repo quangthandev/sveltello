@@ -5,13 +5,14 @@
 	import NewColumn from './NewColumn.svelte';
 
 	export let data: PageData;
+	let moving: { id: string; sourceColumnId: string; targetColunId: string };
 
 	$: itemsById = new Map(data.board.items.map((item) => [item.id, item]));
 
 	type Column = (typeof data.board.columns)[number];
 	type ColumnWithItems = Column & { items: typeof data.board.items };
 
-	$: columns = mapColumns(itemsById);
+	$: columns = mapColumns(itemsById, moving);
 
 	function mapColumns(
 		itemsById: Map<
@@ -24,7 +25,8 @@
 				columnId: string;
 				boardId: number;
 			}
-		>
+		>,
+		moving: any
 	) {
 		const columns = new Map<string, ColumnWithItems>();
 		for (let column of [...data.board.columns]) {
@@ -35,7 +37,16 @@
 		for (let item of itemsById.values()) {
 			let columnId = item.columnId;
 			let column = columns.get(columnId);
-			column && column.items.push(item);
+			if (column) {
+				column.items.push(item);
+
+				if (
+					column.id === moving?.sourceColumnId &&
+					moving?.sourceColumnId !== moving?.targetColumnId
+				) {
+					column.items = [...column.items].filter((item) => item.id !== moving?.id);
+				}
+			}
 		}
 
 		return columns;
@@ -59,7 +70,12 @@
 	</h1>
 	<div class="flex flex-grow min-h-0 h-full items-start gap-4 px-8 pb-4">
 		{#each [...columns.values()] as column (column.id)}
-			<Column name={column.name} columnId={column.id} items={column.items} />
+			<Column
+				name={column.name}
+				columnId={column.id}
+				items={column.items}
+				on:moving={(event) => (moving = event.detail)}
+			/>
 		{/each}
 
 		<NewColumn boardId={data.board.id} />

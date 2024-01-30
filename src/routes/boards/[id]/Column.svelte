@@ -3,7 +3,7 @@
 	import EditableText from './EditableText.svelte';
 	import Card from './Card.svelte';
 	import NewCard from './NewCard.svelte';
-	import { tick } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { droppable } from './actions';
 	import { invalidateAll } from '$app/navigation';
 
@@ -11,17 +11,20 @@
 	export let columnId: string;
 	export let items: Item[];
 
+	const dispatch = createEventDispatcher();
+
 	let acceptDrop = false;
 	let editing: boolean = false;
-	let listEl: HTMLUListElement;
+	let listEl: HTMLOListElement;
 
 	// for optimistic UI
 	let deleting: string[] = [];
 	let creating: Item[] = [];
 
-	$: sortedItems = items
-		.filter((item) => !deleting.includes(item.id))
-		.concat(creating)
+	// TODO: find a better logic
+	$: filteredItems = items.filter((item) => !deleting.includes(item.id));
+	$: sortedItems = filteredItems
+		.concat(creating.filter((item) => filteredItems.findIndex((i) => i.id === item.id) < 0))
 		.sort((a, b) => a.order - b.order);
 
 	function scrollList() {
@@ -88,6 +91,32 @@
 				nextOrder={sortedItems[index + 1] ? sortedItems[index + 1].order : item.order + 1}
 				on:deleting={(event) => (deleting = [...deleting, event.detail.id])}
 				on:deleted={(event) => (deleting = deleting.filter((id) => id !== event.detail.id))}
+				on:updating={(event) => {
+					const droppedItem = event.detail;
+
+					if (droppedItem.sourceColumnId === droppedItem.columnId) {
+						deleting = [...deleting, droppedItem.id];
+					}
+
+					if (droppedItem.columnId === columnId) {
+						creating = [...creating, droppedItem];
+					}
+
+					dispatch('moving', {
+						id: droppedItem.id,
+						sourceColumnId: droppedItem.sourceColumnId,
+						targetColumnId: droppedItem.columnId
+					});
+				}}
+				on:updated={(event) => {
+					const droppedItem = event.detail;
+
+					if (droppedItem.columnId === columnId) {
+						creating = creating.filter((item) => item.id !== event.detail.id);
+					}
+
+					deleting = deleting.filter((id) => id !== event.detail.id);
+				}}
 			/>
 		{/each}
 	</ol>
