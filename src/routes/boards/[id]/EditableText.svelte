@@ -19,8 +19,10 @@
 		method="post"
 		{action}
 		use:enhance={() => {
+			value = inputEl.value;
+			edit = false;
+
 			return async ({ update }) => {
-				value = inputEl.value;
 				await update();
 			};
 		}}
