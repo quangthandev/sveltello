@@ -10,7 +10,7 @@ export function load({ cookies }) {
 }
 
 export const actions = {
-	default: async ({ cookies, request }) => {
+	default: async ({ cookies, url, request }) => {
 		const data = await request.formData();
 		const email = data.get('email')?.toString() || '';
 		const password = data.get('password')?.toString() || '';
@@ -34,7 +34,9 @@ export const actions = {
 			maxAge: 60 * 60 * 24 * 30 // 30 days
 		});
 
-		throw redirect(303, '/boards');
+		const returnURL = url.searchParams.get('returnURL');
+
+		throw redirect(303, returnURL ? returnURL : '/boards');
 	}
 };
 

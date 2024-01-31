@@ -1,4 +1,3 @@
-import { requireAuthCookie } from '$lib/auth.js';
 import { error } from '@sveltejs/kit';
 import {
 	createColumn,
@@ -9,14 +8,12 @@ import {
 	upsertItem
 } from './queries.js';
 
-export async function load({ cookies, params }) {
-	const userId = requireAuthCookie(cookies);
-
+export async function load({ locals, params }) {
 	if (!params.id) {
 		throw error(404, 'Board not found');
 	}
 
-	const board = await getBoard(Number(params.id), userId);
+	const board = await getBoard(Number(params.id), locals.userId);
 
 	if (!board) {
 		throw error(404, 'Board not found');
@@ -26,36 +23,28 @@ export async function load({ cookies, params }) {
 }
 
 export const actions = {
-	updateBoardName: async ({ request, cookies }) => {
-		const userId = requireAuthCookie(cookies);
-
+	updateBoardName: async ({ request, locals }) => {
 		const data = await request.formData();
 		const name = data.get('name')?.toString() || '';
 		const id = data.get('id')?.toString() || '';
 
-		await updateBoardName(parseInt(id), name, userId);
+		await updateBoardName(parseInt(id), name, locals.userId);
 	},
-	createColumn: async ({ request, cookies }) => {
-		const userId = requireAuthCookie(cookies);
-
+	createColumn: async ({ request, locals }) => {
 		const data = await request.formData();
 		const name = data.get('name')?.toString() || '';
 		const boardId = data.get('boardId')?.toString() || '';
 
-		await createColumn(parseInt(boardId), name, userId);
+		await createColumn(parseInt(boardId), name, locals.userId);
 	},
-	updateColumnName: async ({ request, cookies }) => {
-		const userId = requireAuthCookie(cookies);
-
+	updateColumnName: async ({ request, locals }) => {
 		const data = await request.formData();
 		const columnId = data.get('columnId')?.toString() || '';
 		const name = data.get('name')?.toString() || '';
 
-		await updateColumnName(columnId, name, userId);
+		await updateColumnName(columnId, name, locals.userId);
 	},
-	createCard: async ({ request, cookies, params }) => {
-		const userId = requireAuthCookie(cookies);
-
+	createCard: async ({ request, locals, params }) => {
 		const boardId = params.id;
 
 		const data = await request.formData();
@@ -71,15 +60,13 @@ export const actions = {
 				order: parseInt(order),
 				boardId: parseInt(boardId)
 			},
-			userId
+			locals.userId
 		);
 	},
-	deleteCard: async ({ request, cookies }) => {
-		const userId = requireAuthCookie(cookies);
-
+	deleteCard: async ({ request, locals }) => {
 		const data = await request.formData();
 		const id = data.get('itemId')?.toString() || '';
 
-		await deleteCard(id, userId);
+		await deleteCard(id, locals.userId);
 	}
 };

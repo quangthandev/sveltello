@@ -1,19 +1,14 @@
 import { createBoard, deleteBoard, getBoards } from './queries.js';
-import { requireAuthCookie } from '$lib/auth.js';
 import { fail } from '@sveltejs/kit';
 
-export async function load({ cookies }) {
-	const userId = requireAuthCookie(cookies);
-
-	const boards = await getBoards(userId);
+export async function load(event) {
+	const boards = await getBoards(event.locals.userId);
 
 	return { boards };
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
-		const userId = requireAuthCookie(cookies);
-
+	create: async ({ locals, request }) => {
 		const data = await request.formData();
 		const name = data.get('name')?.toString() || '';
 
@@ -25,11 +20,9 @@ export const actions = {
 
 		const color = data.get('color')?.toString() || '';
 
-		await createBoard(userId, name, color);
+		await createBoard(locals.userId, name, color);
 	},
-	delete: async ({ cookies, request }) => {
-		const userId = requireAuthCookie(cookies);
-
+	delete: async ({ locals, request }) => {
 		const data = await request.formData();
 		const boardId = data.get('boardId')?.toString() || '';
 
@@ -39,6 +32,6 @@ export const actions = {
 			});
 		}
 
-		await deleteBoard(parseInt(boardId), userId);
+		await deleteBoard(parseInt(boardId), locals.userId);
 	}
 };
