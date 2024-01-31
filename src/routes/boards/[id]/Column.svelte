@@ -6,6 +6,7 @@
 	import { createEventDispatcher, tick } from 'svelte';
 	import { droppable } from './actions';
 	import { invalidateAll } from '$app/navigation';
+	import { flip } from 'svelte/animate';
 
 	export let name: string;
 	export let columnId: string;
@@ -81,43 +82,45 @@
 
 	<ol bind:this={listEl} class="flex-grow overflow-auto">
 		{#each sortedItems as item, index (item.id)}
-			<Card
-				title={item.title}
-				content={item.content}
-				id={item.id}
-				order={item.order}
-				{columnId}
-				previousOrder={sortedItems[index - 1] ? sortedItems[index - 1].order : 0}
-				nextOrder={sortedItems[index + 1] ? sortedItems[index + 1].order : item.order + 1}
-				on:deleting={(event) => (deleting = [...deleting, event.detail.id])}
-				on:deleted={(event) => (deleting = deleting.filter((id) => id !== event.detail.id))}
-				on:updating={(event) => {
-					const droppedItem = event.detail;
+			<li animate:flip={{ duration: 250 }}>
+				<Card
+					title={item.title}
+					content={item.content}
+					id={item.id}
+					order={item.order}
+					{columnId}
+					previousOrder={sortedItems[index - 1] ? sortedItems[index - 1].order : 0}
+					nextOrder={sortedItems[index + 1] ? sortedItems[index + 1].order : item.order + 1}
+					on:deleting={(event) => (deleting = [...deleting, event.detail.id])}
+					on:deleted={(event) => (deleting = deleting.filter((id) => id !== event.detail.id))}
+					on:updating={(event) => {
+						const droppedItem = event.detail;
 
-					if (droppedItem.sourceColumnId === droppedItem.columnId) {
-						deleting = [...deleting, droppedItem.id];
-					}
+						if (droppedItem.sourceColumnId === droppedItem.columnId) {
+							deleting = [...deleting, droppedItem.id];
+						}
 
-					if (droppedItem.columnId === columnId) {
-						creating = [...creating, droppedItem];
-					}
+						if (droppedItem.columnId === columnId) {
+							creating = [...creating, droppedItem];
+						}
 
-					dispatch('moving', {
-						id: droppedItem.id,
-						sourceColumnId: droppedItem.sourceColumnId,
-						targetColumnId: droppedItem.columnId
-					});
-				}}
-				on:updated={(event) => {
-					const droppedItem = event.detail;
+						dispatch('moving', {
+							id: droppedItem.id,
+							sourceColumnId: droppedItem.sourceColumnId,
+							targetColumnId: droppedItem.columnId
+						});
+					}}
+					on:updated={(event) => {
+						const droppedItem = event.detail;
 
-					if (droppedItem.columnId === columnId) {
-						creating = creating.filter((item) => item.id !== event.detail.id);
-					}
+						if (droppedItem.columnId === columnId) {
+							creating = creating.filter((item) => item.id !== event.detail.id);
+						}
 
-					deleting = deleting.filter((id) => id !== event.detail.id);
-				}}
-			/>
+						deleting = deleting.filter((id) => id !== event.detail.id);
+					}}
+				/>
+			</li>
 		{/each}
 	</ol>
 

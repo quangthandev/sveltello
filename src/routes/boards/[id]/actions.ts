@@ -22,8 +22,8 @@ export function clickOutside(node: HTMLElement): ActionReturn<unknown, ClickOuts
 }
 
 interface DraggableAttributes {
-	'on:dragStart': (e: CustomEvent) => void;
-	'on:dragEnd': () => void;
+	'on:dragStart': (e: CustomEvent<{ draggedEl: HTMLDivElement }>) => void;
+	'on:dragEnd': (e: CustomEvent<{ draggedEl: HTMLDivElement }>) => void;
 }
 
 type DraggableOptions = {
@@ -37,6 +37,10 @@ export function draggable(
 	node: HTMLDivElement,
 	options: DraggableOptions
 ): ActionReturn<DraggableOptions, DraggableAttributes> {
+	if (!node.draggable) {
+		throw new Error('Node using draggable action must have draggable attribute set to true');
+	}
+
 	const handleDragStart = (event: DragEvent) => {
 		if (event.dataTransfer) {
 			const { id, columnId, title, order } = options;
@@ -80,8 +84,8 @@ export function draggable(
 }
 
 interface DroppableAttributes {
-	'on:dragOver': (e: CustomEvent) => void;
-	'on:dragLeave': () => void;
+	'on:dragOver': (e: CustomEvent<{ clientY: number }>) => void;
+	'on:dragLeave': (e: CustomEvent) => void;
 	'on:dropItem': (e: CustomEvent) => void;
 }
 

@@ -15,13 +15,13 @@
 
 	let acceptDrop: AcceptDrop = 'none';
 
-	let droppableEl: HTMLLIElement;
+	let droppableEl: HTMLDivElement;
 	let draggedEl: HTMLDivElement | null;
 
 	const dispatch = createEventDispatcher();
 </script>
 
-<li
+<div
 	bind:this={droppableEl}
 	use:droppable
 	on:dragOver={(event) => {
@@ -139,4 +139,4 @@
 			</button>
 		</form>
 	</div>
-</li>
+</div>
