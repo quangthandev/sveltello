@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-const PUBLIC_ROUTES = ['/', '/login', '/logout', '/signup'];
+const PUBLIC_ROUTES = ['/', '/login', '/signup'];
 
 export async function handle({ event, resolve }) {
 	const userId = event.cookies.get('auth');
