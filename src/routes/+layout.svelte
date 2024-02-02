@@ -1,11 +1,16 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { navigating } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 	import NavigatingnIndicator from '$lib/components/NavigatingnIndicator.svelte';
 	import '../app.css';
 
 	export let data;
 </script>
+
+<svelte:head>
+	<title>{$page.data.title ?? 'SvelteKit Kanban Board'}</title>
+	<meta name="description" content="A Trello clone built with SvelteKit" />
+</svelte:head>
 
 <header
 	class="bg-slate-900 border-b border-slate-800 flex items-center justify-between py-4 px-8 box-border"

@@ -53,6 +53,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{data.board.name}</title>
+</svelte:head>
+
 <div
 	class="h-full min-h-0 flex flex-col overflow-x-scroll"
 	style:background-color={data.board.color}
