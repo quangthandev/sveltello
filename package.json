@@ -42,6 +42,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@libsql/client": "^0.4.3",
+		"@prisma/adapter-libsql": "^5.9.1",
 		"@prisma/client": "^5.8.1",
 		"bcryptjs": "^2.4.3"
 	}
