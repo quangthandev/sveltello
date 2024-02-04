@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
-	import { draggable, droppable } from './actions';
 	import { invalidateAll } from '$app/navigation';
+	import { draggable, droppable } from './actions';
 	import { createEventDispatcher } from 'svelte';
 	import type { AcceptDrop } from './types';
+	import { pendingItemsStore } from './stores';
 
 	export let title: string;
 	export let content: string | null;
@@ -60,9 +62,10 @@
 
 		acceptDrop = 'none';
 
-		dispatch('updating', {
+		pendingItemsStore.addItem({
 			...mutation,
-			sourceColumnId: transfer.columnId
+			content: null,
+			boardId: parseInt($page.params.id)
 		});
 
 		await fetch('?/updateCard', {
@@ -75,9 +78,7 @@
 
 		await invalidateAll();
 
-		dispatch('updated', {
-			...mutation
-		});
+		pendingItemsStore.removeItem(transfer.id);
 	}}
 	class={'border-t-2 border-b-2 -mb-[2px] last:mb-0 cursor-grab active:cursor-grabbing px-2 py-1 ' +
 		(acceptDrop === 'top'

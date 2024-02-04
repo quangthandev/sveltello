@@ -1,33 +1,26 @@
 <script lang="ts">
+	import type { Item } from '@prisma/client';
 	import type { PageData } from './$types';
 	import Column from './Column.svelte';
 	import EditableText from './EditableText.svelte';
 	import NewColumn from './NewColumn.svelte';
+	import { pendingItemsStore } from './stores';
 
 	export let data: PageData;
-	let moving: { id: string; sourceColumnId: string; targetColunId: string };
 
 	$: itemsById = new Map(data.board.items.map((item) => [item.id, item]));
+	$: columns = mapItemsToColumns(itemsById, [...$pendingItemsStore.values()]);
 
-	type Column = (typeof data.board.columns)[number];
-	type ColumnWithItems = Column & { items: typeof data.board.items };
+	function mapItemsToColumns(itemsById: Map<string, Item>, pendingItems: Item[]) {
+		for (let pendingItem of pendingItems) {
+			let item = itemsById.get(pendingItem.id);
+			let merged = item ? { ...item, ...pendingItem } : { ...pendingItem, boardId: data.board.id };
+			itemsById.set(pendingItem.id, merged);
+		}
 
-	$: columns = mapColumns(itemsById, moving);
+		type Column = (typeof data.board.columns)[number];
+		type ColumnWithItems = Column & { items: typeof data.board.items };
 
-	function mapColumns(
-		itemsById: Map<
-			string,
-			{
-				id: string;
-				title: string;
-				content: string | null;
-				order: number;
-				columnId: string;
-				boardId: number;
-			}
-		>,
-		moving: any
-	) {
 		const columns = new Map<string, ColumnWithItems>();
 		for (let column of [...data.board.columns]) {
 			columns.set(column.id, { ...column, items: [] });
@@ -39,13 +32,6 @@
 			let column = columns.get(columnId);
 			if (column) {
 				column.items.push(item);
-
-				if (
-					column.id === moving?.sourceColumnId &&
-					moving?.sourceColumnId !== moving?.targetColumnId
-				) {
-					column.items = [...column.items].filter((item) => item.id !== moving?.id);
-				}
 			}
 		}
 
@@ -74,12 +60,7 @@
 	</h1>
 	<div class="flex flex-grow min-h-0 h-full items-start gap-4 px-8 pb-4">
 		{#each [...columns.values()] as column (column.id)}
-			<Column
-				name={column.name}
-				columnId={column.id}
-				items={column.items}
-				on:moving={(event) => (moving = event.detail)}
-			/>
+			<Column name={column.name} columnId={column.id} items={column.items} />
 		{/each}
 
 		<NewColumn boardId={data.board.id} />

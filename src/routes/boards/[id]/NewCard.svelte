@@ -3,6 +3,8 @@
 	import { ItemMutationFields } from './types';
 	import { enhance } from '$app/forms';
 	import { clickOutside } from './actions';
+	import { pendingItemsStore } from './stores';
+	import { page } from '$app/stores';
 
 	export let columnId: string;
 	export let nextOrder: number;
@@ -22,19 +24,25 @@
 	class="px-2 py-1 border-t-2 border-b-2 border-transparent"
 	bind:this={formEl}
 	use:enhance={() => {
-		dispatch('creating', {
-			id,
+		const currentId = id;
+
+		pendingItemsStore.addItem({
+			id: currentId,
 			title: textareaEl.value,
 			content: null,
 			order: nextOrder,
-			columnId
+			columnId,
+			boardId: parseInt($page.params.id)
 		});
 
+		id = crypto.randomUUID();
 		textareaEl.value = '';
+
+		dispatch('create');
 
 		return async ({ update }) => {
 			await update();
-			dispatch('created', { id });
+			pendingItemsStore.removeItem(currentId);
 		};
 	}}
 	use:clickOutside

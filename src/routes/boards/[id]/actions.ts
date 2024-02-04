@@ -86,7 +86,7 @@ export function draggable(
 interface DroppableAttributes {
 	'on:dragOver': (e: CustomEvent<{ clientY: number }>) => void;
 	'on:dragLeave': (e: CustomEvent) => void;
-	'on:dropItem': (e: CustomEvent) => void;
+	'on:dropItem': (e: CustomEvent<DraggableOptions>) => void;
 }
 
 type DroppableOptions = {

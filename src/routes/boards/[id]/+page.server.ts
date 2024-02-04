@@ -48,13 +48,14 @@ export const actions = {
 		const boardId = params.id;
 
 		const data = await request.formData();
+		const id = data.get('id')?.toString() || '';
 		const title = data.get('title')?.toString() || '';
 		const columnId = data.get('columnId')?.toString() || '';
 		const order = data.get('order')?.toString() || '';
 
 		await upsertItem(
 			{
-				id: crypto.randomUUID(),
+				id,
 				title,
 				columnId,
 				order: parseInt(order),

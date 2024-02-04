@@ -45,7 +45,7 @@
 {:else}
 	<button
 		aria-label="Add new column"
-		class="flex-shrink-0 flex justify-center gap-2 px-6 py-4 text-white bg-black bg-opacity-50 hover:bg-opacity-20 rounded-xl"
+		class="flex-shrink-0 flex justify-center gap-2 px-6 py-4 text-white bg-black bg-opacity-60 hover:bg-opacity-80 rounded-xl"
 		on:click={async () => {
 			editing = true;
 			await tick();
