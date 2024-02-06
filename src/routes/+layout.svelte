@@ -1,10 +1,21 @@
 <script>
 	import { enhance } from '$app/forms';
+	import { browser } from '$app/environment';
 	import { navigating, page } from '$app/stores';
 	import NavigatingnIndicator from '$lib/components/NavigatingnIndicator.svelte';
+	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import '../app.css';
+	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 
 	export let data;
+
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				enabled: browser
+			}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -81,7 +92,10 @@
 </header>
 
 <div class="flex-grow min-h-0 h-full">
-	<slot />
+	<QueryClientProvider client={queryClient}>
+		<SvelteQueryDevtools />
+		<slot />
+	</QueryClientProvider>
 </div>
 
 {#if $navigating}

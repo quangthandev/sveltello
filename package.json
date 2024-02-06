@@ -43,6 +43,8 @@
 	"type": "module",
 	"dependencies": {
 		"@prisma/client": "^5.8.1",
+		"@tanstack/svelte-query": "^5.18.1",
+		"@tanstack/svelte-query-devtools": "^5.18.1",
 		"bcryptjs": "^2.4.3"
 	}
 }

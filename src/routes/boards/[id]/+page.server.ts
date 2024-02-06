@@ -1,12 +1,5 @@
 import { error } from '@sveltejs/kit';
-import {
-	createColumn,
-	deleteCard,
-	getBoard,
-	updateBoardName,
-	updateColumnName,
-	upsertItem
-} from './queries.js';
+import { createColumn, getBoard, updateBoardName, updateColumnName } from './db.js';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
@@ -43,31 +36,5 @@ export const actions = {
 		const name = data.get('name')?.toString() || '';
 
 		await updateColumnName(columnId, name, locals.userId);
-	},
-	createCard: async ({ request, locals, params }) => {
-		const boardId = params.id;
-
-		const data = await request.formData();
-		const id = data.get('id')?.toString() || '';
-		const title = data.get('title')?.toString() || '';
-		const columnId = data.get('columnId')?.toString() || '';
-		const order = data.get('order')?.toString() || '';
-
-		await upsertItem(
-			{
-				id,
-				title,
-				columnId,
-				order: parseInt(order),
-				boardId: parseInt(boardId)
-			},
-			locals.userId
-		);
-	},
-	deleteCard: async ({ request, locals }) => {
-		const data = await request.formData();
-		const id = data.get('itemId')?.toString() || '';
-
-		await deleteCard(id, locals.userId);
 	}
 };

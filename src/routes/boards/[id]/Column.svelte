@@ -5,8 +5,9 @@
 	import NewCard from './NewCard.svelte';
 	import { tick } from 'svelte';
 	import { droppable } from './actions';
-	import { invalidateAll } from '$app/navigation';
 	import { flip } from 'svelte/animate';
+	import { queriesCtx } from './context';
+	import { page } from '$app/stores';
 
 	export let name: string;
 	export let columnId: string;
@@ -16,18 +17,15 @@
 	let editing: boolean = false;
 	let listEl: HTMLOListElement;
 
-	// for optimistic UI
-	let deleting: string[] = [];
-
-	$: sortedItems = items
-		.filter((item) => !deleting.includes(item.id))
-		.sort((a, b) => a.order - b.order);
+	$: sortedItems = items.sort((a, b) => a.order - b.order);
 
 	function scrollList() {
 		if (listEl) {
 			listEl.scrollTop = listEl.scrollHeight;
 		}
 	}
+
+	const { updateItem } = queriesCtx.get();
 </script>
 
 <div
@@ -42,22 +40,15 @@
 		if (acceptDrop) {
 			const transfer = event.detail;
 
-			const mutation = {
+			const data = {
 				order: 1,
 				columnId,
 				id: transfer.id,
-				title: transfer.title
+				title: transfer.title,
+				boardId: parseInt($page.params.id)
 			};
 
-			await fetch('?/updateCard', {
-				method: 'POST',
-				body: JSON.stringify(mutation),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-
-			invalidateAll();
+			$updateItem.mutate(data);
 
 			acceptDrop = false;
 		}
@@ -86,8 +77,6 @@
 					{columnId}
 					previousOrder={sortedItems[index - 1] ? sortedItems[index - 1].order : 0}
 					nextOrder={sortedItems[index + 1] ? sortedItems[index + 1].order : item.order + 1}
-					on:deleting={(event) => (deleting = [...deleting, event.detail.id])}
-					on:deleted={(event) => (deleting = deleting.filter((id) => id !== event.detail.id))}
 				/>
 			</li>
 		{/each}
