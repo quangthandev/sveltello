@@ -7,6 +7,7 @@
 
 	$: boardId = $page.params.id;
 
+	// Store pending update requests to abort later when item is moved around quickly
 	const pendingUpdates = writable(
 		new Map<
 			string,
@@ -68,10 +69,12 @@
 				})
 			).json(),
 		onMutate: async (data) => {
+			// Abort pending update request associated with item id if existed
 			if ($pendingUpdates.has(data.id)) {
 				$pendingUpdates.get(data.id)?.controller.abort();
 			}
 
+			// Store new pending update request controller and signal
 			const controller = new AbortController();
 
 			$pendingUpdates.set(data.id, {
