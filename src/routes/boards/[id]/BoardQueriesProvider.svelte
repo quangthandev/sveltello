@@ -92,7 +92,16 @@
 			if (prevBoardData) {
 				queryClient.setQueryData(['boards', boardId], {
 					...prevBoardData,
-					items: prevBoardData.items.filter((item) => item.id !== data.id).concat(data)
+					items: prevBoardData.items.map((item) => {
+						if (item.id === data.id) {
+							return {
+								...item,
+								...data
+							};
+						}
+
+						return item;
+					})
 				});
 			}
 
