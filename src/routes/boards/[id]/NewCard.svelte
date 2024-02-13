@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { ItemMutationFields } from './types';
-	import { enhance } from '$app/forms';
 	import { clickOutside } from './actions';
-	import { pendingItemsStore } from './stores';
 	import { page } from '$app/stores';
+	import { queriesCtx } from './context';
 
 	export let columnId: string;
 	export let nextOrder: number;
@@ -12,39 +11,34 @@
 	const dispatch = createEventDispatcher();
 
 	let textareaEl: HTMLTextAreaElement;
-	let formEl: HTMLFormElement;
 	let buttonEl: HTMLButtonElement;
 
-	let id = crypto.randomUUID();
-</script>
+	const { createItem } = queriesCtx.get();
 
-<form
-	method="post"
-	action="?/createCard"
-	class="px-2 py-1 border-t-2 border-b-2 border-transparent"
-	bind:this={formEl}
-	use:enhance={() => {
-		const currentId = id;
+	function handleSubmit(e: SubmitEvent) {
+		const formData = new FormData(e.target as HTMLFormElement);
+		const id = crypto.randomUUID();
 
-		pendingItemsStore.addItem({
-			id: currentId,
-			title: textareaEl.value,
-			content: null,
-			order: nextOrder,
-			columnId,
-			boardId: parseInt($page.params.id)
-		});
+		const data: Record<string, unknown> = {};
+		data.id = id;
+		data.boardId = parseInt($page.params.id);
+		for (let field of formData) {
+			const [key, value] = field;
+			data[key] = value;
+		}
 
-		id = crypto.randomUUID();
+		// @ts-expect-error
+		$createItem.mutate(data);
+
 		textareaEl.value = '';
 
 		dispatch('create');
+	}
+</script>
 
-		return async ({ update }) => {
-			await update();
-			pendingItemsStore.removeItem(currentId);
-		};
-	}}
+<form
+	class="px-2 py-1 border-t-2 border-b-2 border-transparent"
+	on:submit|preventDefault={handleSubmit}
 	use:clickOutside
 	on:clickOutside={() => {
 		dispatch('complete');
@@ -52,7 +46,6 @@
 >
 	<input type="hidden" name={ItemMutationFields.columnId.name} value={columnId} />
 	<input type="hidden" name={ItemMutationFields.order.name} value={nextOrder} />
-	<input type="hidden" name="id" value={id} />
 
 	<!-- svelte-ignore a11y-autofocus -->
 	<textarea
