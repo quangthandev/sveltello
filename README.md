@@ -2,6 +2,10 @@
 
 A demo Trello clone fullstack application built with SvelteKit. UI and domain modeling are inspired by the Remix-run repository [https://github.com/remix-run/example-trellix](https://github.com/remix-run/example-trellix).
 
+### Tech Stack
+
+SvelteKit, Prisma, SQLite (Turso), TailwindCSS, Vite, TypeScript
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`):
@@ -9,7 +13,10 @@ Once you've created a project and installed dependencies with `npm install` (or 
 - Create .env file:
 
 ```bash
-DATABASE_URL=[your_db_url]
+DATABASE_URL=[path to your sqlite database]
+
+TURSO_AUTH_TOKEN=[your turso auth token]
+TURSO_DATABASE_URL=[your turso database url]
 ```
 
 - Migrate prisma schema
