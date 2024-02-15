@@ -1,20 +1,30 @@
-import { error, json } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { upsertItem } from '../boards/[id]/queries.js';
+import { z } from 'zod';
+import { checkAuthUser } from '$lib/server/auth.js';
+
+const itemSchema = z.object({
+	id: z.string(),
+	title: z.string(),
+	columnId: z.string(),
+	order: z.string().transform((val) => Number(val)),
+	boardId: z.number()
+});
 
 export async function POST({ request, locals }) {
-	if (!locals.user) {
-		throw error(401, 'Unauthorized');
-	}
+	checkAuthUser(locals);
 
-	const { id, title, columnId, order, boardId } = await request.json();
+	const body = await request.json();
+
+	const { id, title, columnId, order, boardId } = itemSchema.parse(body);
 
 	const data = await upsertItem(
 		{
 			id,
 			title,
 			columnId,
-			order: parseInt(order),
-			boardId: parseInt(boardId)
+			order,
+			boardId
 		},
 		locals.user.id
 	);

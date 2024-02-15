@@ -1,12 +1,9 @@
+import { checkAuthUser } from '$lib/server/auth.js';
 import { createBoard, deleteBoard, getBoards } from './queries.js';
 import { fail } from '@sveltejs/kit';
 
 export async function load({ locals }) {
-	if (!locals.user) {
-		return fail(401, {
-			error: 'Unauthorized'
-		});
-	}
+	checkAuthUser(locals, '/boards');
 
 	const boards = await getBoards(locals.user.id);
 
@@ -15,11 +12,7 @@ export async function load({ locals }) {
 
 export const actions = {
 	create: async ({ locals, request }) => {
-		if (!locals.user) {
-			return fail(401, {
-				error: 'Unauthorized'
-			});
-		}
+		checkAuthUser(locals, '/boards');
 
 		const data = await request.formData();
 		const name = data.get('name')?.toString() || '';
@@ -35,11 +28,7 @@ export const actions = {
 		await createBoard(locals.user.id, name, color);
 	},
 	delete: async ({ locals, request }) => {
-		if (!locals.user) {
-			return fail(401, {
-				error: 'Unauthorized'
-			});
-		}
+		checkAuthUser(locals, '/boards');
 
 		const data = await request.formData();
 		const boardId = data.get('boardId')?.toString() || '';

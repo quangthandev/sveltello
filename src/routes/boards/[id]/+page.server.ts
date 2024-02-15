@@ -1,14 +1,14 @@
-import { error, fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { createColumn, getBoard, updateBoardName, updateColumnName } from './queries.js';
+import { z } from 'zod';
+import { checkAuthUser } from '$lib/server/auth.js';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
 		throw error(404, 'Board not found');
 	}
 
-	if (!locals.user) {
-		throw error(401, 'Unauthorized');
-	}
+	checkAuthUser(locals, `/boards/${params.id}`);
 
 	const board = await getBoard(parseInt(params.id), locals.user.id);
 
@@ -19,43 +19,43 @@ export async function load({ locals, params }) {
 	return { board };
 }
 
+const updateBoardNameSchema = z.object({
+	name: z.string(),
+	id: z.string()
+});
+
+const createColumnSchema = z.object({
+	name: z.string(),
+	boardId: z.string()
+});
+
+const updateColumnNameSchema = z.object({
+	columnId: z.string(),
+	name: z.string()
+});
+
 export const actions = {
-	updateBoardName: async ({ request, locals }) => {
-		if (!locals.user) {
-			return fail(401, {
-				error: 'Unauthorized'
-			});
-		}
+	updateBoardName: async ({ request, locals, params }) => {
+		checkAuthUser(locals, `/boards/${params.id}`);
 
 		const data = await request.formData();
-		const name = data.get('name')?.toString() || '';
-		const id = data.get('id')?.toString() || '';
+		const { name, id } = await updateBoardNameSchema.parseAsync(Object.fromEntries(data));
 
 		await updateBoardName(parseInt(id), name, locals.user.id);
 	},
-	createColumn: async ({ request, locals }) => {
-		if (!locals.user) {
-			return fail(401, {
-				error: 'Unauthorized'
-			});
-		}
+	createColumn: async ({ request, locals, params }) => {
+		checkAuthUser(locals, `/boards/${params.id}`);
 
 		const data = await request.formData();
-		const name = data.get('name')?.toString() || '';
-		const boardId = data.get('boardId')?.toString() || '';
+		const { name, boardId } = await createColumnSchema.parseAsync(Object.fromEntries(data));
 
 		await createColumn(parseInt(boardId), name, locals.user.id);
 	},
-	updateColumnName: async ({ request, locals }) => {
-		if (!locals.user) {
-			return fail(401, {
-				error: 'Unauthorized'
-			});
-		}
+	updateColumnName: async ({ request, locals, params }) => {
+		checkAuthUser(locals, `/boards/${params.id}`);
 
 		const data = await request.formData();
-		const columnId = data.get('columnId')?.toString() || '';
-		const name = data.get('name')?.toString() || '';
+		const { columnId, name } = await updateColumnNameSchema.parseAsync(Object.fromEntries(data));
 
 		await updateColumnName(columnId, name, locals.user.id);
 	}

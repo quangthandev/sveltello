@@ -1,14 +1,13 @@
 import { error, json } from '@sveltejs/kit';
 import { getBoard, upsertItem } from './queries.js';
+import { checkAuthUser } from '$lib/server/auth.js';
 
 export async function GET({ params, locals }) {
 	if (!params.id) {
 		throw error(422, 'Board ID is required');
 	}
 
-	if (!locals.user) {
-		throw error(401, 'Unauthorized');
-	}
+	checkAuthUser(locals, `/boards/${params.id}`);
 
 	const board = await getBoard(parseInt(params.id), locals.user.id);
 
@@ -20,9 +19,7 @@ export async function GET({ params, locals }) {
 }
 
 export async function POST({ request, locals, params }) {
-	if (!locals.user) {
-		throw error(401, 'Unauthorized');
-	}
+	checkAuthUser(locals);
 
 	const boardId = params.id;
 
