@@ -1,21 +1,20 @@
 import prisma from '$lib/prisma';
-import bcrypt from 'bcryptjs';
+import { Argon2id } from 'oslo/password';
 
 export async function login(email: string, password: string) {
-	const account = await prisma.account.findUnique({
-		where: { email },
-		include: { Password: true }
+	const user = await prisma.user.findUnique({
+		where: { email }
 	});
 
-	if (!account || !account.Password) {
+	if (!user) {
 		return false;
 	}
 
-	const result = await bcrypt.compare(password, account.Password.hash);
+	const validPassword = await new Argon2id().verify(user.password, password);
 
-	if (!result) {
+	if (!validPassword) {
 		return false;
 	}
 
-	return account.id;
+	return user.id;
 }

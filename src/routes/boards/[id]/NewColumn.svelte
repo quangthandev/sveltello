@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { clickOutside } from './actions';
+	import { enhance } from '$app/forms';
 
 	export let boardId: number;
 
@@ -14,6 +15,16 @@
 		method="post"
 		action="?/createColumn"
 		class="p-2 flex-shrink-0 flex flex-col gap-5 overflow-hidden max-h-full w-80 border rounded-xl shadow bg-slate-100"
+		use:enhance={() => {
+			editing = false;
+
+			return async ({ update }) => {
+				await update();
+				editing = true;
+				await tick();
+				inputEl.focus();
+			};
+		}}
 		use:clickOutside
 		on:clickOutside={() => {
 			editing = false;
@@ -49,7 +60,7 @@
 		on:click={async () => {
 			editing = true;
 			await tick();
-			inputEl?.focus();
+			inputEl.focus();
 		}}
 	>
 		<span>

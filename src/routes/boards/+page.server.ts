@@ -1,14 +1,26 @@
 import { createBoard, deleteBoard, getBoards } from './queries.js';
 import { fail } from '@sveltejs/kit';
 
-export async function load(event) {
-	const boards = await getBoards(event.locals.userId);
+export async function load({ locals }) {
+	if (!locals.user) {
+		return fail(401, {
+			error: 'Unauthorized'
+		});
+	}
+
+	const boards = await getBoards(locals.user.id);
 
 	return { boards };
 }
 
 export const actions = {
 	create: async ({ locals, request }) => {
+		if (!locals.user) {
+			return fail(401, {
+				error: 'Unauthorized'
+			});
+		}
+
 		const data = await request.formData();
 		const name = data.get('name')?.toString() || '';
 
@@ -20,9 +32,15 @@ export const actions = {
 
 		const color = data.get('color')?.toString() || '';
 
-		await createBoard(locals.userId, name, color);
+		await createBoard(locals.user.id, name, color);
 	},
 	delete: async ({ locals, request }) => {
+		if (!locals.user) {
+			return fail(401, {
+				error: 'Unauthorized'
+			});
+		}
+
 		const data = await request.formData();
 		const boardId = data.get('boardId')?.toString() || '';
 
@@ -32,6 +50,6 @@ export const actions = {
 			});
 		}
 
-		await deleteBoard(parseInt(boardId), locals.userId);
+		await deleteBoard(parseInt(boardId), locals.user.id);
 	}
 };

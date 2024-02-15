@@ -3,7 +3,7 @@ import prisma from '$lib/prisma';
 export async function getBoards(userId: string) {
 	return prisma.board.findMany({
 		where: {
-			accountId: userId
+			userId: userId
 		}
 	});
 }
@@ -13,7 +13,7 @@ export async function createBoard(userId: string, name: string, color: string) {
 		data: {
 			name,
 			color,
-			Account: {
+			User: {
 				connect: {
 					id: userId
 				}
@@ -22,11 +22,11 @@ export async function createBoard(userId: string, name: string, color: string) {
 	});
 }
 
-export async function deleteBoard(boardId: number, accountId: string) {
+export async function deleteBoard(boardId: number, userId: string) {
 	return prisma.board.delete({
 		where: {
 			id: boardId,
-			accountId: accountId
+			userId
 		}
 	});
 }

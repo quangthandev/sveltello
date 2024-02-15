@@ -26,7 +26,7 @@
 <header
 	class="bg-slate-900 border-b border-slate-800 flex items-center justify-between py-4 px-8 box-border"
 >
-	<a href="/boards" class="font-black text-white text-2xl"> Home </a>
+	<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Home </a>
 	<div class="w-1/3 flex items-center justify-end gap-4 h-8">
 		<a href="https://github.com/quangthandev/sveltekit-kanban-board" target="_blank">
 			<span class="text-white">
@@ -44,7 +44,7 @@
 				</svg>
 			</span>
 		</a>
-		{#if data.userId}
+		{#if data.user}
 			<form method="post" action="/logout" use:enhance>
 				<button class="block text-center">
 					<span class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center">

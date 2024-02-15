@@ -1,11 +1,12 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { login } from './queries.js';
+import { lucia } from '$lib/server/auth.js';
 
-export function load({ cookies }) {
-	const userId = cookies.get('auth');
+export function load({ locals }) {
+	const user = locals.user;
 
-	if (userId) {
-		throw redirect(303, '/boards');
+	if (user) {
+		throw redirect(302, '/boards');
 	}
 }
 
@@ -29,14 +30,16 @@ export const actions = {
 			});
 		}
 
-		cookies.set('auth', userId, {
-			path: '/',
-			maxAge: 60 * 60 * 24 * 30 // 30 days
+		const session = await lucia.createSession(userId, {});
+		const sessionCookie = lucia.createSessionCookie(session.id);
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
 		});
 
 		const returnURL = url.searchParams.get('returnURL');
 
-		throw redirect(303, returnURL ? returnURL : '/boards');
+		throw redirect(302, returnURL ? returnURL : '/boards');
 	}
 };
 

@@ -1,23 +1,22 @@
 import prisma from '$lib/prisma';
-import bcrypt from 'bcryptjs';
+import { Argon2id } from 'oslo/password';
 
-export async function accountExists(email: string) {
-	const account = await prisma.account.findUnique({
+export async function userExists(email: string) {
+	const user = await prisma.user.findUnique({
 		where: { email },
 		select: { id: true }
 	});
 
-	return Boolean(account);
+	return Boolean(user);
 }
 
-export async function createAccount(email: string, password: string) {
-	const salt = await bcrypt.genSalt(10);
-	const hash = await bcrypt.hash(password, salt);
+export async function createUser(email: string, password: string) {
+	const hashedPassword = await new Argon2id().hash(password);
 
-	return prisma.account.create({
+	return prisma.user.create({
 		data: {
 			email: email,
-			Password: { create: { hash, salt } }
+			password: hashedPassword
 		}
 	});
 }

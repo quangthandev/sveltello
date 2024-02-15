@@ -16,15 +16,19 @@
 		initialData: data.board
 	});
 
+	$: boardColumns = data.board.columns;
 	$: itemsById = new Map($query.data.items.map((item) => [item.id, item]));
-	$: columns = mapItemsToColumns(itemsById);
+	$: columns = mapItemsToColumns(boardColumns, itemsById);
 
-	function mapItemsToColumns(itemsById: Map<string, Item>) {
-		type Column = (typeof data.board.columns)[number];
+	function mapItemsToColumns(
+		boardColumns: typeof data.board.columns,
+		itemsById: Map<string, Item>
+	) {
+		type Column = (typeof boardColumns)[number];
 		type ColumnWithItems = Column & { items: typeof data.board.items };
 
 		const columns = new Map<string, ColumnWithItems>();
-		for (let column of [...data.board.columns]) {
+		for (let column of [...boardColumns]) {
 			columns.set(column.id, { ...column, items: [] });
 		}
 

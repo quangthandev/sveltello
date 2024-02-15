@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { accountExists, createAccount } from './queries.js';
+import { userExists, createUser } from './queries.js';
+import { lucia } from '$lib/server/auth.js';
 
 export const actions = {
 	default: async ({ cookies, request }) => {
@@ -7,7 +8,15 @@ export const actions = {
 		const email = data.get('email')?.toString() || '';
 		const password = data.get('password')?.toString() || '';
 
-		const errors = await validate(email, password);
+		let errors;
+
+		try {
+			errors = await validate(email, password);
+		} catch (e) {
+			return fail(500, {
+				error: 'Something went wrong'
+			});
+		}
 
 		if (errors) {
 			if (errors.email) {
@@ -19,14 +28,16 @@ export const actions = {
 			return fail(422);
 		}
 
-		const user = await createAccount(email, password);
+		const user = await createUser(email, password);
 
-		cookies.set('auth', user.id, {
-			path: '/',
-			maxAge: 60 * 60 * 24 * 7
+		const session = await lucia.createSession(user.id, {});
+		const sessionCookie = lucia.createSessionCookie(session.id);
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes
 		});
 
-		redirect(303, '/boards');
+		redirect(302, '/boards');
 	}
 };
 
@@ -43,7 +54,7 @@ async function validate(email: string, password: string) {
 		errors.password = 'Password is required.';
 	}
 
-	if (!errors.email && (await accountExists(email))) {
+	if (!errors.email && (await userExists(email))) {
 		errors.email = 'An account with this email already exists.';
 	}
 
