@@ -43,10 +43,12 @@
 	"type": "module",
 	"dependencies": {
 		"@libsql/client": "^0.4.3",
+		"@lucia-auth/adapter-prisma": "^4.0.0",
 		"@prisma/adapter-libsql": "^5.9.1",
 		"@prisma/client": "^5.8.1",
 		"@tanstack/svelte-query": "^5.18.1",
 		"@tanstack/svelte-query-devtools": "^5.18.1",
-		"bcryptjs": "^2.4.3"
+		"lucia": "^3.0.1",
+		"oslo": "^1.1.1"
 	}
 }
