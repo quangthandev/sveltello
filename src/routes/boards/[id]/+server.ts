@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { getBoard, upsertItem } from './db.js';
+import { getBoard, upsertItem } from './queries.js';
 
 export async function GET({ params, locals }) {
 	if (!params.id) {
@@ -10,7 +10,7 @@ export async function GET({ params, locals }) {
 		throw error(401, 'Unauthorized');
 	}
 
-	const board = await getBoard(Number(params.id), locals.user.id);
+	const board = await getBoard(parseInt(params.id), locals.user.id);
 
 	if (!board) {
 		throw error(404, 'Board not found');

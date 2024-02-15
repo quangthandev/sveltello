@@ -1,4 +1,4 @@
-import prisma from '$lib/prisma';
+import prisma from '$lib/server/prisma';
 import { Argon2id } from 'oslo/password';
 
 export async function userExists(email: string) {

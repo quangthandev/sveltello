@@ -1,4 +1,4 @@
-import prisma from '$lib/prisma';
+import prisma from '$lib/server/prisma';
 
 export async function getBoards(userId: string) {
 	return prisma.board.findMany({

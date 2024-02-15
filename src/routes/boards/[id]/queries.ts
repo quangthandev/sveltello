@@ -1,4 +1,4 @@
-import prisma from '$lib/prisma';
+import prisma from '$lib/server/prisma';
 import type { ItemMutation } from './types';
 
 export async function getBoard(boardId: number, userId: string) {

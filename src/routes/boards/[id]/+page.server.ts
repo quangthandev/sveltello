@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { createColumn, getBoard, updateBoardName, updateColumnName } from './db.js';
+import { createColumn, getBoard, updateBoardName, updateColumnName } from './queries.js';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
