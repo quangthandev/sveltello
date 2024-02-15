@@ -49,6 +49,7 @@
 		"@tanstack/svelte-query": "^5.18.1",
 		"@tanstack/svelte-query-devtools": "^5.18.1",
 		"lucia": "^3.0.1",
-		"oslo": "^1.1.1"
+		"oslo": "^1.1.1",
+		"zod": "^3.22.4"
 	}
 }

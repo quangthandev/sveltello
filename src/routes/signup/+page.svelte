@@ -23,9 +23,9 @@
 				class="space-y-6"
 				method="POST"
 				use:enhance={() => {
-					return async ({ update }) => {
-						isLoading = true;
+					isLoading = true;
 
+					return async ({ update }) => {
 						await update();
 						isLoading = false;
 					};
@@ -57,7 +57,13 @@
 					/>
 				</div>
 
-				<Button type="submit">Sign up</Button>
+				<Button type="submit" disabled={isLoading}>
+					{#if isLoading}
+						<span>Loading...</span>
+					{:else}
+						<span>Sign up</span>
+					{/if}
+				</Button>
 
 				<div class="text-sm text-slate-500">
 					Already have an account?{' '}
