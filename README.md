@@ -4,7 +4,12 @@ A demo Trello clone fullstack application built with SvelteKit. UI and domain mo
 
 ### Tech Stack
 
-SvelteKit, Prisma, SQLite (Turso), TailwindCSS, Vite, TypeScript
+- UI: SvelteKit, TailwindCSS
+- Auth: Lucia
+- Database: SQLite (Turso)
+- ORM: Prisma
+- Build: Vite
+- Language: TypeScript
 
 ## Developing
 
