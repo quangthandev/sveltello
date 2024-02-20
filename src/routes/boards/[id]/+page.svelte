@@ -51,7 +51,7 @@
 
 <BoardQueriesProvider>
 	<div
-		class="h-full min-h-0 flex flex-col overflow-x-scroll"
+		class="h-full min-h-0 flex flex-col overflow-x-scroll select-none"
 		style:background-color={data.board.color}
 	>
 		<h1 class="">
