@@ -99,7 +99,7 @@
 
 	<ol
 		bind:this={listEl}
-		class="flex-grow overflow-auto"
+		class="flex-grow overflow-auto min-h-4"
 		use:dndzone={{
 			items: items,
 			flipDurationMs: 300,
