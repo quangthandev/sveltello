@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { Board, Item } from '@prisma/client';
+	import type { Board, Column, Item } from '@prisma/client';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import { queriesCtx, type MutationData } from './context';
 	import { writable } from 'svelte/store';
@@ -84,10 +84,9 @@
 
 			await queryClient.cancelQueries({ queryKey: ['boards', boardId] });
 
-			const prevBoardData = queryClient.getQueryData<Board & { items: Omit<Item, 'content'>[] }>([
-				'boards',
-				boardId
-			]);
+			const prevBoardData = queryClient.getQueryData<
+				Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
+			>(['boards', boardId]);
 
 			if (prevBoardData) {
 				queryClient.setQueryData(['boards', boardId], {
@@ -115,9 +114,9 @@
 		onSettled: (_data, _err, variables) => {
 			if ($pendingUpdates.has(variables.id)) {
 				$pendingUpdates.delete(variables.id);
-			} else {
-				queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 			}
+
+			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
 	});
 

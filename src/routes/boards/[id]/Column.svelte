@@ -4,20 +4,18 @@
 	import Card from './Card.svelte';
 	import NewCard from './NewCard.svelte';
 	import { tick } from 'svelte';
-	import { droppable } from './actions';
 	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
 	import { page } from '$app/stores';
-
+	import { dndzone } from 'svelte-dnd-action';
+	import { useQueryClient } from '@tanstack/svelte-query';
+	import type { Board, Column } from '@prisma/client';
 	export let name: string;
 	export let columnId: string;
 	export let items: Item[];
 
-	let acceptDrop = false;
 	let editing: boolean = false;
 	let listEl: HTMLOListElement;
-
-	$: sortedItems = items.sort((a, b) => a.order - b.order);
 
 	function scrollList() {
 		if (listEl) {
@@ -26,33 +24,66 @@
 	}
 
 	const { updateItem } = queriesCtx.get();
+
+	const queryClient = useQueryClient();
+
+	function handleDndConsider(columnId: string, e) {
+		const prevBoardData = queryClient.getQueryData<
+			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
+		>(['boards', $page.params.id]);
+
+		if (prevBoardData) {
+			const column = prevBoardData.columns.find((c) => c.id === columnId);
+			if (column) {
+				queryClient.setQueryData(['boards', $page.params.id], {
+					...prevBoardData,
+					columns: prevBoardData.columns.map((c) =>
+						c.id === columnId ? { ...c, items: e.detail.items } : c
+					)
+				});
+			}
+		}
+	}
+
+	function handleDndFinalize(columnId: string, e) {
+		const prevBoardData = queryClient.getQueryData<
+			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
+		>(['boards', $page.params.id]);
+
+		if (prevBoardData) {
+			const column = prevBoardData.columns.find((c) => c.id === columnId);
+			if (column) {
+				queryClient.setQueryData(['boards', $page.params.id], {
+					...prevBoardData,
+					columns: prevBoardData.columns.map((c) =>
+						c.id === columnId ? { ...c, items: e.detail.items } : c
+					)
+				});
+			}
+
+			if (e.detail.info.trigger === 'droppedIntoZone') {
+				// Get the index of the item that was dropped
+				const index = e.detail.items.findIndex((i) => i.id === e.detail.info.id);
+
+				// Calculate the new order for the dropped item
+				const previousOrder = e.detail.items[index - 1] ? e.detail.items[index - 1].order : 0;
+				const nextOrder = e.detail.items[index + 1]
+					? e.detail.items[index + 1].order
+					: e.detail.items[index].order + 1;
+				const newOrder = (previousOrder + nextOrder) / 2;
+
+				// Update the item
+				const item = prevBoardData.items.find((i) => i.id === e.detail.info.id);
+				if (item) {
+					$updateItem.mutate({ ...item, order: newOrder, columnId });
+				}
+			}
+		}
+	}
 </script>
 
-<div
-	class={'flex-shrink-0 flex flex-col overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-slate-100 ' +
-		(acceptDrop ? `outline outline-2 outline-red-500` : ``)}
-	use:droppable={{ enabled: items.length === 0 }}
-	on:dragOver={() => (acceptDrop = true)}
-	on:dragLeave={() => {
-		acceptDrop = false;
-	}}
-	on:dropItem={async (event) => {
-		if (acceptDrop) {
-			const transfer = event.detail;
-
-			const data = {
-				order: 1,
-				columnId,
-				id: transfer.id,
-				title: transfer.title,
-				boardId: parseInt($page.params.id)
-			};
-
-			$updateItem.mutate(data);
-
-			acceptDrop = false;
-		}
-	}}
+<lio
+	class="flex-shrink-0 flex flex-col overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-slate-100"
 >
 	<div class="p-2">
 		<EditableText
@@ -66,18 +97,20 @@
 		</EditableText>
 	</div>
 
-	<ol bind:this={listEl} class="flex-grow overflow-auto">
-		{#each sortedItems as item, index (item.id)}
+	<ol
+		bind:this={listEl}
+		class="flex-grow overflow-auto"
+		use:dndzone={{
+			items: items,
+			flipDurationMs: 300,
+			type: 'items'
+		}}
+		on:consider={(e) => handleDndConsider(columnId, e)}
+		on:finalize={(e) => handleDndFinalize(columnId, e)}
+	>
+		{#each items as item (item.id)}
 			<li animate:flip={{ duration: 250 }}>
-				<Card
-					title={item.title}
-					content={item.content}
-					id={item.id}
-					order={item.order}
-					{columnId}
-					previousOrder={sortedItems[index - 1] ? sortedItems[index - 1].order : 0}
-					nextOrder={sortedItems[index + 1] ? sortedItems[index + 1].order : item.order + 1}
-				/>
+				<Card title={item.title} content={item.content} id={item.id} />
 			</li>
 		{/each}
 	</ol>
@@ -85,7 +118,7 @@
 	{#if editing}
 		<NewCard
 			{columnId}
-			nextOrder={sortedItems.length === 0 ? 1 : sortedItems[sortedItems.length - 1].order + 1}
+			nextOrder={items.length === 0 ? 1 : items[items.length - 1].order + 1}
 			on:create={async () => {
 				await tick();
 				scrollList();
@@ -117,4 +150,4 @@
 			</button>
 		</div>
 	{/if}
-</div>
+</lio>
