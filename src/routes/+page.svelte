@@ -1,4 +1,4 @@
-<div class="h-full flex flex-col items-center pt-20 bg-slate-900">
+<div class="h-full flex flex-col items-center pt-20 bg-slate-900 px-8 md:px-0">
 	<div class="space-y-4 max-w-md text-lg text-slate-300">
 		<p>
 			It's a recreation of the popular drag and drop interface in{' '}
