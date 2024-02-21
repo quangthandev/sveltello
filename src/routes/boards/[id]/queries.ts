@@ -9,7 +9,14 @@ export async function getBoard(boardId: number, userId: string) {
 		},
 		include: {
 			items: true,
-			columns: { orderBy: { order: 'asc' } }
+			columns: {
+				orderBy: { order: 'asc' },
+				include: {
+					items: {
+						orderBy: { order: 'asc' }
+					}
+				}
+			}
 		}
 	});
 }
@@ -40,6 +47,13 @@ export async function updateColumnName(id: string, name: string, userId: string)
 	return prisma.column.update({
 		where: { id, Board: { userId } },
 		data: { name }
+	});
+}
+
+export async function updateColumnOrder(id: string, order: number, userId: string) {
+	return prisma.column.update({
+		where: { id, Board: { userId } },
+		data: { order }
 	});
 }
 

@@ -1,47 +1,91 @@
 <script lang="ts">
-	import type { Board, Item } from '@prisma/client';
+	import { dndzone, type DndEvent } from 'svelte-dnd-action';
+	import type { Board, Item, Column } from '@prisma/client';
 	import type { PageData } from './$types';
-	import Column from './Column.svelte';
+	import ColumnComponent from './Column.svelte';
 	import EditableText from './EditableText.svelte';
 	import NewColumn from './NewColumn.svelte';
-	import { createQuery } from '@tanstack/svelte-query';
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import BoardQueriesProvider from './BoardQueriesProvider.svelte';
 
 	export let data: PageData;
 
-	const query = createQuery<Board & { items: Item[] }>({
+	const queryClient = useQueryClient();
+
+	const query = createQuery<Board & { items: Item[]; columns: (Column & { items: Item[] })[] }>({
 		queryKey: ['boards', $page.params.id],
 		queryFn: async () => (await fetch(`/boards/${$page.params.id}`)).json(),
 		initialData: data.board
 	});
 
-	$: boardColumns = data.board.columns;
-	$: itemsById = new Map($query.data.items.map((item) => [item.id, item]));
-	$: columns = mapItemsToColumns(boardColumns, itemsById);
+	$: columns = $query.data.columns;
 
-	function mapItemsToColumns(
-		boardColumns: typeof data.board.columns,
-		itemsById: Map<string, Item>
-	) {
-		type Column = (typeof boardColumns)[number];
-		type ColumnWithItems = Column & { items: typeof data.board.items };
+	// Column mutation
+	type MutationData = {
+		id: string;
+		order: number;
+	};
 
-		const columns = new Map<string, ColumnWithItems>();
-		for (let column of [...boardColumns]) {
-			columns.set(column.id, { ...column, items: [] });
+	const updateColumn = createMutation<unknown, unknown, MutationData>({
+		mutationFn: async (data) => {
+			const res = await fetch(`/columns/${data.id}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ order: data.order })
+			});
+			return res.json();
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ['boards', $page.params.id] });
+		}
+	});
+
+	function handleDndConsider(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
+		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
+			'boards',
+			$page.params.id
+		]);
+		if (prevBoardData) {
+			queryClient.setQueryData(['boards', $page.params.id], {
+				...prevBoardData,
+				columns: e.detail.items
+			});
+		}
+	}
+
+	function handleDndFinalize(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
+		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
+			'boards',
+			$page.params.id
+		]);
+
+		if (prevBoardData) {
+			queryClient.setQueryData(['boards', $page.params.id], {
+				...prevBoardData,
+				columns: e.detail.items
+			});
 		}
 
-		// add items to their columns
-		for (let item of itemsById.values()) {
-			let columnId = item.columnId;
-			let column = columns.get(columnId);
-			if (column) {
-				column.items.push(item);
-			}
-		}
+		// Get index of dropped item
+		const droppedColumnId = e.detail.info.id;
+		const droppedIndex = e.detail.items.findIndex((column) => column.id === droppedColumnId);
+		const originalIndex = columns.findIndex((column) => column.id === droppedColumnId);
 
-		return columns;
+		// If the item was dropped in the same position, do nothing
+		if (droppedIndex === originalIndex) return;
+
+		// Get prevOrder and nextOrder of dropped item
+		const prevOrder = e.detail.items[droppedIndex - 1] ? e.detail.items[droppedIndex - 1].order : 0;
+		const nextOrder = e.detail.items[droppedIndex + 1]
+			? e.detail.items[droppedIndex + 1].order
+			: e.detail.items[droppedIndex].order + 1;
+		const newOrder = (prevOrder + nextOrder) / 2;
+
+		// Update the order of the dropped item
+		$updateColumn.mutate({ id: droppedColumnId, order: newOrder });
 	}
 </script>
 
@@ -65,10 +109,21 @@
 				<input type="hidden" name="id" value={data.board.id} />
 			</EditableText>
 		</h1>
-		<div class="flex flex-grow min-h-0 h-full items-start gap-4 px-8 pb-4">
-			{#each [...columns.values()] as column (column.id)}
-				<Column name={column.name} columnId={column.id} items={column.items} />
-			{/each}
+		<div class="flex items-start gap-4 px-8 pb-4">
+			<div
+				use:dndzone={{
+					items: columns,
+					flipDurationMs: 300,
+					type: 'columns'
+				}}
+				on:consider={handleDndConsider}
+				on:finalize={handleDndFinalize}
+				class="flex flex-grow min-h-0 h-full items-start gap-4"
+			>
+				{#each columns as column (column.id)}
+					<ColumnComponent name={column.name} columnId={column.id} items={column.items} />
+				{/each}
+			</div>
 
 			<NewColumn boardId={data.board.id} />
 		</div>

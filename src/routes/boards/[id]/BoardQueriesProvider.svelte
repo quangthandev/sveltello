@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { Board, Item } from '@prisma/client';
+	import type { Board, Column, Item } from '@prisma/client';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import { queriesCtx, type MutationData } from './context';
 	import { writable } from 'svelte/store';
@@ -32,15 +32,23 @@
 				})
 			).json(),
 		onMutate: async (data) => {
-			const prevBoardData = queryClient.getQueryData<Board & { items: Item[] }>([
-				'boards',
-				boardId
-			]);
+			const prevBoardData = queryClient.getQueryData<
+				Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
+			>(['boards', boardId]);
 
 			if (prevBoardData) {
 				queryClient.setQueryData(['boards', boardId], {
 					...prevBoardData,
-					items: [...prevBoardData.items, data]
+					columns: prevBoardData.columns.map((column) => {
+						if (column.id === data.columnId) {
+							return {
+								...column,
+								items: [...column.items, data]
+							};
+						}
+
+						return column;
+					})
 				});
 			}
 
@@ -84,10 +92,9 @@
 
 			await queryClient.cancelQueries({ queryKey: ['boards', boardId] });
 
-			const prevBoardData = queryClient.getQueryData<Board & { items: Omit<Item, 'content'>[] }>([
-				'boards',
-				boardId
-			]);
+			const prevBoardData = queryClient.getQueryData<
+				Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
+			>(['boards', boardId]);
 
 			if (prevBoardData) {
 				queryClient.setQueryData(['boards', boardId], {
@@ -115,9 +122,9 @@
 		onSettled: (_data, _err, variables) => {
 			if ($pendingUpdates.has(variables.id)) {
 				$pendingUpdates.delete(variables.id);
-			} else {
-				queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 			}
+
+			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
 	});
 
@@ -129,15 +136,17 @@
 				})
 			).json(),
 		onMutate: async (id) => {
-			const prevBoardData = queryClient.getQueryData<Board & { items: Omit<Item, 'content'>[] }>([
-				'boards',
-				boardId
-			]);
+			const prevBoardData = queryClient.getQueryData<
+				Board & { items: Omit<Item, 'content'>[]; columns: (Column & { items: Item[] })[] }
+			>(['boards', boardId]);
 
 			if (prevBoardData) {
 				queryClient.setQueryData(['boards', boardId], {
 					...prevBoardData,
-					items: prevBoardData.items.filter((item) => item.id !== id)
+					columns: prevBoardData.columns.map((column) => ({
+						...column,
+						items: column.items.filter((item) => item.id !== id)
+					}))
 				});
 			}
 
