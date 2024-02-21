@@ -32,15 +32,23 @@
 				})
 			).json(),
 		onMutate: async (data) => {
-			const prevBoardData = queryClient.getQueryData<Board & { items: Item[] }>([
-				'boards',
-				boardId
-			]);
+			const prevBoardData = queryClient.getQueryData<
+				Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
+			>(['boards', boardId]);
 
 			if (prevBoardData) {
 				queryClient.setQueryData(['boards', boardId], {
 					...prevBoardData,
-					items: [...prevBoardData.items, data]
+					columns: prevBoardData.columns.map((column) => {
+						if (column.id === data.columnId) {
+							return {
+								...column,
+								items: [...column.items, data]
+							};
+						}
+
+						return column;
+					})
 				});
 			}
 
@@ -128,15 +136,17 @@
 				})
 			).json(),
 		onMutate: async (id) => {
-			const prevBoardData = queryClient.getQueryData<Board & { items: Omit<Item, 'content'>[] }>([
-				'boards',
-				boardId
-			]);
+			const prevBoardData = queryClient.getQueryData<
+				Board & { items: Omit<Item, 'content'>[]; columns: (Column & { items: Item[] })[] }
+			>(['boards', boardId]);
 
 			if (prevBoardData) {
 				queryClient.setQueryData(['boards', boardId], {
 					...prevBoardData,
-					items: prevBoardData.items.filter((item) => item.id !== id)
+					columns: prevBoardData.columns.map((column) => ({
+						...column,
+						items: column.items.filter((item) => item.id !== id)
+					}))
 				});
 			}
 
