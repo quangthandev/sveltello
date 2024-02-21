@@ -33,15 +33,12 @@
 		>(['boards', $page.params.id]);
 
 		if (prevBoardData) {
-			const column = prevBoardData.columns.find((c) => c.id === columnId);
-			if (column) {
-				queryClient.setQueryData(['boards', $page.params.id], {
-					...prevBoardData,
-					columns: prevBoardData.columns.map((c) =>
-						c.id === columnId ? { ...c, items: e.detail.items } : c
-					)
-				});
-			}
+			queryClient.setQueryData(['boards', $page.params.id], {
+				...prevBoardData,
+				columns: prevBoardData.columns.map((c) =>
+					c.id === columnId ? { ...c, items: e.detail.items } : c
+				)
+			});
 		}
 	}
 
@@ -50,33 +47,35 @@
 			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
 		>(['boards', $page.params.id]);
 
-		if (prevBoardData) {
-			const column = prevBoardData.columns.find((c) => c.id === columnId);
-			if (column) {
-				queryClient.setQueryData(['boards', $page.params.id], {
-					...prevBoardData,
-					columns: prevBoardData.columns.map((c) =>
-						c.id === columnId ? { ...c, items: e.detail.items } : c
-					)
-				});
-			}
+		if (prevBoardData && e.detail.info.trigger === 'droppedIntoZone') {
+			const newItems = e.detail.items;
 
-			if (e.detail.info.trigger === 'droppedIntoZone') {
-				// Get the index of the item that was dropped
-				const index = e.detail.items.findIndex((i) => i.id === e.detail.info.id);
+			// Get the index of the item that was dropped
+			const droppedItemId = e.detail.info.id;
+			const droppedIndex = newItems.findIndex((i) => i.id === droppedItemId);
+			const originalIndex = items.findIndex((i) => i.id === droppedItemId);
 
-				// Calculate the new order for the dropped item
-				const previousOrder = e.detail.items[index - 1] ? e.detail.items[index - 1].order : 0;
-				const nextOrder = e.detail.items[index + 1]
-					? e.detail.items[index + 1].order
-					: e.detail.items[index].order + 1;
-				const newOrder = (previousOrder + nextOrder) / 2;
+			// Update the items in the query cache
+			queryClient.setQueryData(['boards', $page.params.id], {
+				...prevBoardData,
+				columns: prevBoardData.columns.map((c) =>
+					c.id === columnId ? { ...c, items: newItems } : c
+				)
+			});
 
-				// Update the item
-				const item = prevBoardData.items.find((i) => i.id === e.detail.info.id);
-				if (item) {
-					$updateItem.mutate({ ...item, order: newOrder, columnId });
-				}
+			// TODO: If the item was dropped in the same position and same column, do nothing
+
+			// Calculate the new order for the dropped item
+			const previousOrder = newItems[droppedIndex - 1] ? newItems[droppedIndex - 1].order : 0;
+			const nextOrder = newItems[droppedIndex + 1]
+				? newItems[droppedIndex + 1].order
+				: previousOrder + 1;
+			const newOrder = (previousOrder + nextOrder) / 2;
+
+			// Update the item
+			const item = prevBoardData.items.find((i) => i.id === droppedItemId);
+			if (item) {
+				$updateItem.mutate({ ...item, order: newOrder, columnId });
 			}
 		}
 	}

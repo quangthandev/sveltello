@@ -62,27 +62,28 @@
 			$page.params.id
 		]);
 
+		const newItems = e.detail.items;
+
 		// Get index of dropped item
 		const droppedColumnId = e.detail.info.id;
-		const droppedIndex = e.detail.items.findIndex((column) => column.id === droppedColumnId);
-		const originalIndex = columns.findIndex((column) => column.id === droppedColumnId);
-
-		// If the item was dropped in the same position, do nothing
-		if (droppedIndex === originalIndex) return;
+		const droppedIndex = newItems.findIndex((column) => column.id === droppedColumnId);
+		const originalIndex = prevBoardData?.columns.findIndex(
+			(column) => !newItems.map((c) => c.id).includes(column.id)
+		);
 
 		// Update the items in the query cache
 		if (prevBoardData) {
 			queryClient.setQueryData(['boards', $page.params.id], {
 				...prevBoardData,
-				columns: e.detail.items
+				columns: newItems
 			});
 		}
 
+		// TODO: If the item was dropped in the same position and same column, do nothing
+
 		// Get prevOrder and nextOrder of dropped item
-		const prevOrder = e.detail.items[droppedIndex - 1] ? e.detail.items[droppedIndex - 1].order : 0;
-		const nextOrder = e.detail.items[droppedIndex + 1]
-			? e.detail.items[droppedIndex + 1].order
-			: e.detail.items[droppedIndex].order + 1;
+		const prevOrder = newItems[droppedIndex - 1] ? newItems[droppedIndex - 1].order : 0;
+		const nextOrder = newItems[droppedIndex + 1] ? newItems[droppedIndex + 1].order : prevOrder + 1;
 		const newOrder = (prevOrder + nextOrder) / 2;
 
 		// Update the order of the dropped item
