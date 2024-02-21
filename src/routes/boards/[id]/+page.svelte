@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dndzone } from 'svelte-dnd-action';
+	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import type { Board, Item, Column } from '@prisma/client';
 	import type { PageData } from './$types';
 	import ColumnComponent from './Column.svelte';
@@ -43,7 +43,7 @@
 		}
 	});
 
-	function handleDndConsider(e) {
+	function handleDndConsider(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
 		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
 			'boards',
 			$page.params.id
@@ -51,13 +51,12 @@
 		if (prevBoardData) {
 			queryClient.setQueryData(['boards', $page.params.id], {
 				...prevBoardData,
-				columns: e.detail.items,
-				items: e.detail.items.reduce((acc, column) => acc.concat(column.items), [])
+				columns: e.detail.items
 			});
 		}
 	}
 
-	function handleDndFinalize(e) {
+	function handleDndFinalize(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
 		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
 			'boards',
 			$page.params.id

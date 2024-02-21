@@ -7,7 +7,7 @@
 	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
 	import { page } from '$app/stores';
-	import { dndzone } from 'svelte-dnd-action';
+	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { Board, Column } from '@prisma/client';
 	export let name: string;
@@ -27,7 +27,7 @@
 
 	const queryClient = useQueryClient();
 
-	function handleDndConsider(columnId: string, e) {
+	function handleDndConsider(columnId: string, e: CustomEvent<DndEvent<Item>>) {
 		const prevBoardData = queryClient.getQueryData<
 			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
 		>(['boards', $page.params.id]);
@@ -45,7 +45,7 @@
 		}
 	}
 
-	function handleDndFinalize(columnId: string, e) {
+	function handleDndFinalize(columnId: string, e: CustomEvent<DndEvent<Item>>) {
 		const prevBoardData = queryClient.getQueryData<
 			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
 		>(['boards', $page.params.id]);
