@@ -62,13 +62,6 @@
 			$page.params.id
 		]);
 
-		if (prevBoardData) {
-			queryClient.setQueryData(['boards', $page.params.id], {
-				...prevBoardData,
-				columns: e.detail.items
-			});
-		}
-
 		// Get index of dropped item
 		const droppedColumnId = e.detail.info.id;
 		const droppedIndex = e.detail.items.findIndex((column) => column.id === droppedColumnId);
@@ -76,6 +69,14 @@
 
 		// If the item was dropped in the same position, do nothing
 		if (droppedIndex === originalIndex) return;
+
+		// Update the items in the query cache
+		if (prevBoardData) {
+			queryClient.setQueryData(['boards', $page.params.id], {
+				...prevBoardData,
+				columns: e.detail.items
+			});
+		}
 
 		// Get prevOrder and nextOrder of dropped item
 		const prevOrder = e.detail.items[droppedIndex - 1] ? e.detail.items[droppedIndex - 1].order : 0;
