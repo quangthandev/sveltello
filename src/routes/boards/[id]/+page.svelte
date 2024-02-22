@@ -69,19 +69,19 @@
 			$page.params.id
 		]);
 
+		if (!prevBoardData) return;
+
 		const newItems = e.detail.items;
+
+		// Update the items in the query cache
+		queryClient.setQueryData(['boards', $page.params.id], {
+			...prevBoardData,
+			columns: newItems
+		});
 
 		// Get index of dropped item
 		const droppedColumnId = e.detail.info.id;
 		const droppedIndex = newItems.findIndex((column) => column.id === droppedColumnId);
-
-		// Update the items in the query cache
-		if (prevBoardData) {
-			queryClient.setQueryData(['boards', $page.params.id], {
-				...prevBoardData,
-				columns: newItems
-			});
-		}
 
 		// If the item was dropped in the same position and same column, do nothing
 		if (sourceIndex === droppedIndex) return;

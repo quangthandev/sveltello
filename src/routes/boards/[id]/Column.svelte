@@ -54,20 +54,20 @@
 			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
 		>(['boards', $page.params.id]);
 
-		if (prevBoardData && e.detail.info.trigger === 'droppedIntoZone') {
-			const newItems = e.detail.items;
+		if (!prevBoardData) return;
 
+		const newItems = e.detail.items;
+
+		// Update the items in the query cache
+		queryClient.setQueryData(['boards', $page.params.id], {
+			...prevBoardData,
+			columns: prevBoardData.columns.map((c) => (c.id === columnId ? { ...c, items: newItems } : c))
+		});
+
+		if (e.detail.info.trigger === 'droppedIntoZone') {
 			// Get the index of the item that was dropped
 			const droppedItemId = e.detail.info.id;
 			const droppedIndex = newItems.findIndex((i) => i.id === droppedItemId);
-
-			// Update the items in the query cache
-			queryClient.setQueryData(['boards', $page.params.id], {
-				...prevBoardData,
-				columns: prevBoardData.columns.map((c) =>
-					c.id === columnId ? { ...c, items: newItems } : c
-				)
-			});
 
 			// If the item was dropped in the same position and same column, do nothing
 			if (sourceIndex === droppedIndex && columnId === newItems[droppedIndex].columnId) return;
