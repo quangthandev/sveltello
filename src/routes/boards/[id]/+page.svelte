@@ -21,6 +21,8 @@
 
 	$: columns = $query.data.columns;
 
+	let sourceIndex: number | null = null;
+
 	// Column mutation
 	type MutationData = {
 		id: string;
@@ -44,6 +46,11 @@
 	});
 
 	function handleDndConsider(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
+		// Store source index when user starts dragging for later use
+		if (e.detail.info.trigger === 'dragStarted') {
+			sourceIndex = columns.findIndex((column) => column.id === e.detail.info.id);
+		}
+
 		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
 			'boards',
 			$page.params.id
@@ -67,9 +74,6 @@
 		// Get index of dropped item
 		const droppedColumnId = e.detail.info.id;
 		const droppedIndex = newItems.findIndex((column) => column.id === droppedColumnId);
-		const originalIndex = prevBoardData?.columns.findIndex(
-			(column) => !newItems.map((c) => c.id).includes(column.id)
-		);
 
 		// Update the items in the query cache
 		if (prevBoardData) {
@@ -79,7 +83,8 @@
 			});
 		}
 
-		// TODO: If the item was dropped in the same position and same column, do nothing
+		// If the item was dropped in the same position and same column, do nothing
+		if (sourceIndex === droppedIndex) return;
 
 		// Get prevOrder and nextOrder of dropped item
 		const prevOrder = newItems[droppedIndex - 1] ? newItems[droppedIndex - 1].order : 0;
@@ -88,6 +93,9 @@
 
 		// Update the order of the dropped item
 		$updateColumn.mutate({ id: droppedColumnId, order: newOrder });
+
+		// Reset source index
+		sourceIndex = null;
 	}
 </script>
 

@@ -17,6 +17,8 @@
 	let editing: boolean = false;
 	let listEl: HTMLOListElement;
 
+	let sourceIndex: number | null = null;
+
 	function scrollList() {
 		if (listEl) {
 			listEl.scrollTop = listEl.scrollHeight;
@@ -28,6 +30,11 @@
 	const queryClient = useQueryClient();
 
 	function handleDndConsider(columnId: string, e: CustomEvent<DndEvent<Item>>) {
+		// Store source index when user starts dragging for later use
+		if (e.detail.info.trigger === 'dragStarted') {
+			sourceIndex = items.findIndex((item) => item.id === e.detail.info.id);
+		}
+
 		const prevBoardData = queryClient.getQueryData<
 			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
 		>(['boards', $page.params.id]);
@@ -53,7 +60,6 @@
 			// Get the index of the item that was dropped
 			const droppedItemId = e.detail.info.id;
 			const droppedIndex = newItems.findIndex((i) => i.id === droppedItemId);
-			const originalIndex = items.findIndex((i) => i.id === droppedItemId);
 
 			// Update the items in the query cache
 			queryClient.setQueryData(['boards', $page.params.id], {
@@ -63,7 +69,8 @@
 				)
 			});
 
-			// TODO: If the item was dropped in the same position and same column, do nothing
+			// If the item was dropped in the same position and same column, do nothing
+			if (sourceIndex === droppedIndex && columnId === newItems[droppedIndex].columnId) return;
 
 			// Calculate the new order for the dropped item
 			const previousOrder = newItems[droppedIndex - 1] ? newItems[droppedIndex - 1].order : 0;
@@ -77,6 +84,9 @@
 			if (item) {
 				$updateItem.mutate({ ...item, order: newOrder, columnId });
 			}
+
+			// Reset the source index
+			sourceIndex = null;
 		}
 	}
 </script>
