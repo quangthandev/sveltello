@@ -6,12 +6,27 @@
 	import { tick } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
-	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
+	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
 	export let name: string;
 	export let columnId: string;
 	export let items: Item[];
 
 	let localItems: Item[] = items;
+
+	$: if (items) {
+		dealWithServerUpdate();
+	}
+	function dealWithServerUpdate() {
+		const shadowItem = localItems.find((item) => item.id === SHADOW_PLACEHOLDER_ITEM_ID);
+
+		if (!shadowItem) {
+			localItems = items;
+		} else {
+			localItems = items.map((sItem) =>
+				localItems.find((cItem) => sItem.id === cItem.id) ? sItem : shadowItem
+			);
+		}
+	}
 
 	let editing: boolean = false;
 	let listEl: HTMLOListElement;

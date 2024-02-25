@@ -91,33 +91,6 @@
 			});
 
 			await queryClient.cancelQueries({ queryKey: ['boards', boardId] });
-
-			const prevBoardData = queryClient.getQueryData<
-				Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
-			>(['boards', boardId]);
-
-			if (prevBoardData) {
-				queryClient.setQueryData(['boards', boardId], {
-					...prevBoardData,
-					items: prevBoardData.items.map((item) => {
-						if (item.id === data.id) {
-							return {
-								...item,
-								...data
-							};
-						}
-
-						return item;
-					})
-				});
-			}
-
-			return { prevBoardData };
-		},
-		onError: (_err, _variables, context: any) => {
-			if (context?.prevBoardData) {
-				queryClient.setQueryData(['boards', boardId], context.prevBoardData);
-			}
 		},
 		onSettled: (_data, _err, variables) => {
 			if ($pendingUpdates.has(variables.id)) {
