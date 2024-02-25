@@ -6,13 +6,12 @@
 	import { tick } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
-	import { page } from '$app/stores';
 	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
-	import { useQueryClient } from '@tanstack/svelte-query';
-	import type { Board, Column } from '@prisma/client';
 	export let name: string;
 	export let columnId: string;
 	export let items: Item[];
+
+	let localItems: Item[] = items;
 
 	let editing: boolean = false;
 	let listEl: HTMLOListElement;
@@ -27,66 +26,47 @@
 
 	const { updateItem } = queriesCtx.get();
 
-	const queryClient = useQueryClient();
+	function handleDndConsider(cId: string, e: CustomEvent<DndEvent<Item>>) {
+		if (columnId === cId) {
+			// Store source index when user starts dragging for later use
+			if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
+				sourceIndex = items.findIndex((item) => item.id === e.detail.info.id);
+			}
 
-	function handleDndConsider(columnId: string, e: CustomEvent<DndEvent<Item>>) {
-		// Store source index when user starts dragging for later use
-		if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
-			sourceIndex = items.findIndex((item) => item.id === e.detail.info.id);
-		}
-
-		const prevBoardData = queryClient.getQueryData<
-			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
-		>(['boards', $page.params.id]);
-
-		if (prevBoardData) {
-			queryClient.setQueryData(['boards', $page.params.id], {
-				...prevBoardData,
-				columns: prevBoardData.columns.map((c) =>
-					c.id === columnId ? { ...c, items: e.detail.items } : c
-				)
-			});
+			localItems = e.detail.items;
 		}
 	}
 
-	function handleDndFinalize(columnId: string, e: CustomEvent<DndEvent<Item>>) {
-		const prevBoardData = queryClient.getQueryData<
-			Board & { items: Item[]; columns: (Column & { items: Item[] })[] }
-		>(['boards', $page.params.id]);
+	function handleDndFinalize(cId: string, e: CustomEvent<DndEvent<Item>>) {
+		if (columnId === cId) {
+			const { items: newItems } = e.detail;
 
-		if (!prevBoardData) return;
+			localItems = newItems;
 
-		const newItems = e.detail.items;
+			if (e.detail.info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
+				// Get the index of the item that was dropped
+				const droppedItemId = e.detail.info.id;
+				const droppedIndex = newItems.findIndex((i) => i.id === droppedItemId);
 
-		// Update the items in the query cache
-		queryClient.setQueryData(['boards', $page.params.id], {
-			...prevBoardData,
-			columns: prevBoardData.columns.map((c) => (c.id === columnId ? { ...c, items: newItems } : c))
-		});
+				// If the item was dropped in the same position and same column, do nothing
+				if (sourceIndex === droppedIndex && columnId === newItems[droppedIndex].columnId) return;
 
-		if (e.detail.info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
-			// Get the index of the item that was dropped
-			const droppedItemId = e.detail.info.id;
-			const droppedIndex = newItems.findIndex((i) => i.id === droppedItemId);
+				// Calculate the new order for the dropped item
+				const previousOrder = newItems[droppedIndex - 1] ? newItems[droppedIndex - 1].order : 0;
+				const nextOrder = newItems[droppedIndex + 1]
+					? newItems[droppedIndex + 1].order
+					: previousOrder + 1;
+				const newOrder = (previousOrder + nextOrder) / 2;
 
-			// If the item was dropped in the same position and same column, do nothing
-			if (sourceIndex === droppedIndex && columnId === newItems[droppedIndex].columnId) return;
+				// Update the item
+				const item = localItems.find((item) => item.id === droppedItemId);
+				if (item) {
+					$updateItem.mutate({ ...item, order: newOrder, columnId });
+				}
 
-			// Calculate the new order for the dropped item
-			const previousOrder = newItems[droppedIndex - 1] ? newItems[droppedIndex - 1].order : 0;
-			const nextOrder = newItems[droppedIndex + 1]
-				? newItems[droppedIndex + 1].order
-				: previousOrder + 1;
-			const newOrder = (previousOrder + nextOrder) / 2;
-
-			// Update the item
-			const item = prevBoardData.items.find((i) => i.id === droppedItemId);
-			if (item) {
-				$updateItem.mutate({ ...item, order: newOrder, columnId });
+				// Reset the source index
+				sourceIndex = null;
 			}
-
-			// Reset the source index
-			sourceIndex = null;
 		}
 	}
 </script>
@@ -110,14 +90,14 @@
 		bind:this={listEl}
 		class="flex-grow overflow-auto min-h-4"
 		use:dndzone={{
-			items: items,
+			items: localItems,
 			flipDurationMs: 300,
 			type: 'items'
 		}}
 		on:consider={(e) => handleDndConsider(columnId, e)}
 		on:finalize={(e) => handleDndFinalize(columnId, e)}
 	>
-		{#each items as item (item.id)}
+		{#each localItems as item (item.id)}
 			<li animate:flip={{ duration: 250 }}>
 				<Card title={item.title} content={item.content} id={item.id} />
 			</li>
@@ -127,7 +107,7 @@
 	{#if editing}
 		<NewCard
 			{columnId}
-			nextOrder={items.length === 0 ? 1 : items[items.length - 1].order + 1}
+			nextOrder={localItems.length === 0 ? 1 : localItems[localItems.length - 1].order + 1}
 			on:create={async () => {
 				await tick();
 				scrollList();
