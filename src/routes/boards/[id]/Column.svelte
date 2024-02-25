@@ -7,7 +7,7 @@
 	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
 	import { page } from '$app/stores';
-	import { dndzone, type DndEvent } from 'svelte-dnd-action';
+	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { Board, Column } from '@prisma/client';
 	export let name: string;
@@ -31,7 +31,7 @@
 
 	function handleDndConsider(columnId: string, e: CustomEvent<DndEvent<Item>>) {
 		// Store source index when user starts dragging for later use
-		if (e.detail.info.trigger === 'dragStarted') {
+		if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
 			sourceIndex = items.findIndex((item) => item.id === e.detail.info.id);
 		}
 
@@ -64,7 +64,7 @@
 			columns: prevBoardData.columns.map((c) => (c.id === columnId ? { ...c, items: newItems } : c))
 		});
 
-		if (e.detail.info.trigger === 'droppedIntoZone') {
+		if (e.detail.info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
 			// Get the index of the item that was dropped
 			const droppedItemId = e.detail.info.id;
 			const droppedIndex = newItems.findIndex((i) => i.id === droppedItemId);

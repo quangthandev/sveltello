@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dndzone, type DndEvent } from 'svelte-dnd-action';
+	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
 	import type { Board, Item, Column } from '@prisma/client';
 	import type { PageData } from './$types';
 	import ColumnComponent from './Column.svelte';
@@ -47,7 +47,7 @@
 
 	function handleDndConsider(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
 		// Store source index when user starts dragging for later use
-		if (e.detail.info.trigger === 'dragStarted') {
+		if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
 			sourceIndex = columns.findIndex((column) => column.id === e.detail.info.id);
 		}
 
