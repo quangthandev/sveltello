@@ -84,6 +84,16 @@
 			}
 		}
 	}
+
+	function transformDraggedElement(draggedEl?: HTMLElement) {
+		if (!draggedEl) return;
+
+		const card = draggedEl.querySelector('.card');
+
+		if (card) {
+			(card as HTMLElement).style.transform = 'rotate(10deg)';
+		}
+	}
 </script>
 
 <lio
@@ -107,14 +117,15 @@
 		use:dndzone={{
 			items: localItems,
 			flipDurationMs: 300,
-			type: 'items'
+			type: 'items',
+			transformDraggedElement
 		}}
 		on:consider={(e) => handleDndConsider(columnId, e)}
 		on:finalize={(e) => handleDndFinalize(columnId, e)}
 	>
 		{#each localItems as item (item.id)}
 			<li animate:flip={{ duration: 250 }}>
-				<Card title={item.title} content={item.content} id={item.id} />
+				<Card title={item.title} content={item.content} id={item.id} class="card" />
 			</li>
 		{/each}
 	</ol>

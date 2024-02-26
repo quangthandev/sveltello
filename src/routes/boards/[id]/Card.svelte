@@ -1,18 +1,24 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import { queriesCtx } from './context';
 
 	export let title: string;
 	export let content: string | null;
 	export let id: string;
+	let className: string | undefined = undefined;
+	export { className as class };
 
 	const { deleteItem } = queriesCtx.get();
 </script>
 
 <div
-	class="border-t-2 border-b-2 -mb-[2px] last:mb-0 px-2 py-1 border-t-transparent border-b-transparent"
+	class={cn(
+		'border-t-2 border-b-2 -mb-[2px] last:mb-0 px-2 py-1 border-t-transparent border-b-transparent',
+		className
+	)}
 >
 	<div
-		class="bg-white shadow shadow-slate-300 border-slate-300 text-sm rounded-lg w-full py-1 px-2 relative"
+		class="bg-white shadow shadow-slate-300 border-4 border-transparent text-sm rounded-lg w-full py-1 px-2 relative hover:border-cyan-500"
 	>
 		<h3>{title}</h3>
 		{#if content}
