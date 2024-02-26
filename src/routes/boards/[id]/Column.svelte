@@ -96,7 +96,7 @@
 	}
 </script>
 
-<lio
+<li
 	class="flex-shrink-0 flex flex-col overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-slate-100"
 >
 	<div class="p-2">
@@ -165,4 +165,4 @@
 			</button>
 		</div>
 	{/if}
-</lio>
+</li>
