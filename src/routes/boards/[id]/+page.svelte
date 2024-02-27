@@ -2,9 +2,9 @@
 	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
 	import type { Board, Item, Column } from '@prisma/client';
 	import type { PageData } from './$types';
-	import ColumnComponent from './Column.svelte';
+	import List from './List.svelte';
 	import EditableText from './EditableText.svelte';
-	import NewColumn from './NewColumn.svelte';
+	import NewList from './NewList.svelte';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import BoardQueriesProvider from './BoardQueriesProvider.svelte';
@@ -108,7 +108,7 @@
 		class="h-full min-h-0 flex flex-col overflow-x-scroll select-none"
 		style:background-color={data.board.color}
 	>
-		<h1 class="">
+		<h1>
 			<EditableText
 				action="?/updateBoardName"
 				value={data.board.name}
@@ -131,11 +131,11 @@
 				class="flex flex-grow min-h-0 h-full items-start gap-4"
 			>
 				{#each columns as column (column.id)}
-					<ColumnComponent name={column.name} columnId={column.id} items={column.items} />
+					<List name={column.name} columnId={column.id} items={column.items} />
 				{/each}
 			</div>
 
-			<NewColumn boardId={data.board.id} />
+			<NewList boardId={data.board.id} />
 		</div>
 	</div>
 </BoardQueriesProvider>

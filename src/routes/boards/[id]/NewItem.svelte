@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { ItemMutationFields } from './types';
-	import { clickOutside } from './actions';
 	import { page } from '$app/stores';
 	import { queriesCtx } from './context';
+	import { clickOutside } from '$lib/actions/click-outside';
 
 	export let columnId: string;
 	export let nextOrder: number;

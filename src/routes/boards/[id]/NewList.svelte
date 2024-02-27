@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { clickOutside } from './actions';
 	import { enhance } from '$app/forms';
+	import { clickOutside } from '$lib/actions/click-outside';
 
 	export let boardId: number;
 

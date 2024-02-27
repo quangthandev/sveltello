@@ -1,5 +1,26 @@
 import { error, json } from '@sveltejs/kit';
 import { deleteCard, upsertItem } from '../../boards/[id]/queries.js';
+import { checkAuthUser } from '$lib/server/auth.js';
+import { getItem } from './queries.js';
+
+export async function GET({ locals, params }) {
+	if (!params.id) {
+		throw error(404, 'Item not found');
+	}
+
+	checkAuthUser(locals, `/items/${params.id}`);
+
+	const item = await getItem(params.id, locals.user.id);
+
+	if (!item) {
+		throw error(404, 'Board not found');
+	}
+
+	return json({
+		...item,
+		column: item.Column
+	});
+}
 
 export async function DELETE({ locals, params }) {
 	const id = params.id;
@@ -8,9 +29,7 @@ export async function DELETE({ locals, params }) {
 		throw error(422, 'ID is required');
 	}
 
-	if (!locals.user) {
-		throw error(401, 'Unauthorized');
-	}
+	checkAuthUser(locals, `/items/${params.id}`);
 
 	await deleteCard(id, locals.user.id);
 

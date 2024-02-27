@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Item } from '@prisma/client';
 	import EditableText from './EditableText.svelte';
-	import Card from './Card.svelte';
-	import NewCard from './NewCard.svelte';
+	import ListItem from './ListItem.svelte';
+	import NewItem from './NewItem.svelte';
 	import { tick } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
@@ -88,10 +88,10 @@
 	function transformDraggedElement(draggedEl?: HTMLElement) {
 		if (!draggedEl) return;
 
-		const card = draggedEl.querySelector('.card');
+		const listItem = draggedEl.querySelector('.list-item');
 
-		if (card) {
-			(card as HTMLElement).style.transform = 'rotate(10deg)';
+		if (listItem) {
+			(listItem as HTMLElement).style.transform = 'rotate(8deg)';
 		}
 	}
 </script>
@@ -125,13 +125,13 @@
 	>
 		{#each localItems as item (item.id)}
 			<li animate:flip={{ duration: 250 }}>
-				<Card title={item.title} content={item.content} id={item.id} class="card" />
+				<ListItem title={item.title} content={item.content} id={item.id} class="list-item" />
 			</li>
 		{/each}
 	</ol>
 
 	{#if editing}
-		<NewCard
+		<NewItem
 			{columnId}
 			nextOrder={localItems.length === 0 ? 1 : localItems[localItems.length - 1].order + 1}
 			on:create={async () => {
