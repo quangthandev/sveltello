@@ -1,29 +1,34 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { tick } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 
 	export let value: string;
 	export let fieldName: string;
 	export let inputClassName: string;
 	export let buttonClassName: string;
 	export let action: string;
+	export let invalidateAll: boolean | undefined = true;
 
-	let edit: boolean = false;
+	let isEditing: boolean = false;
 
 	let inputEl: HTMLInputElement;
 	let buttonEl: HTMLButtonElement;
+
+	const dispatch = createEventDispatcher<{ submitted: void }>();
 </script>
 
-{#if edit}
+{#if isEditing}
 	<form
 		method="post"
 		{action}
 		use:enhance={() => {
 			value = inputEl.value;
-			edit = false;
+			isEditing = false;
 
 			return async ({ update }) => {
-				await update();
+				await update({ invalidateAll });
+
+				dispatch('submitted');
 			};
 		}}
 	>
@@ -35,10 +40,10 @@
 			name={fieldName}
 			{value}
 			class={inputClassName}
-			on:blur={() => (edit = false)}
+			on:blur={() => (isEditing = false)}
 			on:keydown={async (event) => {
 				if (event.key === 'Escape') {
-					edit = false;
+					isEditing = false;
 					await tick();
 					buttonEl?.focus();
 				}
@@ -50,7 +55,7 @@
 		bind:this={buttonEl}
 		class={buttonClassName}
 		on:click={async () => {
-			edit = true;
+			isEditing = true;
 			await tick();
 			inputEl?.select();
 		}}
