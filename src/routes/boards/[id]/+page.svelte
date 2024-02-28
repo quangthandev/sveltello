@@ -128,7 +128,7 @@
 				}}
 				on:consider={handleDndConsider}
 				on:finalize={handleDndFinalize}
-				class="flex flex-grow min-h-0 h-full items-start gap-4"
+				class="flex min-h-0 h-full items-start gap-4"
 			>
 				{#each columns as column (column.id)}
 					<List name={column.name} columnId={column.id} items={column.items} />

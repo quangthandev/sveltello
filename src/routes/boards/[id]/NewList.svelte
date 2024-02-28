@@ -2,12 +2,15 @@
 	import { tick } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { clickOutside } from '$lib/actions/click-outside';
+	import { useQueryClient } from '@tanstack/svelte-query';
 
 	export let boardId: number;
 
 	let inputEl: HTMLInputElement;
 
 	let editing: boolean;
+
+	const queryClient = useQueryClient();
 </script>
 
 {#if editing}
@@ -19,7 +22,10 @@
 			editing = false;
 
 			return async ({ update }) => {
-				await update();
+				await update({ invalidateAll: false });
+				queryClient.invalidateQueries({
+					queryKey: ['boards', boardId.toString()]
+				});
 				editing = true;
 				await tick();
 				inputEl.focus();
