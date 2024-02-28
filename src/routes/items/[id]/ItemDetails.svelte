@@ -30,7 +30,7 @@
 		</div>
 	{:else}
 		<ItemHeader
-			id={$page.params.id}
+			id={$query.data?.id.toString() || ''}
 			boardId={$query.data?.boardId.toString() || ''}
 			title={$query.data?.title || ''}
 			columnName={$query.data?.column.name || ''}
@@ -48,7 +48,7 @@
 		</div>
 	{:else}
 		<ItemDecription
-			id={$page.params.id}
+			id={$query.data?.id.toString() || ''}
 			boardId={$query.data?.boardId.toString() || ''}
 			content={$query.data?.content || ''}
 		/>
