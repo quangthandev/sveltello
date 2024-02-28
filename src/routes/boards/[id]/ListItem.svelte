@@ -62,6 +62,8 @@
 			class="absolute top-4 right-4 text-gray-400 hover:text-red-500"
 			type="submit"
 			on:click={(event) => {
+				// Prevent the click event from bubbling up to the parent anchor tag
+				event.preventDefault();
 				event.stopPropagation();
 
 				$deleteItem.mutate(id);
