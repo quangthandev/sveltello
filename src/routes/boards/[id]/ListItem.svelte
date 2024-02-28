@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, pushState } from '$app/navigation';
+	import { pushState } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Modal from '$lib/components/Modal.svelte';
 	import { cn } from '$lib/utils';
@@ -18,15 +18,15 @@
 
 	const queryClient = useQueryClient();
 
-	let pageState: App.PageState & { item?: Item & { column: Column } };
+	let pageState: App.PageState & { id?: string };
 	$: pageState = $page.state;
 
-	async function handleClick(e: MouseEvent) {
+	function handleClick(e: MouseEvent) {
 		e.preventDefault();
 
 		const { href } = e.currentTarget as HTMLAnchorElement;
 
-		const data = await queryClient.fetchQuery<Item & { column: Column }>({
+		queryClient.prefetchQuery<Item & { column: Column }>({
 			queryKey: ['items', id],
 			queryFn: async () => {
 				const res = await fetch(`/items/${id}`);
@@ -34,11 +34,7 @@
 			}
 		});
 
-		if (data) {
-			pushState(href, { item: data });
-		} else {
-			goto(href);
-		}
+		pushState(href, { id });
 	}
 </script>
 
@@ -89,8 +85,8 @@
 	</div>
 </a>
 
-{#if pageState.item}
+{#if pageState.id && pageState.id === id}
 	<Modal on:close={() => history.back()} class="w-9/12 lg:w-[768px]">
-		<ItemDetails id={pageState.item.id} />
+		<ItemDetails {id} />
 	</Modal>
 {/if}
