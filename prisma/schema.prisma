@@ -61,4 +61,7 @@ model Item {
 
   Board   Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
