@@ -14,6 +14,12 @@ export default {
 			},
 			transitionProperty: {
 				width: 'width'
+			},
+			colors: {
+				muted: {
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))'
+				}
 			}
 		}
 	},

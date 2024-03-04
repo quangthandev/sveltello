@@ -28,8 +28,8 @@
 			<li class="flex items-start gap-x-2">
 				<Avatar userName={$page.data.user.email} />
 				<div>
-					<p class="text-sm text-muted-foreground">
-						<span class="font-medium">{$page.data.user.email}</span> added this card to
+					<p>
+						<span class="font-bold">{$page.data.user.email}</span> added this card to
 						<span class="font-medium">{item.column.name}</span>
 					</p>
 					<p class="text-sm text-muted-foreground">
