@@ -28,14 +28,14 @@ export async function updateBoardName(boardId: number, name: string, userId: str
 	});
 }
 
-export async function createColumn(boardId: number, name: string, userId: string) {
+export async function createColumn(boardId: number, name: string, userId: string, id?: string) {
 	const columnCount = await prisma.column.count({
 		where: { boardId, Board: { userId } }
 	});
 
 	return prisma.column.create({
 		data: {
-			id: crypto.randomUUID(),
+			id: id ?? crypto.randomUUID(),
 			boardId,
 			name,
 			order: columnCount + 1

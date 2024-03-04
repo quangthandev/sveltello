@@ -25,6 +25,7 @@ const updateBoardNameSchema = z.object({
 });
 
 const createColumnSchema = z.object({
+	id: z.string().optional(),
 	name: z.string(),
 	boardId: z.string()
 });
@@ -47,9 +48,9 @@ export const actions = {
 		checkAuthUser(locals, `/boards/${params.id}`);
 
 		const data = await request.formData();
-		const { name, boardId } = await createColumnSchema.parseAsync(Object.fromEntries(data));
+		const { id, name, boardId } = await createColumnSchema.parseAsync(Object.fromEntries(data));
 
-		await createColumn(parseInt(boardId), name, locals.user.id);
+		await createColumn(parseInt(boardId), name, locals.user.id, id);
 	},
 	updateColumnName: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);

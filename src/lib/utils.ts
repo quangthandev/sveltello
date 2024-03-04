@@ -14,3 +14,5 @@ export function formatTimestamp(timestamp: Date): string {
 		hour12: true
 	});
 }
+
+export type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

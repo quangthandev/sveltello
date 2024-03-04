@@ -3,14 +3,52 @@
 	import { enhance } from '$app/forms';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { useQueryClient } from '@tanstack/svelte-query';
+	import type { Board, Column, Item } from '@prisma/client';
+	import type { TypedSubmitFunction } from '$lib/form';
+	import type { ActionData } from './$types';
+	import type { WithOptional } from '$lib/utils';
 
 	export let boardId: number;
 
 	let inputEl: HTMLInputElement;
 
 	let editing: boolean;
+	let id: string = crypto.randomUUID();
 
 	const queryClient = useQueryClient();
+
+	const handleSubmit: TypedSubmitFunction<ActionData> = () => {
+		queryClient.setQueryData<Board & { columns: WithOptional<Column, 'order'>[] }>(
+			['boards', boardId.toString()],
+			(prevData) => {
+				if (!prevData) return;
+				return {
+					...prevData,
+					columns: [
+						...prevData.columns,
+						{
+							id,
+							name: inputEl.value,
+							boardId,
+							items: []
+						}
+					]
+				};
+			}
+		);
+		editing = false;
+
+		return async ({ update }) => {
+			await update({ invalidateAll: false });
+			queryClient.invalidateQueries({
+				queryKey: ['boards', boardId.toString()]
+			});
+			editing = true;
+			id = crypto.randomUUID();
+			await tick();
+			inputEl.focus();
+		};
+	};
 </script>
 
 {#if editing}
@@ -18,25 +56,14 @@
 		method="post"
 		action="?/createColumn"
 		class="p-2 flex-shrink-0 flex flex-col gap-5 overflow-hidden max-h-full w-80 border rounded-xl shadow bg-slate-100"
-		use:enhance={() => {
-			editing = false;
-
-			return async ({ update }) => {
-				await update({ invalidateAll: false });
-				queryClient.invalidateQueries({
-					queryKey: ['boards', boardId.toString()]
-				});
-				editing = true;
-				await tick();
-				inputEl.focus();
-			};
-		}}
+		use:enhance={handleSubmit}
 		use:clickOutside
 		on:clickOutside={() => {
 			editing = false;
 		}}
 	>
 		<input type="hidden" name="boardId" value={boardId} />
+		<input type="hidden" name="id" value={id} />
 		<input
 			required
 			bind:this={inputEl}
