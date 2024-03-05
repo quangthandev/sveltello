@@ -45,6 +45,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@floating-ui/dom": "^1.6.3",
 		"@libsql/client": "^0.4.3",
 		"@lucia-auth/adapter-prisma": "^4.0.0",
 		"@prisma/adapter-libsql": "^5.9.1",
