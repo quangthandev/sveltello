@@ -3,6 +3,7 @@
 	import EditableText from './EditableText.svelte';
 	import ListItem from './ListItem.svelte';
 	import NewItem from './NewItem.svelte';
+	import ListActionsMenu from './ListActionsMenu.svelte';
 	import { tick } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
@@ -99,7 +100,7 @@
 <li
 	class="flex-shrink-0 flex flex-col overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-slate-100"
 >
-	<div class="p-2">
+	<div class="p-2 flex justify-between items-center">
 		<EditableText
 			action="?/updateColumnName"
 			fieldName="name"
@@ -109,6 +110,7 @@
 		>
 			<input type="hidden" name="columnId" value={columnId} />
 		</EditableText>
+		<ListActionsMenu id={columnId} {name} onAddCard={() => (editing = true)} />
 	</div>
 
 	<ol

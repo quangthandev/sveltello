@@ -1,5 +1,12 @@
 import { error } from '@sveltejs/kit';
-import { createColumn, getBoard, updateBoardName, updateColumnName } from './queries.js';
+import {
+	copyColumn,
+	createColumn,
+	deleteColumn,
+	getBoard,
+	updateBoardName,
+	updateColumnName
+} from './queries.js';
 import { z } from 'zod';
 import { checkAuthUser } from '$lib/server/auth.js';
 
@@ -35,6 +42,15 @@ const updateColumnNameSchema = z.object({
 	name: z.string()
 });
 
+const copyColumnSchema = z.object({
+	id: z.string(),
+	name: z.string()
+});
+
+const deleteColumnSchema = z.object({
+	id: z.string()
+});
+
 export const actions = {
 	updateBoardName: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
@@ -59,5 +75,22 @@ export const actions = {
 		const { columnId, name } = await updateColumnNameSchema.parseAsync(Object.fromEntries(data));
 
 		await updateColumnName(columnId, name, locals.user.id);
+	},
+	deleteColumn: async ({ request, locals, params }) => {
+		checkAuthUser(locals, `/boards/${params.id}`);
+
+		const data = await request.formData();
+
+		const { id } = await deleteColumnSchema.parseAsync(Object.fromEntries(data));
+
+		await deleteColumn(id, locals.user.id);
+	},
+	copyColumn: async ({ request, locals, params }) => {
+		checkAuthUser(locals, `/boards/${params.id}`);
+
+		const data = await request.formData();
+		const { id, name } = await copyColumnSchema.parseAsync(Object.fromEntries(data));
+
+		await copyColumn(id, name, locals.user.id);
 	}
 };
