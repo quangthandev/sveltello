@@ -2,12 +2,14 @@
 	import { enhance } from '$app/forms';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { useQueryClient } from '@tanstack/svelte-query';
+	import { tick } from 'svelte';
 
 	export let id: string;
 	export let boardId: string;
 	export let content: string | null;
 
 	let isEditing = false;
+	let contentEl: HTMLTextAreaElement;
 
 	const queryClient = useQueryClient();
 </script>
@@ -60,12 +62,12 @@
 				use:clickOutside
 				on:clickOutside={() => (isEditing = false)}
 			>
-				<!-- svelte-ignore a11y-autofocus -->
 				<textarea
+					bind:this={contentEl}
 					name="content"
 					class="border border-slate-400 w-full rounded-lg py-1 px-2 font-medium"
-					autofocus
 					value={content}
+					rows="6"
 				/>
 				<input type="hidden" name="id" value={id} />
 				<div class="flex items-center gap-x-2">
@@ -76,11 +78,18 @@
 				</div>
 			</form>
 		{:else}
-			<p class="min-h-[40px] bg-neutral-200 font-medium py-3 px-3.5 rounded-md">
-				<!-- svelte-ignore a11y-invalid-attribute -->
-				<a href="#" class="block min-h-[40px]" on:click|preventDefault={() => (isEditing = true)}>
+			<p class="relative min-h-[60px] font-medium rounded-md">
+				<button
+					class="absolute inset-0 text-left px-4 bg-neutral-300 hover:bg-neutral-200"
+					aria-label="Edit description"
+					on:click|preventDefault={async () => {
+						isEditing = true;
+						await tick();
+						contentEl.focus();
+					}}
+				>
 					{content || 'Add a more detailed description...'}
-				</a>
+				</button>
 			</p>
 		{/if}
 	</div>

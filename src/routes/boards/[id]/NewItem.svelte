@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { ItemMutationFields } from './types';
 	import { page } from '$app/stores';
 	import { queriesCtx } from './context';
@@ -12,6 +12,10 @@
 
 	let textareaEl: HTMLTextAreaElement;
 	let buttonEl: HTMLButtonElement;
+
+	onMount(() => {
+		textareaEl.focus();
+	});
 
 	const { createItem } = queriesCtx.get();
 
@@ -47,9 +51,7 @@
 	<input type="hidden" name={ItemMutationFields.columnId.name} value={columnId} />
 	<input type="hidden" name={ItemMutationFields.order.name} value={nextOrder} />
 
-	<!-- svelte-ignore a11y-autofocus -->
 	<textarea
-		autofocus
 		required
 		bind:this={textareaEl}
 		name={ItemMutationFields.title.name}

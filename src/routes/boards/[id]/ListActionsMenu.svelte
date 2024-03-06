@@ -130,10 +130,8 @@
 					<input hidden name="id" value={id} />
 					<label>
 						Name:
-						<!-- svelte-ignore a11y-autofocus -->
 						<textarea
 							bind:this={columnToCopyName}
-							autofocus
 							name="name"
 							required
 							class="border w-full rounded-lg py-1 px-2 mb-6 font-medium text-black"
