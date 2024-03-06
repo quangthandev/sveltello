@@ -15,4 +15,6 @@ export function formatTimestamp(timestamp: Date): string {
 	});
 }
 
+export function noop() {}
+
 export type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

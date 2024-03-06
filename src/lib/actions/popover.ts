@@ -1,47 +1,84 @@
-import { computePosition, flip, offset, shift } from '@floating-ui/dom';
+import { autoUpdate, computePosition, flip, offset as offsetFn, shift } from '@floating-ui/dom';
+import { noop } from '$lib/utils';
 import type { ActionReturn } from 'svelte/action';
+import { trapFocus } from './trap-focus';
+import type { FloatingConfig } from './types';
 
 type PopoverOptions = {
-	content: HTMLElement;
-	offset?: number;
+	triggerEl: HTMLElement;
+	open: boolean;
+	floatingConfig?: FloatingConfig;
 };
 
-type PopoverAttributes = {
-	'on:trigger': (e: MouseEvent) => void;
+interface PopoverAttributes {}
+
+const defaultFloatingConfig: FloatingConfig = {
+	placement: 'bottom-start',
+	offset: 6,
+	flip: true
 };
 
 export function popover(
 	node: HTMLElement,
 	options: PopoverOptions
 ): ActionReturn<PopoverOptions, PopoverAttributes> {
-	const handleClick = (event: MouseEvent) => {
-		updatePosition();
+	const { triggerEl, open, floatingConfig } = options;
 
-		node.dispatchEvent(new CustomEvent('trigger', { detail: event }));
+	const mergedFloatingConfig = { ...defaultFloatingConfig, ...floatingConfig };
+
+	if (!triggerEl || !open) {
+		return {
+			destroy: noop
+		};
+	}
+
+	const destroyCallbacks: Array<() => void> = [];
+
+	destroyCallbacks.push(
+		// floating ui
+		useFloating(triggerEl, node, mergedFloatingConfig).destroy,
+		// trap focus
+		trapFocus(node).destroy
+	);
+
+	return {
+		destroy() {
+			destroyCallbacks.forEach((cb) => cb());
+		}
 	};
+}
 
-	function updatePosition() {
-		const content = options.content;
+function useFloating(anchorEl: HTMLElement, floatingEl: HTMLElement, options: FloatingConfig = {}) {
+	if (!anchorEl || !floatingEl)
+		return {
+			destroy: noop
+		};
 
-		computePosition(node, content, {
-			placement: 'bottom-start',
-			middleware: [offset(options.offset ?? 6), flip(), shift()]
+	function compute() {
+		if (!anchorEl || !floatingEl || options === null) return;
+
+		const { placement, offset } = options;
+
+		const middleware = [offsetFn(offset)];
+
+		if (options.flip) {
+			middleware.push(flip());
+		}
+
+		middleware.push(shift());
+
+		computePosition(anchorEl, floatingEl, {
+			placement: placement,
+			middleware
 		}).then(({ x, y }) => {
-			Object.assign(content.style, {
+			Object.assign(floatingEl.style, {
 				left: `${x}px`,
 				top: `${y}px`
 			});
 		});
 	}
 
-	node.addEventListener('click', handleClick);
-
 	return {
-		update(newOptions) {
-			options = newOptions;
-		},
-		destroy() {
-			node.removeEventListener('click', handleClick);
-		}
+		destroy: autoUpdate(anchorEl, floatingEl, compute)
 	};
 }
