@@ -195,3 +195,15 @@
 		{/if}
 	</div>
 </Portal>
+
+<svelte:window
+	on:keydown={(e) => {
+		if (e.key === 'Escape') {
+			if (isCopying) {
+				isCopying = false;
+			} else {
+				open = false;
+			}
+		}
+	}}
+/>

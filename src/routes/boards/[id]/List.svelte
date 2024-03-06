@@ -5,7 +5,6 @@
 	import NewItem from './NewItem.svelte';
 	import ListActionsMenu from './ListActionsMenu.svelte';
 	import { tick } from 'svelte';
-	import { flip } from 'svelte/animate';
 	import { queriesCtx } from './context';
 	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
 	export let name: string;
@@ -126,7 +125,7 @@
 		on:finalize={(e) => handleDndFinalize(columnId, e)}
 	>
 		{#each localItems as item (item.id)}
-			<li animate:flip={{ duration: 250 }}>
+			<li>
 				<ListItem title={item.title} content={item.content} id={item.id} class="list-item" />
 			</li>
 		{/each}
