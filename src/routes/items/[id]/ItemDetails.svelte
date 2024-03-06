@@ -37,6 +37,7 @@
 			boardId={item.boardId.toString()}
 			title={item.title}
 			columnName={item.column.name}
+			on:close
 		/>
 	{/if}
 

@@ -89,6 +89,6 @@
 
 {#if pageState.id && pageState.id === id}
 	<Modal on:close={() => history.back()} class="w-9/12 lg:w-[768px]">
-		<ItemDetails {id} />
+		<ItemDetails {id} on:close={() => history.back()} />
 	</Modal>
 {/if}
