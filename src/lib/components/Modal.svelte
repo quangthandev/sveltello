@@ -5,6 +5,7 @@
 	import Portal from './Portal.svelte';
 	import { browser } from '$app/environment';
 	import { cn } from '$lib/utils';
+	import { trapFocus } from '$lib/actions/trap-focus';
 
 	let className: string | undefined = undefined;
 	export { className as class };
@@ -48,6 +49,7 @@
 		role="presentation"
 		tabindex="-1"
 		bind:this={backdropEl}
+		use:trapFocus
 		on:click={handleBackdropClick}
 		transition:fade|global={{ easing: cubicOut, duration: 300 }}
 		class="fixed inset-0 z-40 flex items-center justify-center bg-black/15 p-8"
