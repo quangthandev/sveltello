@@ -57,7 +57,16 @@
 	<Popover.Trigger class="text-muted-foreground p-2 rounded-md hover:bg-gray-300" aria-label="more">
 		<IconMore />
 	</Popover.Trigger>
-	<Popover.Content class={cn('absolute top-0 left-0 bg-white shadow-lg py-4 rounded-lg w-72')}>
+	<Popover.Content
+		class={cn('absolute top-0 left-0 bg-white shadow-lg py-4 rounded-lg w-72')}
+		keydownHandler={() => {
+			if (isCopying) {
+				isCopying = false;
+			} else {
+				close();
+			}
+		}}
+	>
 		<header class="relative mb-4">
 			{#if isCopying}
 				<button

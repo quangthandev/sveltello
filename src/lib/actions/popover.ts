@@ -1,9 +1,10 @@
 import { autoUpdate, computePosition, flip, offset as offsetFn, shift } from '@floating-ui/dom';
 import { noop } from '$lib/utils';
 import type { ActionReturn } from 'svelte/action';
-import { trapFocus } from './trap-focus';
 import type { FloatingConfig } from './types';
-import { clickOutside } from './click-outside';
+import { trapFocus as useTrapFocus } from './trap-focus';
+import { clickOutside as useClickOutside } from './click-outside';
+import { escapeKeydown as useEscapeKeydown } from './escape-keydown';
 
 type PopoverOptions = {
 	triggerEl: HTMLElement | null;
@@ -13,6 +14,7 @@ type PopoverOptions = {
 
 interface PopoverAttributes {
 	'on:clickOutside'?: (e: CustomEvent<PointerEvent>) => void;
+	'on:escapeKeydown'?: (e: CustomEvent<KeyboardEvent>) => void;
 }
 
 const defaultFloatingConfig: FloatingConfig = {
@@ -41,9 +43,19 @@ export function popover(
 		// floating ui
 		useFloating(triggerEl, node, mergedFloatingConfig).destroy,
 		// trap focus
-		trapFocus(node).destroy,
+		useTrapFocus(node).destroy,
 		// click outside
-		clickOutside(node).destroy!
+		useClickOutside(node).destroy!,
+		// escape keydown
+		useEscapeKeydown(node, {
+			handler: (e) => {
+				node.dispatchEvent(
+					new CustomEvent('escapeKeydown', {
+						detail: e
+					})
+				);
+			}
+		}).destroy
 	);
 
 	return {

@@ -3,11 +3,21 @@
 	import Portal from '../Portal.svelte';
 	import { popoverCtx } from './context';
 
+	export let keydownHandler: ((e: KeyboardEvent) => void) | undefined = undefined;
+
 	const { triggerEl, open } = popoverCtx.get();
 
 	const handleClickOutside = (e: CustomEvent<PointerEvent>) => {
 		if ($triggerEl && $triggerEl.contains(e.detail.target as HTMLElement)) {
 			return;
+		}
+
+		open.set(false);
+	};
+
+	const handleEscapeKeydown = (e: CustomEvent<KeyboardEvent>) => {
+		if (keydownHandler) {
+			return keydownHandler(e.detail);
 		}
 
 		open.set(false);
@@ -19,17 +29,10 @@
 		<div
 			use:popover={{ open: $open, triggerEl: $triggerEl }}
 			on:clickOutside={handleClickOutside}
+			on:escapeKeydown={handleEscapeKeydown}
 			{...$$restProps}
 		>
 			<slot />
 		</div>
 	</Portal>
 {/if}
-
-<svelte:document
-	on:keydown={(e) => {
-		if (e.key === 'Escape') {
-			open.set(false);
-		}
-	}}
-/>
