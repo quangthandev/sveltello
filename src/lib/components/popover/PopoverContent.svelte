@@ -4,12 +4,17 @@
 	import { popoverCtx } from './context';
 
 	export let keydownHandler: ((e: KeyboardEvent) => void) | undefined = undefined;
+	export let clickOutsideHandler: ((e: PointerEvent) => void) | undefined = undefined;
 
 	const { triggerEl, open } = popoverCtx.get();
 
 	const handleClickOutside = (e: CustomEvent<PointerEvent>) => {
 		if ($triggerEl && $triggerEl.contains(e.detail.target as HTMLElement)) {
 			return;
+		}
+
+		if (clickOutsideHandler) {
+			return clickOutsideHandler(e.detail);
 		}
 
 		open.set(false);

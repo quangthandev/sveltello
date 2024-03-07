@@ -59,6 +59,13 @@
 	</Popover.Trigger>
 	<Popover.Content
 		class={cn('absolute top-0 left-0 bg-white shadow-lg py-4 rounded-lg w-72')}
+		clickOutsideHandler={() => {
+			if (isCopying) {
+				isCopying = false;
+			}
+
+			close();
+		}}
 		keydownHandler={() => {
 			if (isCopying) {
 				isCopying = false;
