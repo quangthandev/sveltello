@@ -7,6 +7,8 @@
 	import { tick } from 'svelte';
 	import { queriesCtx } from './context';
 	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
+	import IconPlus from '$lib/components/icons/IconPlus.svelte';
+
 	export let name: string;
 	export let columnId: string;
 	export let items: Item[];
@@ -150,18 +152,10 @@
 					await tick();
 					scrollList();
 				}}
+				aria-label="Add a card"
 				class="flex items-center gap-2 rounded-lg text-left w-full p-2 font-medium text-slate-500 hover:bg-slate-200 focus:bg-slate-200"
 			>
-				<svg
-					width="24"
-					height="24"
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 24 24"
-					fill="currentColor"
-				>
-					<title>add</title>
-					<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-				</svg>
+				<IconPlus />
 				Add a card
 			</button>
 		</div>

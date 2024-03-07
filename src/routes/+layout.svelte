@@ -4,8 +4,10 @@
 	import { navigating, page } from '$app/stores';
 	import NavigatingnIndicator from '$lib/components/NavigatingnIndicator.svelte';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
-	import '../app.css';
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
+	import IconLogin from '$lib/components/icons/IconLogin.svelte';
+	import IconLogout from '$lib/components/icons/IconLogout.svelte';
+	import '../app.css';
 
 	export let data;
 
@@ -48,20 +50,7 @@
 			<form method="post" action="/logout" use:enhance>
 				<button class="block text-center">
 					<span class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center">
-						<span>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								width="24"
-								height="24"
-								fill="currentColor"
-							>
-								<title>logout</title>
-								<path
-									d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12M4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"
-								/>
-							</svg>
-						</span>
+						<IconLogout />
 						Log out
 					</span>
 				</button>
@@ -71,20 +60,7 @@
 				href="/login"
 				class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center"
 			>
-				<span>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						width="24"
-						height="24"
-						fill="currentColor"
-					>
-						<title>login</title>
-						<path
-							d="M11 7L9.6 8.4L12.2 11H2V13H12.2L9.6 15.6L11 17L16 12L11 7M20 19H12V21H20C21.1 21 22 20.1 22 19V5C22 3.9 21.1 3 20 3H12V5H20V19Z"
-						/>
-					</svg>
-				</span>
+				<IconLogin />
 				Log in
 			</a>
 		{/if}
