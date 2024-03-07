@@ -3,14 +3,17 @@ import { noop } from '$lib/utils';
 import type { ActionReturn } from 'svelte/action';
 import { trapFocus } from './trap-focus';
 import type { FloatingConfig } from './types';
+import { clickOutside } from './click-outside';
 
 type PopoverOptions = {
-	triggerEl: HTMLElement;
+	triggerEl: HTMLElement | null;
 	open: boolean;
 	floatingConfig?: FloatingConfig;
 };
 
-interface PopoverAttributes {}
+interface PopoverAttributes {
+	'on:clickOutside'?: (e: CustomEvent<PointerEvent>) => void;
+}
 
 const defaultFloatingConfig: FloatingConfig = {
 	placement: 'bottom-start',
@@ -38,7 +41,9 @@ export function popover(
 		// floating ui
 		useFloating(triggerEl, node, mergedFloatingConfig).destroy,
 		// trap focus
-		trapFocus(node).destroy
+		trapFocus(node).destroy,
+		// click outside
+		clickOutside(node).destroy!
 	);
 
 	return {
