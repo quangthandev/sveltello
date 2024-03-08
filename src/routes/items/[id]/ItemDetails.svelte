@@ -6,6 +6,7 @@
 	import Skeleton from '$lib/components/Skeleton.svelte';
 	import ItemHeader from './ItemHeader.svelte';
 	import ItemActivity from './ItemActivity.svelte';
+	import ItemActions from './ItemActions.svelte';
 
 	export let id: string;
 
@@ -35,33 +36,42 @@
 		<ItemHeader {item} on:close />
 	{/if}
 
-	<!-- Description -->
-	{#if $query.isLoading || $query.isFetching}
-		<div class="flex items-start gap-x-3 w-full">
-			<Skeleton class="h-6 w-6 bg-neutral-200" />
-			<div class="w-full">
-				<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
-				<Skeleton class="w-full h-[78px] bg-neutral-200" />
-			</div>
-		</div>
-	{:else if item}
-		<ItemDecription
-			id={item.id.toString()}
-			boardId={item.boardId.toString()}
-			content={item.content}
-		/>
-	{/if}
+	<div class="flex flex-col md:flex-row gap-2">
+		<div class="flex-grow">
+			<!-- Description -->
+			{#if $query.isLoading || $query.isFetching}
+				<div class="flex items-start gap-x-3 w-full">
+					<Skeleton class="h-6 w-6 bg-neutral-200" />
+					<div class="w-full">
+						<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
+						<Skeleton class="w-full h-[78px] bg-neutral-200" />
+					</div>
+				</div>
+			{:else if item}
+				<ItemDecription
+					id={item.id.toString()}
+					boardId={item.boardId.toString()}
+					content={item.content}
+				/>
+			{/if}
 
-	<!-- Activity -->
-	{#if $query.isLoading || $query.isFetching}
-		<div class="flex items-start gap-x-3 w-full">
-			<Skeleton class="h-6 w-6 bg-neutral-200" />
-			<div class="w-full">
-				<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
-				<Skeleton class="w-full h-10 bg-neutral-200" />
-			</div>
+			<!-- Activity -->
+			{#if $query.isLoading || $query.isFetching}
+				<div class="flex items-start gap-x-3 w-full">
+					<Skeleton class="h-6 w-6 bg-neutral-200" />
+					<div class="w-full">
+						<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
+						<Skeleton class="w-full h-10 bg-neutral-200" />
+					</div>
+				</div>
+			{:else if item}
+				<ItemActivity {item} />
+			{/if}
 		</div>
-	{:else if item}
-		<ItemActivity {item} />
-	{/if}
+
+		<!-- Actions -->
+		{#if item}
+			<ItemActions {item} class="min-w-48" />
+		{/if}
+	</div>
 </div>

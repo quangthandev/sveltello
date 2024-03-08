@@ -3,11 +3,10 @@
 	import EditableText from '../../boards/[id]/EditableText.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
-	import MoveItem from './MoveItem.svelte';
-	import type { Column, Item } from '@prisma/client';
-	import type { BoardWithColumns } from '../../types';
+	import MoveItem from './MoveItemPopover.svelte';
+	import type { BoardWithColumns, ItemWithColumn } from '../../types';
 
-	export let item: Item & { column: Column };
+	export let item: ItemWithColumn;
 	const { id, boardId, title } = item;
 
 	const queryClient = useQueryClient();
@@ -67,7 +66,11 @@
 				{#if $boardQuery.isFetching}
 					<span class="underline">{item.column.name}</span>
 				{:else}
-					<MoveItem {item} />
+					<MoveItem {item} let:trigger>
+						<button class="underline hover:text-blue-600" use:trigger>
+							{item.column.name}
+						</button>
+					</MoveItem>
 				{/if}
 			</p>
 		</div>

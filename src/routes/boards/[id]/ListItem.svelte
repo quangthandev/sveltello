@@ -5,7 +5,6 @@
 	import { cn } from '$lib/utils';
 	import type { Column, Item } from '@prisma/client';
 	import ItemDetails from '../../items/[id]/ItemDetails.svelte';
-	import { queriesCtx } from './context';
 	import { useQueryClient } from '@tanstack/svelte-query';
 
 	export let title: string;
@@ -13,8 +12,6 @@
 	export let id: string;
 	let className: string | undefined = undefined;
 	export { className as class };
-
-	const { deleteItem } = queriesCtx.get();
 
 	const queryClient = useQueryClient();
 
@@ -55,33 +52,6 @@
 		{:else}
 			<span>&nbsp;</span>
 		{/if}
-		<button
-			aria-label="Delete card"
-			class="absolute top-4 right-4 text-gray-400 hover:text-red-500"
-			type="submit"
-			on:click={(event) => {
-				// Prevent the click event from bubbling up to the parent anchor tag
-				event.preventDefault();
-				event.stopPropagation();
-
-				$deleteItem.mutate(id);
-			}}
-		>
-			<span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 24 24"
-					width="24"
-					height="24"
-					fill="currentColor"
-				>
-					<title>delete</title>
-					<path
-						d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-					/>
-				</svg>
-			</span>
-		</button>
 	</div>
 </a>
 
