@@ -7,6 +7,7 @@
 	import type { ItemWithColumn } from '../../types';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import type { Board, Column, Item } from '@prisma/client';
+	import { goto } from '$app/navigation';
 
 	export let item: ItemWithColumn;
 	export { className as class };
@@ -36,6 +37,8 @@
 					}))
 				});
 			}
+
+			goto(`/boards/${item.boardId}`);
 
 			return { prevBoardData };
 		},
