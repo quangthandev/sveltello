@@ -124,6 +124,13 @@ export function upsertItem(mutation: ItemMutation & { boardId: number }, userId:
 	});
 }
 
+export function moveItemToColumn(id: string, columnId: string, userId: string) {
+	return prisma.item.update({
+		where: { id, board: { userId } },
+		data: { columnId }
+	});
+}
+
 export function deleteCard(id: string, userId: string) {
 	return prisma.item.delete({ where: { id, board: { userId } } });
 }

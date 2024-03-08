@@ -4,6 +4,20 @@ export async function getBoards(userId: string) {
 	return prisma.board.findMany({
 		where: {
 			userId: userId
+		},
+		include: {
+			columns: {
+				orderBy: {
+					order: 'asc'
+				},
+				include: {
+					items: {
+						orderBy: {
+							order: 'asc'
+						}
+					}
+				}
+			}
 		}
 	});
 }

@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { afterNavigate, goto } from '$app/navigation';
 	import { base } from '$app/paths';
-	import { createQuery } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
-	import { type Column, type Item } from '@prisma/client';
 	import ItemDetails from './ItemDetails.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 

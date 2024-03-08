@@ -1,14 +1,24 @@
 <script lang="ts">
-	import { useQueryClient } from '@tanstack/svelte-query';
+	import { createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import EditableText from '../../boards/[id]/EditableText.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import IconClose from '$lib/components/icons/IconClose.svelte';
+	import MoveItem from './MoveItem.svelte';
+	import type { Column, Item } from '@prisma/client';
+	import type { BoardWithColumns } from '../../types';
 
-	export let id: string;
-	export let boardId: string;
-	export let title: string;
-	export let columnName: string;
+	export let item: Item & { column: Column };
+	const { id, boardId, title } = item;
 
 	const queryClient = useQueryClient();
+
+	const boardQuery = createQuery<BoardWithColumns>({
+		queryKey: ['boards', boardId.toString()],
+		queryFn: async () => {
+			const res = await fetch(`/boards/${boardId}`);
+			return res.json();
+		}
+	});
 
 	const dispatch = createEventDispatcher<{ close: void }>();
 </script>
@@ -53,7 +63,12 @@
 				</EditableText>
 			</h3>
 			<p class="text-sm text-muted-foreground px-3">
-				in list <span class="underline">{columnName}</span>
+				in list
+				{#if $boardQuery.isFetching}
+					<span class="underline">{item.column.name}</span>
+				{:else}
+					<MoveItem {item} />
+				{/if}
 			</p>
 		</div>
 	</div>
@@ -62,18 +77,8 @@
 			dispatch('close');
 		}}
 		class="-mt-2 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
+		aria-label="close"
 	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 24 24"
-			width="24"
-			height="24"
-			fill="currentColor"
-		>
-			<title>close</title>
-			<path
-				d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-			/>
-		</svg>
+		<IconClose />
 	</button>
 </div>

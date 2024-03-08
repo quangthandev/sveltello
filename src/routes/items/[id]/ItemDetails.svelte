@@ -32,13 +32,7 @@
 			</div>
 		</div>
 	{:else if item}
-		<ItemHeader
-			id={item.id}
-			boardId={item.boardId.toString()}
-			title={item.title}
-			columnName={item.column.name}
-			on:close
-		/>
+		<ItemHeader {item} on:close />
 	{/if}
 
 	<!-- Description -->

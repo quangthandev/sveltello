@@ -80,7 +80,7 @@
 		{:else}
 			<p class="relative min-h-[60px] font-medium rounded-md">
 				<button
-					class="absolute inset-0 text-left px-4 bg-neutral-300 hover:bg-neutral-200"
+					class="absolute inset-0 text-left px-4 bg-gray-200 hover:bg-gray-300"
 					aria-label="Edit description"
 					on:click|preventDefault={async () => {
 						isEditing = true;
