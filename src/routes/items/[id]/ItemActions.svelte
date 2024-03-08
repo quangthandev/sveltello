@@ -1,8 +1,9 @@
 <script lang="ts">
 	import IconArrowRight from '$lib/components/icons/IconArrowRight.svelte';
 	import IconDelete from '$lib/components/icons/IconDelete.svelte';
+	import IconCopy from '$lib/components/icons/IconCopy.svelte';
 	import { cn } from '$lib/utils';
-	import MoveItem from './MoveItemPopover.svelte';
+	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
 	import type { ItemWithColumn } from '../../types';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import type { Board, Column, Item } from '@prisma/client';
@@ -52,7 +53,7 @@
 <div class={cn('space-y-2', className)}>
 	<h4>Actions</h4>
 	<div class="flex md:flex-col gap-2">
-		<MoveItem {item} let:trigger>
+		<MoveOrCopyItemPopover {item} let:trigger>
 			<button
 				use:trigger
 				class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
@@ -60,7 +61,7 @@
 				<IconArrowRight />
 				Move
 			</button>
-		</MoveItem>
+		</MoveOrCopyItemPopover>
 		<button
 			class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
 			on:click={() => $deleteItem.mutate(item.id)}
@@ -68,5 +69,14 @@
 			<IconDelete />
 			Delete
 		</button>
+		<MoveOrCopyItemPopover {item} action="copy" let:trigger>
+			<button
+				use:trigger
+				class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+			>
+				<IconCopy />
+				Copy
+			</button>
+		</MoveOrCopyItemPopover>
 	</div>
 </div>

@@ -3,10 +3,13 @@
 	import * as Popover from '$lib/components/popover';
 	import { cn } from '$lib/utils';
 	import MoveItemSuggestion from './MoveItemSuggestion.svelte';
-	import MoveItemDestination from './MoveItemDestination.svelte';
+	import MoveItemForm from './MoveItemForm.svelte';
 	import type { BoardWithColumns, ItemWithColumn } from '../../types';
 	import { useQueryClient } from '@tanstack/svelte-query';
+	import CopyItemForm from './CopyItemForm.svelte';
 
+	type ActionType = 'move' | 'copy';
+	export let action: ActionType = 'move';
 	export let item: ItemWithColumn;
 
 	const queryClient = useQueryClient();
@@ -32,7 +35,13 @@
 		)}
 	>
 		<header class="relative mb-4">
-			<h3 class="font-bold text-center">Move card</h3>
+			<h3 class="font-bold text-center">
+				{#if action === 'move'}
+					Move card
+				{:else}
+					Copy card
+				{/if}
+			</h3>
 			<Popover.Close
 				class="absolute -top-2 right-2 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
 				aria-label="close"
@@ -40,7 +49,20 @@
 				<IconClose />
 			</Popover.Close>
 		</header>
-		<MoveItemSuggestion {item} />
-		<MoveItemDestination {item} {initialPosIndex} on:close={close} />
+
+		{#if action === 'move'}
+			<section class="flex flex-col gap-2 px-4 py-2">
+				<MoveItemSuggestion {item} />
+			</section>
+			<section class="flex flex-col gap-2 px-4 py-2">
+				<h4>Select destination</h4>
+
+				<MoveItemForm {item} {initialPosIndex} on:close={close} />
+			</section>
+		{:else}
+			<section class="flex flex-col gap-2 px-4 py-2">
+				<CopyItemForm {item} {initialPosIndex} />
+			</section>
+		{/if}
 	</Popover.Content>
 </Popover.Root>

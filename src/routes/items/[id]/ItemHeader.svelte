@@ -3,7 +3,7 @@
 	import EditableText from '../../boards/[id]/EditableText.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
-	import MoveItem from './MoveItemPopover.svelte';
+	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
 	import type { BoardWithColumns, ItemWithColumn } from '../../types';
 
 	export let item: ItemWithColumn;
@@ -66,11 +66,11 @@
 				{#if $boardQuery.isFetching}
 					<span class="underline">{item.column.name}</span>
 				{:else}
-					<MoveItem {item} let:trigger>
+					<MoveOrCopyItemPopover {item} let:trigger>
 						<button class="underline hover:text-blue-600" use:trigger>
 							{item.column.name}
 						</button>
-					</MoveItem>
+					</MoveOrCopyItemPopover>
 				{/if}
 			</p>
 		</div>
