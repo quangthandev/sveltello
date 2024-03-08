@@ -16,10 +16,7 @@ export async function GET({ locals, params }) {
 		throw error(404, 'Board not found');
 	}
 
-	return json({
-		...item,
-		column: item.Column
-	});
+	return json(item);
 }
 
 export async function DELETE({ locals, params }) {

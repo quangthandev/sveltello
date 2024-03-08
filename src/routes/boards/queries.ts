@@ -13,7 +13,7 @@ export async function createBoard(userId: string, name: string, color: string) {
 		data: {
 			name,
 			color,
-			User: {
+			user: {
 				connect: {
 					id: userId
 				}

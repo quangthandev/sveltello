@@ -4,26 +4,26 @@ export function getItem(id: string, userId: string) {
 	return prisma.item.findUnique({
 		where: {
 			id,
-			Board: {
+			board: {
 				userId
 			}
 		},
 		include: {
-			Column: true
+			column: true
 		}
 	});
 }
 
 export function updateItemTitle(id: string, title: string, userId: string) {
 	return prisma.item.update({
-		where: { id, Board: { userId } },
+		where: { id, board: { userId } },
 		data: { title }
 	});
 }
 
 export function updateItemContent(id: string, content: string, userId: string) {
 	return prisma.item.update({
-		where: { id, Board: { userId } },
+		where: { id, board: { userId } },
 		data: { content }
 	});
 }

@@ -30,7 +30,7 @@ export async function updateBoardName(boardId: number, name: string, userId: str
 
 export async function createColumn(boardId: number, name: string, userId: string, id?: string) {
 	const columnCount = await prisma.column.count({
-		where: { boardId, Board: { userId } }
+		where: { boardId, board: { userId } }
 	});
 
 	return prisma.column.create({
@@ -45,14 +45,14 @@ export async function createColumn(boardId: number, name: string, userId: string
 
 export async function updateColumnName(id: string, name: string, userId: string) {
 	return prisma.column.update({
-		where: { id, Board: { userId } },
+		where: { id, board: { userId } },
 		data: { name }
 	});
 }
 
 export async function copyColumn(id: string, name: string, userId: string) {
 	const columnToCopy = await prisma.column.findUnique({
-		where: { id, Board: { userId } },
+		where: { id, board: { userId } },
 		include: {
 			items: {
 				orderBy: { order: 'asc' }
@@ -100,13 +100,13 @@ export async function copyColumn(id: string, name: string, userId: string) {
 
 export async function deleteColumn(id: string, userId: string) {
 	return prisma.column.delete({
-		where: { id, Board: { userId } }
+		where: { id, board: { userId } }
 	});
 }
 
 export async function updateColumnOrder(id: string, order: number, userId: string) {
 	return prisma.column.update({
-		where: { id, Board: { userId } },
+		where: { id, board: { userId } },
 		data: { order }
 	});
 }
@@ -115,7 +115,7 @@ export function upsertItem(mutation: ItemMutation & { boardId: number }, userId:
 	return prisma.item.upsert({
 		where: {
 			id: mutation.id,
-			Board: {
+			board: {
 				userId
 			}
 		},
@@ -125,5 +125,5 @@ export function upsertItem(mutation: ItemMutation & { boardId: number }, userId:
 }
 
 export function deleteCard(id: string, userId: string) {
-	return prisma.item.delete({ where: { id, Board: { userId } } });
+	return prisma.item.delete({ where: { id, board: { userId } } });
 }

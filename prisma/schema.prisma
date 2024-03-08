@@ -33,7 +33,7 @@ model Board {
   createdAt DateTime @default(now())
   columns   Column[]
   items     Item[]
-  User   User  @relation(fields: [userId], references: [id])
+  user   User  @relation(fields: [userId], references: [id])
   userId String
 }
 
@@ -42,7 +42,7 @@ model Column {
   name    String
   order   Float  @default(0)
   items   Item[]
-  Board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId Int
 }
 
@@ -56,10 +56,10 @@ model Item {
   // will be 1.75, etc.
   order Float
 
-  Column   Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  column   Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId String
 
-  Board   Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  board   Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId Int
 
   createdAt DateTime @default(now())

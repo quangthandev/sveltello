@@ -17,10 +17,7 @@ export async function load({ locals, params }) {
 	}
 
 	return {
-		item: {
-			...item,
-			column: item.Column
-		}
+		item
 	};
 }
 

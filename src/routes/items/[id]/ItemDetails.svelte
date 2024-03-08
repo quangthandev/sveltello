@@ -33,7 +33,7 @@
 		</div>
 	{:else if item}
 		<ItemHeader
-			id={item.id.toString()}
+			id={item.id}
 			boardId={item.boardId.toString()}
 			title={item.title}
 			columnName={item.column.name}
