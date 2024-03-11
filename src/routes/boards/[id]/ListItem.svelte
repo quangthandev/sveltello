@@ -48,7 +48,7 @@
 	>
 		<h3>{title}</h3>
 		{#if content}
-			<div class="mt-2">{content}</div>
+			<div class="mt-2 truncate">{@html content}</div>
 		{:else}
 			<span>&nbsp;</span>
 		{/if}

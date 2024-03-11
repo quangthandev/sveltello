@@ -49,7 +49,6 @@
 		role="presentation"
 		tabindex="-1"
 		bind:this={backdropEl}
-		use:trapFocus
 		on:click={handleBackdropClick}
 		transition:fade|global={{ easing: cubicOut, duration: 300 }}
 		class="fixed inset-0 z-40 flex items-center justify-center bg-black/15 p-8"
@@ -58,6 +57,7 @@
 			role="dialog"
 			tabindex="-1"
 			bind:this={modalEl}
+			use:trapFocus
 			on:keydown={handleKeydown}
 			class={cn(
 				'max-h-[90dvh] overflow-y-auto overflow-x-hidden rounded-2xl bg-white shadow-2xl outline-none sm:-mt-10',

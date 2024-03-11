@@ -22,7 +22,7 @@
 	$: item = $query.data;
 </script>
 
-<div class="p-6">
+<div class="p-6 bg-gray-100">
 	<!-- Header -->
 	{#if $query.isLoading || $query.isFetching}
 		<div class="flex items-start gap-x-3 mb-6">
@@ -36,7 +36,7 @@
 		<ItemHeader {item} on:close />
 	{/if}
 
-	<div class="flex flex-col md:flex-row gap-2">
+	<div class="flex flex-col lg:flex-row gap-2">
 		<div class="flex-grow">
 			<!-- Description -->
 			{#if $query.isLoading || $query.isFetching}

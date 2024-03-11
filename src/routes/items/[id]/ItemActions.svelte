@@ -53,9 +53,9 @@
 	});
 </script>
 
-<div class={cn('space-y-2', className)}>
+<div class={cn('space-y-4', className)}>
 	<h4>Actions</h4>
-	<div class="flex md:flex-col gap-2">
+	<div class="flex lg:flex-col gap-2">
 		<MoveOrCopyItemPopover {item} let:trigger>
 			<button
 				use:trigger
@@ -65,13 +65,6 @@
 				Move
 			</button>
 		</MoveOrCopyItemPopover>
-		<button
-			class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
-			on:click={() => $deleteItem.mutate(item.id)}
-		>
-			<IconDelete />
-			Delete
-		</button>
 		<MoveOrCopyItemPopover {item} action="copy" let:trigger>
 			<button
 				use:trigger
@@ -81,5 +74,12 @@
 				Copy
 			</button>
 		</MoveOrCopyItemPopover>
+		<button
+			class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+			on:click={() => $deleteItem.mutate(item.id)}
+		>
+			<IconDelete />
+			Delete
+		</button>
 	</div>
 </div>
