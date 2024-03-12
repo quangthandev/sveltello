@@ -5,6 +5,7 @@
 	import type { Delta } from 'quill/core';
 	import type { EmitterSource } from 'quill/core/emitter';
 	import type { Range } from 'quill/core/selection';
+	import QuillMarkdown from './modules/markdown';
 
 	interface StringMap {
 		[key: string]: any;
@@ -55,9 +56,16 @@
 		options?: QuillOptionsStatic
 	): ActionReturn<TextEditorOptions, TextEditorAttributes> {
 		import('quill').then(({ default: Quill }) => {
+			Quill.register({
+				'modules/quillMarkdown': QuillMarkdown
+			});
 			quill = new Quill(node, {
 				...defaultOptions,
-				...options
+				...options,
+				modules: {
+					...defaultOptions.modules,
+					quillMarkdown: true
+				}
 			});
 
 			dispatch('initialized', quill);
@@ -68,11 +76,15 @@
 						quill.clipboard.convert({
 							html: initialContent,
 							text: initialContent
-						})
+						}),
+						'silent'
 					);
 				} else {
-					quill.setContents(initialContent);
+					quill.setContents(initialContent, 'silent');
 				}
+
+				// Clear history to prevent undoing initial content
+				quill.history.clear();
 			}
 
 			if (autofocus) {
@@ -110,6 +122,10 @@
 
 	export function getContents() {
 		return quill.getContents();
+	}
+
+	export function getHTML() {
+		return quill.getSemanticHTML();
 	}
 
 	export function getEditor() {

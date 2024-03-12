@@ -3,15 +3,15 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { escapeKeydown } from '$lib/actions/escape-keydown';
-	import TextEditor from '$lib/components/TextEditor.svelte';
+	import TextEditor from '$lib/components/text-editor';
 
 	export let id: string;
 	export let boardId: string;
 	export let content: string | null;
 
 	let isEditing = false;
-	let textEditor: TextEditor;
 	let isSubmitting = false;
+	let textEditor: TextEditor;
 
 	const queryClient = useQueryClient();
 </script>
@@ -42,9 +42,7 @@
 				use:enhance={({ formData }) => {
 					isSubmitting = true;
 
-					const editor = textEditor.getEditor();
-					const content = editor.getSemanticHTML() || '';
-					formData.append('content', content);
+					formData.append('content', textEditor.getHTML());
 
 					return async ({ update }) => {
 						await update({ invalidateAll: false });

@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { createQuery } from '@tanstack/svelte-query';
 	import type { Column, Item } from '@prisma/client';
-	import ItemDecription from './ItemDecription.svelte';
+	import ItemDescription from './ItemDescription.svelte';
 	import Skeleton from '$lib/components/Skeleton.svelte';
 	import ItemHeader from './ItemHeader.svelte';
 	import ItemActivity from './ItemActivity.svelte';
@@ -48,7 +48,7 @@
 					</div>
 				</div>
 			{:else if item}
-				<ItemDecription
+				<ItemDescription
 					id={item.id.toString()}
 					boardId={item.boardId.toString()}
 					content={item.content}
