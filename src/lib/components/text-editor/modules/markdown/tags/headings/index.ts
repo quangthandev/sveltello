@@ -4,19 +4,21 @@ import meta from '../meta';
 import type { Options, Tag, TagImpl, TagPattern } from '../../types';
 
 class Heading extends AbstractTag implements TagImpl {
-	private quillJS: Quill;
 	private name: string;
 	private pattern: TagPattern;
 	private _meta: ReturnType<typeof meta>;
 	private activeTags: string[];
 
-	constructor(quillJS: Quill, options: Options = {}) {
+	constructor(
+		private quillJS: Quill,
+		options: Options = {}
+	) {
 		super();
 		this.quillJS = quillJS;
-		this.name = 'heading';
+		this.name = 'header';
 		this.pattern = this._getCustomPatternOrDefault(options, this.name, /^(#){1,6}\s/g);
 		this.getAction.bind(this);
-		this._meta = meta(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+		this._meta = meta(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', this.name]);
 		this.activeTags = this._getActiveTagsWithoutIgnore(
 			this._meta.applyHtmlTags,
 			options.ignoreTags ?? []
@@ -33,7 +35,7 @@ class Heading extends AbstractTag implements TagImpl {
 					if (
 						!match ||
 						!this.activeTags.length ||
-						!this.activeTags.find((tag) => tag === 'heading')
+						!this.activeTags.find((tag) => tag === this.name)
 					) {
 						resolve(false);
 						return;
@@ -47,7 +49,7 @@ class Heading extends AbstractTag implements TagImpl {
 					}
 
 					setTimeout(() => {
-						this.quillJS.formatLine(index, 0, 'heading', size - 1);
+						this.quillJS.formatLine(index, 0, this.name, size - 1);
 						this.quillJS.deleteText(index, size);
 						resolve(true);
 					}, 0);
