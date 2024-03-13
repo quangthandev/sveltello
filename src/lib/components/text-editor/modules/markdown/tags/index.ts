@@ -17,13 +17,15 @@ import type Quill from 'quill';
 import type { Options, Tag } from '../types';
 
 class TagsOperators {
-	quillJS: Quill;
-	supportInlineTags: Tag[];
-	supportfullTextTags: Tag[];
-	tags: Tag[];
-	fullTextTags: Tag[];
+	private supportInlineTags: Tag[];
+	private supportfullTextTags: Tag[];
+	private tags: Tag[];
+	private fullTextTags: Tag[];
 
-	constructor(quillJS: Quill, options: Options = { tags: {} }) {
+	constructor(
+		private quillJS: Quill,
+		options: Options = { tags: {} }
+	) {
 		this.quillJS = quillJS;
 		this.getOperatorsAll.bind(this);
 		this.supportInlineTags = [

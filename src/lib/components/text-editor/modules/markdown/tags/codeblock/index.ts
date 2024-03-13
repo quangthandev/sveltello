@@ -1,16 +1,18 @@
 import type Quill from 'quill';
 import AbstractTag from '../AbstractTag';
 import meta from '../meta';
-import type { Options, Tag, TagPattern } from '../../types';
+import type { Options, Tag, TagImpl, TagPattern } from '../../types';
 
-class Codeblock extends AbstractTag {
-	quillJS: Quill;
-	name: string;
-	pattern: TagPattern;
-	_meta: ReturnType<typeof meta>;
-	activeTags: string[];
+class Codeblock extends AbstractTag implements TagImpl {
+	private name: string;
+	private pattern: TagPattern;
+	private _meta: ReturnType<typeof meta>;
+	private activeTags: string[];
 
-	constructor(quillJS: Quill, options: Options = {}) {
+	constructor(
+		private quillJS: Quill,
+		options: Options = {}
+	) {
 		super();
 		this.quillJS = quillJS;
 		this.name = 'pre';
