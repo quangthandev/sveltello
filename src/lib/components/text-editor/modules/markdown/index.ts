@@ -8,10 +8,9 @@ import type { Range } from 'quill/core/selection';
 import type { Options, Tag } from './types';
 
 class QuillMarkdown {
-	quillJS: Quill;
 	options: Options<RegExp>;
-	handleTextChangeBound: (delta: Delta, oldContent: Delta, source: EmitterSource) => void;
-	actionCharacters: {
+	private handleTextChangeBound: (delta: Delta, oldContent: Delta, source: EmitterSource) => void;
+	private actionCharacters: {
 		whiteSpace: string;
 		newLine: string;
 		asterisk: string;
@@ -22,10 +21,13 @@ class QuillMarkdown {
 	};
 	ignoreTags: string[];
 	tags: TagsOperators;
-	matches: Tag[];
-	fullMatches: Tag[];
+	private matches: Tag[];
+	private fullMatches: Tag[];
 
-	constructor(quillJS: Quill, options: Options<RegExp> = {}) {
+	constructor(
+		private quillJS: Quill,
+		options: Options<RegExp> = {}
+	) {
 		this.quillJS = quillJS;
 		this.options = options;
 		this.handleTextChangeBound = this.handleTextChange.bind(this);
@@ -51,6 +53,7 @@ class QuillMarkdown {
 
 	handleTextChange(delta: Delta, _oldContent: Delta, source: EmitterSource) {
 		if (source !== 'user') return;
+
 		const cursorOffset = typeof delta.ops[0].retain === 'number' ? delta.ops[0].retain : 0;
 		const inputText = delta.ops[0].insert || (delta.ops[1] && delta.ops[1].insert);
 		const [removeLine] = this.quillJS.getLine(cursorOffset);
@@ -73,48 +76,46 @@ class QuillMarkdown {
 
 		if (!inputText) {
 			return;
-		} else if (typeof inputText === 'string' && inputText.length > 1) {
-			setTimeout(async () => {
-				const cursorOffsetFixed = cursorOffset;
-				const tokens = inputText.split('\n');
-				let _offset = cursorOffsetFixed;
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				for (const _ of tokens) {
-					const [line] = this.quillJS.getLine(_offset);
-					if (!line) {
-						return 0;
-					}
-					const firstIndex = this.quillJS.getIndex(line);
-					let _targetText = '';
-					let result = await this.handleFullTextExecute.bind(this)({
-						index: firstIndex,
-						delta,
-						length: 0
-					});
-
-					if (result) {
-						while (result) {
-							const [line] = this.quillJS.getLine(_offset);
-							const firstIndex = this.quillJS.getIndex(line!);
-							if (!line || !line.domNode) {
-								result = false;
-								break;
-							}
-
-							_targetText = line.domNode.textContent || '';
-							result = await this.handleFullTextExecute.bind(this)({
-								index: firstIndex,
-								delta,
-								length: 0
-							});
-						}
-					} else {
-						_targetText = line.domNode.textContent || '';
-					}
-					_offset += _targetText.length + 1;
-				}
-			}, 0);
-			return;
+			// } else if (typeof inputText === 'string' && inputText.length > 1) {
+			// 	setTimeout(async () => {
+			// 		const cursorOffsetFixed = cursorOffset;
+			// 		const tokens = inputText.split('\n');
+			// 		let _offset = cursorOffsetFixed;
+			// 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			// 		for (const _ of tokens) {
+			// 			const [line] = this.quillJS.getLine(_offset);
+			// 			if (!line) {
+			// 				return 0;
+			// 			}
+			// 			const firstIndex = this.quillJS.getIndex(line);
+			// 			let _targetText = '';
+			// 			let result = await this.handleFullTextExecute.bind(this)({
+			// 				index: firstIndex,
+			// 				delta,
+			// 				length: 0
+			// 			});
+			// 			if (result) {
+			// 				while (result) {
+			// 					const [line] = this.quillJS.getLine(_offset);
+			// 					const firstIndex = this.quillJS.getIndex(line!);
+			// 					if (!line || !line.domNode) {
+			// 						result = false;
+			// 						break;
+			// 					}
+			// 					_targetText = line.domNode.textContent || '';
+			// 					result = await this.handleFullTextExecute.bind(this)({
+			// 						index: firstIndex,
+			// 						delta,
+			// 						length: 0
+			// 					});
+			// 				}
+			// 			} else {
+			// 				_targetText = line.domNode.textContent || '';
+			// 			}
+			// 			_offset += _targetText.length + 1;
+			// 		}
+			// 	}, 0);
+			// 	return;
 		}
 
 		delta.ops
@@ -128,6 +129,7 @@ class QuillMarkdown {
 					case this.actionCharacters.newLine:
 					case this.actionCharacters.tilde:
 					case this.actionCharacters.underscore:
+						this.quillJS.history.cutoff();
 						this.handleInlineExecute.bind(this)();
 						break;
 				}
