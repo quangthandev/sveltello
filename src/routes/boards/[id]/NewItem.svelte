@@ -43,10 +43,7 @@
 <form
 	class="px-2 py-1 border-t-2 border-b-2 border-transparent"
 	on:submit|preventDefault={handleSubmit}
-	use:clickOutside
-	on:clickOutside={() => {
-		dispatch('complete');
-	}}
+	use:clickOutside={{ handler: () => dispatch('complete') }}
 >
 	<input type="hidden" name={ItemMutationFields.columnId.name} value={columnId} />
 	<input type="hidden" name={ItemMutationFields.order.name} value={nextOrder} />

@@ -57,10 +57,7 @@
 		action="?/createColumn"
 		class="p-2 flex-shrink-0 flex flex-col gap-5 overflow-hidden max-h-full w-80 border rounded-xl shadow bg-slate-100"
 		use:enhance={handleSubmit}
-		use:clickOutside
-		on:clickOutside={() => {
-			editing = false;
-		}}
+		use:clickOutside={{ handler: () => (editing = false) }}
 	>
 		<input type="hidden" name="boardId" value={boardId} />
 		<input type="hidden" name="id" value={id} />

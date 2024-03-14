@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { clickOutside } from '$lib/actions/click-outside';
 	import { popover } from '$lib/actions/popover';
 	import Portal from '../Portal.svelte';
 	import { popoverCtx } from './context';
@@ -8,13 +9,13 @@
 
 	const { triggerEl, open } = popoverCtx.get();
 
-	const handleClickOutside = (e: CustomEvent<PointerEvent>) => {
-		if ($triggerEl && $triggerEl.contains(e.detail.target as HTMLElement)) {
+	const handleClickOutside = (e: PointerEvent) => {
+		if ($triggerEl && $triggerEl.contains(e.target as HTMLElement)) {
 			return;
 		}
 
 		if (clickOutsideHandler) {
-			return clickOutsideHandler(e.detail);
+			return clickOutsideHandler(e);
 		}
 
 		open.set(false);
@@ -33,7 +34,9 @@
 	<Portal>
 		<div
 			use:popover={{ open: $open, triggerEl: $triggerEl }}
-			on:clickOutside={handleClickOutside}
+			use:clickOutside={{
+				handler: handleClickOutside
+			}}
 			on:escapeKeydown={handleEscapeKeydown}
 			{...$$restProps}
 		>
