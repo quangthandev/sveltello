@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import QuillMarkdown from './modules/markdown';
 	import type { ActionReturn } from 'svelte/action';
 	import type Quill from 'quill';
 	import type { Delta } from 'quill/core';
@@ -37,17 +38,6 @@
 		'selection-change': { range: Range; oldRange: Range; source: EmitterSource };
 	}>();
 
-	const defaultOptions: QuillOptionsStatic = {
-		modules: {
-			toolbar: [
-				['bold', 'italic'],
-				['link', 'blockquote', 'code-block', 'image'],
-				[{ list: 'ordered' }, { list: 'bullet' }]
-			]
-		},
-		theme: 'snow'
-	};
-
 	type TextEditorOptions = QuillOptionsStatic;
 
 	interface TextEditorAttributes {}
@@ -57,9 +47,11 @@
 		options?: QuillOptionsStatic
 	): ActionReturn<TextEditorOptions, TextEditorAttributes> {
 		import('quill').then(({ default: Quill }) => {
+			// Register Quill Markdown module
 			Quill.register({
 				'modules/quillMarkdown': QuillMarkdown
 			});
+
 			// Register horizontal rule blot
 			const BlockEmbed = Quill.import('blots/block/embed') as BlotConstructor;
 			class HorizontalRuleBlot extends BlockEmbed {
@@ -67,12 +59,41 @@
 				static tagName = 'hr';
 			}
 			Quill.register(HorizontalRuleBlot, true);
+
+			const defaultOptions: QuillOptionsStatic = {
+				modules: {
+					toolbar: [
+						[{ header: [false, 1, 2, 3, 4, 5, 6] }],
+						['bold', 'italic', 'strike', 'code'],
+						['link', 'blockquote', 'code-block', 'image'],
+						[{ list: 'ordered' }, { list: 'bullet' }]
+					],
+					keyboard: {
+						bindings: {
+							custom: {
+								key: ['Backspace', 'Delete'],
+								handler: (range: Range, context: Context) => {
+									// Remove formatting when deleting at the beginning of a line and the line is empty
+									if (range.index === 0 && range.length === 0 && context.empty && context.format) {
+										quill.removeFormat(range, context.format);
+										return false;
+									}
+
+									return true;
+								}
+							}
+						}
+					}
+				},
+				theme: 'snow'
+			};
+
 			quill = new Quill(node, {
 				...defaultOptions,
 				...options,
 				modules: {
 					...defaultOptions.modules,
-					quillMarkdown: true
+					quillMarkdown: {}
 				}
 			});
 
