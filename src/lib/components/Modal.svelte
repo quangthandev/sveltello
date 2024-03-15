@@ -6,6 +6,8 @@
 	import { browser } from '$app/environment';
 	import { cn } from '$lib/utils';
 	import { trapFocus } from '$lib/actions/trap-focus';
+	import { clickOutside } from '$lib/actions/click-outside';
+	import { escapeKeydown } from '$lib/actions/escape-keydown';
 
 	let className: string | undefined = undefined;
 	export { className as class };
@@ -14,20 +16,6 @@
 	let modalEl: HTMLDivElement;
 
 	const dispatch = createEventDispatcher<{ close: void }>();
-
-	function handleKeydown(event: KeyboardEvent) {
-		// close on ESC
-		if (event.key === 'Escape') {
-			event.preventDefault();
-			dispatch('close');
-		}
-	}
-
-	function handleBackdropClick(event: MouseEvent) {
-		if (event.target === backdropEl) {
-			dispatch('close');
-		}
-	}
 
 	onMount(() => {
 		document.getElementById('app')?.setAttribute('inert', 'true');
@@ -44,12 +32,10 @@
 </script>
 
 <Portal>
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<div
 		role="presentation"
 		tabindex="-1"
 		bind:this={backdropEl}
-		on:click={handleBackdropClick}
 		transition:fade|global={{ easing: cubicOut, duration: 300 }}
 		class="fixed inset-0 z-40 flex items-center justify-center bg-black/15 p-8"
 	>
@@ -58,7 +44,12 @@
 			tabindex="-1"
 			bind:this={modalEl}
 			use:trapFocus
-			on:keydown={handleKeydown}
+			use:clickOutside={{
+				handler: () => dispatch('close')
+			}}
+			use:escapeKeydown={{
+				handler: () => dispatch('close')
+			}}
 			class={cn(
 				'max-h-[90dvh] overflow-y-auto overflow-x-hidden rounded-2xl bg-white shadow-2xl outline-none sm:-mt-10',
 				className
