@@ -5,7 +5,8 @@
 	import type { Delta } from 'quill/core';
 	import type { EmitterSource } from 'quill/core/emitter';
 	import type { Range } from 'quill/core/selection';
-	import QuillMarkdown from './modules/markdown';
+	import type { BlotConstructor } from 'parchment';
+	import type { Context } from 'quill/modules/keyboard';
 
 	interface StringMap {
 		[key: string]: any;
@@ -59,6 +60,13 @@
 			Quill.register({
 				'modules/quillMarkdown': QuillMarkdown
 			});
+			// Register horizontal rule blot
+			const BlockEmbed = Quill.import('blots/block/embed') as BlotConstructor;
+			class HorizontalRuleBlot extends BlockEmbed {
+				static blotName = 'hr';
+				static tagName = 'hr';
+			}
+			Quill.register(HorizontalRuleBlot, true);
 			quill = new Quill(node, {
 				...defaultOptions,
 				...options,
