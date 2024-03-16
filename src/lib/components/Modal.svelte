@@ -12,7 +12,6 @@
 	let className: string | undefined = undefined;
 	export { className as class };
 
-	let backdropEl: HTMLDivElement;
 	let modalEl: HTMLDivElement;
 
 	const dispatch = createEventDispatcher<{ close: void }>();
@@ -35,7 +34,6 @@
 	<div
 		role="presentation"
 		tabindex="-1"
-		bind:this={backdropEl}
 		transition:fade|global={{ easing: cubicOut, duration: 300 }}
 		class="fixed inset-0 z-40 flex items-center justify-center bg-black/15 p-8"
 	>

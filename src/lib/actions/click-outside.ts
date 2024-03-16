@@ -1,6 +1,6 @@
 // Reference: https://github.com/melt-ui/melt-ui/blob/develop/src/lib/internal/actions/click-outside/action.ts
 
-import { readable, type Readable } from 'svelte/store';
+import { readable, writable, type Readable } from 'svelte/store';
 import { get } from 'svelte/store';
 import { addEventListener, isFunction } from '$lib/utils.js';
 
@@ -50,8 +50,26 @@ const documentClickStore = readable<PointerEvent | undefined>(undefined, (set): 
 	return unsubscribe;
 });
 
+// Store a collection of subscribed nodes
+const nodes = writable<HTMLElement[]>([]);
+
 export const clickOutside = (node: HTMLElement, config: ClickOutsideConfig = {}) => {
 	let options = { enabled: true, ...config };
+	let _enabled = isEnabled();
+
+	// This is a hack to ensure only the latest subcribed node is enabled
+	nodes.subscribe((value) => {
+		_enabled = value[value.length - 1] === node;
+	});
+
+	// Create a stack of nodes to handle nested click outside events
+	nodes.update((prev) => {
+		if (prev.includes(node)) {
+			return prev;
+		}
+
+		return [...prev, node];
+	});
 
 	// Returns true if the click outside handler is enabled
 	function isEnabled(): boolean {
@@ -61,7 +79,7 @@ export const clickOutside = (node: HTMLElement, config: ClickOutsideConfig = {})
 	// Handle document clicks
 	const unsubscribe = documentClickStore.subscribe((e) => {
 		// If the click outside handler is disabled, or if the event is null or the node itself, return early
-		if (!isEnabled() || !e || e.target === node) {
+		if (!_enabled || !e || e.target === node) {
 			return;
 		}
 
@@ -97,6 +115,7 @@ export const clickOutside = (node: HTMLElement, config: ClickOutsideConfig = {})
 		},
 		destroy() {
 			unsubscribe();
+			nodes.update((prev) => prev.filter((n) => n !== node));
 		}
 	};
 };
