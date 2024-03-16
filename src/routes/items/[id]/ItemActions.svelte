@@ -55,7 +55,7 @@
 
 <div class={cn('space-y-4', className)}>
 	<h4>Actions</h4>
-	<div class="flex lg:flex-col gap-2">
+	<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
 		<MoveOrCopyItemPopover {item} let:trigger>
 			<button
 				use:trigger

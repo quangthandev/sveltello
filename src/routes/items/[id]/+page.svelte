@@ -16,7 +16,7 @@
 	on:close={() => {
 		goto(previousPage ? previousPage : `/boards`);
 	}}
-	class="w-9/12 lg:w-[768px]"
+	class="w-11/12 md:w-9/12 lg:w-[768px]"
 >
 	<ItemDetails id={$page.params.id} />
 </Modal>

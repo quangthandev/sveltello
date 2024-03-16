@@ -28,7 +28,7 @@
 			<li class="flex items-start gap-x-2">
 				<Avatar userName={$page.data.user.email} />
 				<div>
-					<p>
+					<p class="hyphens-auto">
 						<span class="font-bold">{$page.data.user.email}</span> added this card to
 						<span class="font-medium">{item.column.name}</span>
 					</p>
