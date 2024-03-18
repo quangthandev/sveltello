@@ -26,7 +26,7 @@
 </svelte:head>
 
 <header
-	class="bg-slate-900 border-b border-slate-800 flex items-center justify-between py-4 px-8 box-border"
+	class="bg-slate-900 border-b border-slate-800 flex items-center justify-between py-4 px-8 box-border h-appHeader"
 >
 	<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Home </a>
 	<div class="w-1/3 flex items-center justify-end gap-4 h-8">

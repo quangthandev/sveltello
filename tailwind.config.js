@@ -20,6 +20,9 @@ export default {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
 				}
+			},
+			height: {
+				appHeader: 'var(--app-header-height)'
 			}
 		}
 	},
