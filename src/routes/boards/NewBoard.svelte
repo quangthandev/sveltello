@@ -27,7 +27,7 @@
 		formData.delete('photo');
 
 		return async ({ update }) => {
-			await update();
+			await update({ invalidateAll: false });
 		};
 	};
 </script>

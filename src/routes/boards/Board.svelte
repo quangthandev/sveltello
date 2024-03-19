@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { cn } from '$lib/utils';
 	import type { Board } from '@prisma/client';
 
 	export let board: Board;
@@ -9,7 +10,10 @@
 
 <a
 	href={`/boards/${id}`}
-	class="w-60 h-40 p-4 block border-b-8 shadow rounded hover:shadow-lg bg-white relative aspect-video bg-no-repeat bg-center bg-cover"
+	class={cn(
+		'w-60 h-40 p-4 block border-b-8 shadow rounded hover:shadow-lg relative aspect-video bg-no-repeat bg-center bg-cover',
+		imageThumbUrl ? 'text-white' : 'bg-white text-black'
+	)}
 	style:border-color={color}
 	style:background-image={imageThumbUrl ? `url(${imageThumbUrl})` : 'none'}
 >

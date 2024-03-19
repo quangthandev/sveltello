@@ -1,7 +1,7 @@
 import { checkAuthUser } from '$lib/server/auth.js';
 import { z } from 'zod';
 import { createBoard, deleteBoard, getBoards } from './queries.js';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 export async function load({ locals }) {
 	checkAuthUser(locals, '/boards');
@@ -29,7 +29,7 @@ export const actions = {
 		const { name, color, imageId, imageThumbUrl, imageFullUrl, imageUsername, imageLinkHTML } =
 			await createBoardSchema.parseAsync(Object.fromEntries(data));
 
-		await createBoard(
+		const newBoard = await createBoard(
 			locals.user.id,
 			name,
 			color,
@@ -39,6 +39,8 @@ export const actions = {
 			imageUsername,
 			imageLinkHTML
 		);
+
+		redirect(303, `/boards/${newBoard.id}`);
 	},
 	delete: async ({ locals, request }) => {
 		checkAuthUser(locals, '/boards');
