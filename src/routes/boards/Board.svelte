@@ -4,6 +4,8 @@
 	import type { Board } from '@prisma/client';
 
 	export let board: Board;
+	let className = '';
+	export { className as class };
 
 	const { id, name, color, imageThumbUrl } = board;
 </script>
@@ -11,8 +13,9 @@
 <a
 	href={`/boards/${id}`}
 	class={cn(
-		'w-60 h-40 p-4 block border-b-8 shadow rounded hover:shadow-lg relative aspect-video bg-no-repeat bg-center bg-cover',
-		imageThumbUrl ? 'text-white' : 'bg-white text-black'
+		'p-4 block border-b-8 shadow rounded hover:shadow-lg relative aspect-video bg-no-repeat bg-center bg-cover',
+		imageThumbUrl ? 'text-white' : 'bg-white text-black',
+		className
 	)}
 	style:border-color={color}
 	style:background-image={imageThumbUrl ? `url(${imageThumbUrl})` : 'none'}

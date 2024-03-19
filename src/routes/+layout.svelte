@@ -37,10 +37,11 @@
 			<NewBoard let:trigger>
 				<button
 					use:trigger
-					class="p-2 bg-cyan-500 rounded-sm text-white"
+					class="flex gap-2 p-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-500 rounded-md text-white"
 					aria-label="create new board"
 				>
 					<IconPlus />
+					<span class="hidden sm:inline">Create</span>
 				</button>
 			</NewBoard>
 		</div>

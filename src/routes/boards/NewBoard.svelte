@@ -9,6 +9,7 @@
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { ActionData } from './$types';
+	import type { FloatingConfig } from '$lib/actions/types';
 
 	const queryClient = useQueryClient();
 
@@ -30,7 +31,17 @@
 			await update({ invalidateAll: false });
 		};
 	};
+
+	let innerWidth = 0;
+
+	let placement: 'right' | 'bottom' = 'right';
+	$: placement = innerWidth < 640 ? 'bottom' : 'right';
+
+	let offset = 6;
+	$: offset = innerWidth < 640 ? -6 : 6;
 </script>
+
+<svelte:window bind:innerWidth />
 
 <Popover.Root let:open>
 	<Popover.Trigger asChild let:triggerAction={trigger}>
@@ -38,7 +49,7 @@
 	</Popover.Trigger>
 
 	<Popover.Content
-		floatingConfig={{ placement: 'bottom' }}
+		floatingConfig={{ placement, offset }}
 		class={cn('absolute top-0 left-0 bg-white shadow-2xl py-4 rounded-lg w-80 z-50')}
 	>
 		<header class="relative mb-4">
