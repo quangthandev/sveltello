@@ -1,4 +1,5 @@
 <script>
+	import { cn } from '$lib/utils';
 	import Board from './Board.svelte';
 	import NewBoard from './NewBoard.svelte';
 
@@ -19,7 +20,16 @@
 				</li>
 			{/each}
 			<li>
-				<NewBoard />
+				<NewBoard let:trigger>
+					<button
+						class={cn(
+							'w-60 h-40 font-medium text-lg bg-neutral-200 hover:bg-neutral-300 rounded-md'
+						)}
+						use:trigger
+					>
+						Create new board
+					</button>
+				</NewBoard>
 			</li>
 		</ul>
 	</div>
