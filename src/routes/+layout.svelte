@@ -63,11 +63,12 @@
 			</a>
 			{#if data.user}
 				<form method="post" action="/logout" use:enhance>
-					<button class="block text-center">
-						<span class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center">
-							<IconLogout />
-							Log out
-						</span>
+					<button
+						class="text-center text-slate-500 text-xs uppercase font-bold flex flex-col items-center"
+						aria-label="log out"
+					>
+						<IconLogout />
+						<span class="hidden sm:inline">Log out</span>
 					</button>
 				</form>
 			{:else}
@@ -76,7 +77,7 @@
 					class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center"
 				>
 					<IconLogin />
-					Log in
+					<span class="hidden sm:inline">Log in</span>
 				</a>
 			{/if}
 		</div>

@@ -107,7 +107,7 @@
 <BoardQueriesProvider>
 	<div
 		class={cn(
-			'max-w-full flex flex-col overflow-x-scroll select-none bg-no-repeat bg-center bg-cover overflow-hidden',
+			'max-w-full flex flex-col overflow-x-scroll select-none bg-no-repeat bg-center bg-cover',
 			'container'
 		)}
 		style:background-color={data.board.color}
