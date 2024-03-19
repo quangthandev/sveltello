@@ -22,6 +22,8 @@ DATABASE_URL=[path to your sqlite database]
 
 TURSO_AUTH_TOKEN=[your turso auth token]
 TURSO_DATABASE_URL=[your turso database url]
+
+UNSPLASH_ACCESS_KEY=[your unsplash access key]
 ```
 
 - Migrate prisma schema
