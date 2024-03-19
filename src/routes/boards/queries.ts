@@ -22,11 +22,25 @@ export async function getBoards(userId: string) {
 	});
 }
 
-export async function createBoard(userId: string, name: string, color: string) {
+export async function createBoard(
+	userId: string,
+	name: string,
+	color: string,
+	imageId?: string,
+	imageThumbUrl?: string,
+	imageFullUrl?: string,
+	imageUserName?: string,
+	imageLinkHTML?: string
+) {
 	return prisma.board.create({
 		data: {
 			name,
 			color,
+			imageId,
+			imageThumbUrl,
+			imageFullUrl,
+			imageUserName,
+			imageLinkHTML,
 			user: {
 				connect: {
 					id: userId
