@@ -108,7 +108,7 @@
 	<div
 		class="max-w-full h-full min-h-0 flex flex-col overflow-x-scroll select-none aspect-video bg-no-repeat bg-center bg-cover overflow-hidden"
 		style:background-color={data.board.color}
-		style:background-image={`url(${data.board.imageFullUrl})`}
+		style:background-image={data.board.imageFullUrl ? `url(${data.board.imageFullUrl})` : 'none'}
 	>
 		<h1>
 			<EditableText
