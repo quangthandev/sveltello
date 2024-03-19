@@ -1,4 +1,5 @@
 import { checkAuthUser } from '$lib/server/auth.js';
+import { z } from 'zod';
 import { createBoard, deleteBoard, getBoards } from './queries.js';
 import { fail } from '@sveltejs/kit';
 
@@ -10,22 +11,34 @@ export async function load({ locals }) {
 	return { boards };
 }
 
+const createBoardSchema = z.object({
+	name: z.string(),
+	color: z.string(),
+	imageId: z.string().optional(),
+	imageThumbUrl: z.string().optional(),
+	imageFullUrl: z.string().optional(),
+	imageUsername: z.string().optional(),
+	imageLinkHTML: z.string().optional()
+});
+
 export const actions = {
 	create: async ({ locals, request }) => {
 		checkAuthUser(locals, '/boards');
 
 		const data = await request.formData();
-		const name = data.get('name')?.toString() || '';
+		const { name, color, imageId, imageThumbUrl, imageFullUrl, imageUsername, imageLinkHTML } =
+			await createBoardSchema.parseAsync(Object.fromEntries(data));
 
-		if (!name) {
-			return fail(400, {
-				error: 'Missing name'
-			});
-		}
-
-		const color = data.get('color')?.toString() || '';
-
-		await createBoard(locals.user.id, name, color);
+		await createBoard(
+			locals.user.id,
+			name,
+			color,
+			imageId,
+			imageThumbUrl,
+			imageFullUrl,
+			imageUsername,
+			imageLinkHTML
+		);
 	},
 	delete: async ({ locals, request }) => {
 		checkAuthUser(locals, '/boards');

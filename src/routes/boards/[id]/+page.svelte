@@ -105,8 +105,9 @@
 
 <BoardQueriesProvider>
 	<div
-		class="h-full min-h-0 flex flex-col overflow-x-scroll select-none"
+		class="max-w-full h-full min-h-0 flex flex-col overflow-x-scroll select-none aspect-video bg-no-repeat bg-center bg-cover overflow-hidden"
 		style:background-color={data.board.color}
+		style:background-image={`url(${data.board.imageFullUrl})`}
 	>
 		<h1>
 			<EditableText

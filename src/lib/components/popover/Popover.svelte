@@ -10,4 +10,4 @@
 	const close = () => open.set(false);
 </script>
 
-<slot {close} />
+<slot {close} open={$open} />
