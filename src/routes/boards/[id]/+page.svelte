@@ -106,7 +106,10 @@
 
 <BoardQueriesProvider>
 	<div
-		class="max-w-full h-full min-h-0 flex flex-col overflow-x-scroll select-none aspect-video bg-no-repeat bg-center bg-cover overflow-hidden"
+		class={cn(
+			'max-w-full flex flex-col overflow-x-scroll select-none bg-no-repeat bg-center bg-cover overflow-hidden',
+			'container'
+		)}
 		style:background-color={data.board.color}
 		style:background-image={data.board.imageFullUrl ? `url(${data.board.imageFullUrl})` : 'none'}
 	>
@@ -146,3 +149,11 @@
 		</div>
 	</div>
 </BoardQueriesProvider>
+
+<style>
+	.container {
+		min-height: calc(100% - var(--app-header-height));
+		margin-top: calc(var(--app-header-height) * -1);
+		transform: translateY(var(--app-header-height));
+	}
+</style>

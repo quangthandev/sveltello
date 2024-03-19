@@ -58,7 +58,7 @@
 		>
 			<ImagePicker visible={open} />
 			<div class="flex items-center gap-1">
-				<label for="board-color"> Color </label>
+				<label for="board-color" class="text-sm font-medium"> Color </label>
 				<input id="board-color" name="color" type="color" value="#cbd5e1" class="bg-transparent" />
 			</div>
 			<div>
