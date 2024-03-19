@@ -40,6 +40,7 @@
 	</Popover.Trigger>
 
 	<Popover.Content
+		floatingConfig={{ placement: 'right-start' }}
 		class={cn('absolute top-0 left-0 bg-white shadow-2xl py-4 rounded-lg w-80 z-50')}
 	>
 		<header class="relative mb-4">
