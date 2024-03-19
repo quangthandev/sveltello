@@ -1,4 +1,5 @@
 import { unsplash } from '$lib/server/unsplash.js';
+import { error, json } from '@sveltejs/kit';
 
 export async function GET() {
 	const result = await unsplash.photos.getRandom({
@@ -7,8 +8,8 @@ export async function GET() {
 	});
 
 	if (result.errors) {
-		return Response.json({ errors: result.errors }, { status: 500 });
+		throw error(500);
 	}
 
-	return Response.json(result.response);
+	return json(result.response);
 }

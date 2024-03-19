@@ -10,6 +10,11 @@
 		queryKey: ['unsplash-random'],
 		queryFn: async () => {
 			const res = await fetch('/api/unsplash');
+
+			if (!res.ok) {
+				throw new Error('Failed to fetch photos');
+			}
+
 			return res.json();
 		},
 		enabled: visible,
@@ -41,7 +46,7 @@
 			</svg>
 		</button>
 	</div>
-	{#if $query.isLoading || $query.isFetching || !$query.data}
+	{#if $query.isLoading || $query.isFetching}
 		<Skeleton class={cn('w-full h-20 bg-neutral-200')} />
 	{:else if $query.data}
 		<div class="grid grid-cols-3 gap-2">
@@ -87,6 +92,10 @@
 					{/if}
 				</div>
 			{/each}
+		</div>
+	{:else if $query.error}
+		<div class={cn('flex items-center justify-center w-full h-20 text-red-600 bg-neutral-200')}>
+			{$query.error.message}
 		</div>
 	{/if}
 </div>
