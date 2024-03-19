@@ -8,6 +8,7 @@
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import BoardQueriesProvider from './BoardQueriesProvider.svelte';
+	import { cn } from '$lib/utils';
 
 	export let data: PageData;
 
@@ -115,7 +116,12 @@
 				value={data.board.name}
 				fieldName="name"
 				inputClassName="mx-8 my-4 text-2xl font-medium border border-slate-400 rounded-lg py-1 px-2 text-black"
-				buttonClassName="mx-8 my-4 text-2xl font-medium block rounded-lg text-left border border-transparent py-1 px-2 text-slate-800"
+				buttonClassName={cn(
+					'mx-8 my-4 text-2xl font-medium block rounded-lg text-left border border-transparent py-1 px-2',
+					data.board.color.toLowerCase() === '#ffffff'
+						? 'text-black bg-neutral-300'
+						: 'text-white bg-black/50'
+				)}
 			>
 				<input type="hidden" name="id" value={data.board.id} />
 			</EditableText>
