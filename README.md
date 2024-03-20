@@ -18,10 +18,8 @@ Once you've created a project and installed dependencies with `npm install` (or 
 - Create .env file:
 
 ```bash
-DATABASE_URL=[path to your sqlite database]
-
+DATABASE_URL=[path to your local sqlite database file or turso database url]
 TURSO_AUTH_TOKEN=[your turso auth token]
-TURSO_DATABASE_URL=[your turso database url]
 
 UNSPLASH_ACCESS_KEY=[your unsplash access key]
 ```
