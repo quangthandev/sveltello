@@ -18,6 +18,10 @@ export async function load({ locals, params }) {
 
 	checkAuthUser(locals, `/boards/${params.id}`);
 
+	if (isNaN(Number(params.id))) {
+		throw error(404, 'Board not found');
+	}
+
 	const board = await getBoard(parseInt(params.id), locals.user.id);
 	const boards = await getBoards(locals.user.id);
 
