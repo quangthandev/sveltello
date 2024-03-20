@@ -4,7 +4,7 @@
 
 @layer base {
 	:root {
-		--app-header-height: 3.5rem;
+		--app-header-height: 4rem;
 		--muted: 210 40% 96.1%;
 		--muted-foreground: 215.4 16.3% 46.9%;
 	}
