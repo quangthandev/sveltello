@@ -34,16 +34,18 @@
 	>
 		<div class="flex items-center gap-8">
 			<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Home </a>
-			<NewBoard let:trigger>
-				<button
-					use:trigger
-					class="flex gap-2 p-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-500 rounded-md text-white"
-					aria-label="create new board"
-				>
-					<IconPlus />
-					<span class="hidden sm:inline">Create</span>
-				</button>
-			</NewBoard>
+			{#if data.user}
+				<NewBoard let:trigger>
+					<button
+						use:trigger
+						class="flex gap-2 p-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-500 rounded-md text-white"
+						aria-label="create new board"
+					>
+						<IconPlus />
+						<span class="hidden sm:inline">Create</span>
+					</button>
+				</NewBoard>
+			{/if}
 		</div>
 		<div class="w-1/3 flex items-center justify-end gap-4 h-8">
 			<a href="https://github.com/quangthandev/sveltekit-kanban-board" target="_blank">
