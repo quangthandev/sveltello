@@ -22,6 +22,12 @@ DATABASE_URL=[path to your local sqlite database file or turso database url]
 TURSO_AUTH_TOKEN=[your turso auth token]
 
 UNSPLASH_ACCESS_KEY=[your unsplash access key]
+
+R2_ACCOUNT_ID=[your R2 account id]
+R2_ACCESS_KEY=[your R2 access key]
+R2_SECRET_KEY=[your R2 secret key]
+R2_BUCKET_NAME=[your R2 bucket name]
+R2_PUBLIC_BUCKET_URL=[your R2 public bucket url]
 ```
 
 - Migrate prisma schema
