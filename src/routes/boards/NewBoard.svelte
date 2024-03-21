@@ -9,7 +9,6 @@
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { ActionData } from './$types';
-	import type { FloatingConfig } from '$lib/actions/types';
 
 	const queryClient = useQueryClient();
 

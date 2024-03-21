@@ -16,6 +16,30 @@ export function formatTimestamp(timestamp: Date): string {
 	});
 }
 
+type RelativeTimeUnit = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second';
+// in miliseconds
+const units: Record<RelativeTimeUnit, number> = {
+	year: 24 * 60 * 60 * 1000 * 365,
+	month: (24 * 60 * 60 * 1000 * 365) / 12,
+	day: 24 * 60 * 60 * 1000,
+	hour: 60 * 60 * 1000,
+	minute: 60 * 1000,
+	second: 1000
+} as const;
+
+export function getRelativeTime(d1: Date, d2 = new Date()) {
+	const elapsed = new Date(d1).getTime() - d2.getTime();
+
+	for (const unit of Object.keys(units) as RelativeTimeUnit[]) {
+		// "Math.abs" accounts for both "past" & "future" scenarios
+		if (Math.abs(elapsed) > units[unit] || unit === 'second')
+			return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
+				Math.round(elapsed / units[unit]),
+				unit
+			);
+	}
+}
+
 export function noop() {}
 
 export type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

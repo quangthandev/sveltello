@@ -4,6 +4,7 @@
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { escapeKeydown } from '$lib/actions/escape-keydown';
 	import TextEditor from '$lib/components/text-editor';
+	import { queriesCtx } from './context';
 
 	export let id: string;
 	export let boardId: string;
@@ -14,6 +15,8 @@
 	let textEditor: TextEditor;
 
 	const queryClient = useQueryClient();
+
+	const { uploadImage } = queriesCtx.get();
 </script>
 
 <div class="relative flex items-start gap-x-2 mb-8 w-full">
@@ -34,7 +37,7 @@
 		<line x1="17" x2="3" y1="18" y2="18"></line>
 	</svg>
 	<div class="px-2 w-full">
-		<h3 class="text-xl font-medium mb-4">Description</h3>
+		<h3 class="text-xl font-medium mb-3">Description</h3>
 		{#if isEditing}
 			<form
 				action="?/updateItemContent"
@@ -75,7 +78,14 @@
 				<TextEditor
 					class="bg-white min-h-48"
 					options={{
-						placeholder: 'Add a more detailed description...'
+						placeholder: 'Add a more detailed description...',
+						imageUploader: async (file) => {
+							const res = await $uploadImage.mutateAsync({ itemId: id, file });
+
+							// queryClient.invalidateQueries({ queryKey: ['items', id] });
+
+							return res.url;
+						}
 					}}
 					initialContent={content}
 					autofocus={true}

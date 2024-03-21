@@ -8,6 +8,7 @@
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import type { Board, Column, Item } from '@prisma/client';
 	import { goto } from '$app/navigation';
+	import AttachPopover from './AttachPopover.svelte';
 
 	export let item: ItemWithColumn;
 	export { className as class };
@@ -53,33 +54,44 @@
 	});
 </script>
 
-<div class={cn('space-y-4', className)}>
-	<h4>Actions</h4>
-	<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-		<MoveOrCopyItemPopover {item} let:trigger>
+<div class="flex flex-col gap-8">
+	<!-- Add to card -->
+	<div class={cn('space-y-4', className)}>
+		<h4>Add to card</h4>
+		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
+			<AttachPopover itemId={item.id} />
+		</div>
+	</div>
+
+	<!-- Actions -->
+	<div class={cn('space-y-4', className)}>
+		<h4>Actions</h4>
+		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
+			<MoveOrCopyItemPopover {item} let:trigger>
+				<button
+					use:trigger
+					class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+				>
+					<IconArrowRight />
+					Move
+				</button>
+			</MoveOrCopyItemPopover>
+			<MoveOrCopyItemPopover {item} action="copy" let:trigger>
+				<button
+					use:trigger
+					class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+				>
+					<IconCopy />
+					Copy
+				</button>
+			</MoveOrCopyItemPopover>
 			<button
-				use:trigger
 				class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+				on:click={() => $deleteItem.mutate(item.id)}
 			>
-				<IconArrowRight />
-				Move
+				<IconDelete />
+				Delete
 			</button>
-		</MoveOrCopyItemPopover>
-		<MoveOrCopyItemPopover {item} action="copy" let:trigger>
-			<button
-				use:trigger
-				class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
-			>
-				<IconCopy />
-				Copy
-			</button>
-		</MoveOrCopyItemPopover>
-		<button
-			class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
-			on:click={() => $deleteItem.mutate(item.id)}
-		>
-			<IconDelete />
-			Delete
-		</button>
+		</div>
 	</div>
 </div>
