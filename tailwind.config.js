@@ -25,7 +25,8 @@ export default {
 				appHeader: 'var(--app-header-height)'
 			},
 			gridTemplateColumns: {
-				'item-section': '24px 1fr'
+				'item-section': '24px 1fr',
+				attachment: '100px 1fr'
 			}
 		}
 	},

@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { cn, getRelativeTime } from '$lib/utils';
+	import { getRelativeTime } from '$lib/utils';
 	import type { Attachment } from '@prisma/client';
-	import * as Popover from '$lib/components/popover';
-	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
 	import { queriesCtx } from './context';
+	import CardPopover from '$lib/components/CardPopover.svelte';
 
 	export let itemId: string;
 	export let attachments: Attachment[];
@@ -20,7 +19,9 @@
 		<h3 class="text-xl font-medium mb-4">Attachments</h3>
 		<ul class="flex flex-col gap-2">
 			{#each attachments as attachment (attachment.id)}
-				<li class="attachment-container p-2 bg-gray-50 rounded-md">
+				<li
+					class="grid items-center grid-cols-1 sm:grid-cols-attachment gap-4 p-2 bg-gray-50 rounded-md"
+				>
 					<a href={attachment.url} target="_blank" rel="noreferer noopener">
 						{#if attachment.type.startsWith('image/')}
 							<img
@@ -44,39 +45,24 @@
 								Added {getRelativeTime(attachment.createdAt)}
 							</span>
 							<span>
-								<Popover.Root>
-									<Popover.Trigger class="underline">Delete</Popover.Trigger>
-									<Popover.Content
-										class={cn(
-											'absolute top-0 left-0 bg-white shadow-2xl py-4 rounded-lg w-80 z-50 border-2 border-gray-200'
-										)}
-									>
-										<header>
-											<header class="relative mb-4">
-												<h3 class="font-bold text-center">Delete Attachment</h3>
-												<Popover.Close
-													class="absolute -top-2 right-2 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
-													aria-label="close"
-												>
-													<IconClose />
-												</Popover.Close>
-											</header>
-										</header>
-										<div class="px-4 space-y-4">
-											<div>
-												<p>Deleting an attachment is permanent.</p>
-												<p>There is no undo.</p>
-											</div>
-											<button
-												class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-												disabled={$deleteMutation.isPending}
-												on:click={() => $deleteMutation.mutate(attachment.id)}
-											>
-												Delete
-											</button>
-										</div>
-									</Popover.Content>
-								</Popover.Root>
+								<CardPopover
+									title="Delete Attachment"
+									let:trigger
+									on:confirm={() => $deleteMutation.mutate(attachment.id)}
+								>
+									<button use:trigger class="underline"> Delete </button>
+									<div slot="content" class="px-4 space-y-4">
+										<p>Deleting an attachment is permanent.</p>
+										<p>There is no undo.</p>
+										<button
+											class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
+											disabled={$deleteMutation.isPending}
+											on:click={() => $deleteMutation.mutate(attachment.id)}
+										>
+											Delete
+										</button>
+									</div>
+								</CardPopover>
 							</span>
 						</p>
 					</div>
@@ -87,12 +73,6 @@
 </section>
 
 <style>
-	.attachment-container {
-		display: grid;
-		align-items: center;
-		grid-template-columns: 100px 1fr;
-		gap: 1rem;
-	}
 	.attachment-name {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
