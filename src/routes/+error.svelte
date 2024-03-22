@@ -9,7 +9,7 @@
 
 <style>
 	.wrapper {
-		height: calc(100% - var(--app-header-height));
+		height: calc(100vh - var(--app-header-height));
 		margin-top: calc(var(--app-header-height) * -1);
 		transform: translateY(var(--app-header-height));
 	}
