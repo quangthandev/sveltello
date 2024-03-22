@@ -14,7 +14,7 @@
 	const deleteMutation = deleteAttachment(itemId);
 </script>
 
-<div class="relative flex items-start gap-x-2 mb-8 w-full">
+<section class="grid grid-cols-item-section items-start">
 	<IconAttachment />
 	<div class="px-2 w-full">
 		<h3 class="text-xl font-medium mb-4">Attachments</h3>
@@ -38,7 +38,7 @@
 					</a>
 
 					<div class="flex flex-col gap-1">
-						<p class="font-bold">{attachment.name}</p>
+						<p class="font-bold attachment-name">{attachment.name}</p>
 						<p class="flex gap-2 text-sm text-muted-foreground">
 							<span>
 								Added {getRelativeTime(attachment.createdAt)}
@@ -84,7 +84,7 @@
 			{/each}
 		</ul>
 	</div>
-</div>
+</section>
 
 <style>
 	.attachment-container {
@@ -92,5 +92,11 @@
 		align-items: center;
 		grid-template-columns: 100px 1fr;
 		gap: 1rem;
+	}
+	.attachment-name {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
 	}
 </style>

@@ -7,7 +7,7 @@
 	export let item: Item & { column: Column };
 </script>
 
-<div class="flex items-start gap-x-2 w-full">
+<section class="grid grid-cols-item-section items-start w-full">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="24"
@@ -39,4 +39,4 @@
 			</li>
 		</ol>
 	</div>
-</div>
+</section>

@@ -40,7 +40,7 @@
 		{/if}
 
 		<div class="flex flex-col lg:flex-row gap-2">
-			<div class="flex-grow">
+			<div class="flex flex-col gap-8 flex-grow">
 				<!-- Description -->
 				{#if $query.isLoading || $query.isFetching}
 					<div class="flex items-start gap-x-3 w-full">
@@ -59,15 +59,7 @@
 				{/if}
 
 				<!-- Attachments -->
-				{#if $query.isLoading || $query.isFetching}
-					<div class="flex items-start gap-x-3 w-full">
-						<Skeleton class="h-6 w-6 bg-neutral-200" />
-						<div class="w-full">
-							<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
-							<Skeleton class="w-full h-10 bg-neutral-200" />
-						</div>
-					</div>
-				{:else if item && item.attachments.length > 0}
+				{#if item && item.attachments.length > 0}
 					<ItemAttachments itemId={id} attachments={item.attachments} />
 				{/if}
 

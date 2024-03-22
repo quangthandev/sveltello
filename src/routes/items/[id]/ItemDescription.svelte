@@ -19,7 +19,7 @@
 	const { uploadImage } = queriesCtx.get();
 </script>
 
-<div class="relative flex items-start gap-x-2 mb-8 w-full">
+<section class="relative grid grid-cols-item-section items-start w-full">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="24"
@@ -131,4 +131,4 @@
 			</button>
 		{/if}
 	</div>
-</div>
+</section>

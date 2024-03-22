@@ -23,7 +23,7 @@
 </script>
 
 <div class="flex items-start">
-	<div class="flex items-start gap-x-2 mb-8 w-full">
+	<div class="grid grid-cols-item-section items-start mb-8 w-full">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
