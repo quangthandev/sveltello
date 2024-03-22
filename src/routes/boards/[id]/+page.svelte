@@ -106,7 +106,7 @@
 
 <div
 	class={cn(
-		'max-w-full flex flex-col overflow-x-scroll select-none bg-no-repeat bg-center bg-cover',
+		'max-w-full flex flex-col overflow-x-auto select-none bg-no-repeat bg-center bg-cover bg-fixed',
 		'container'
 	)}
 	style:background-color={data.board.color}
@@ -152,7 +152,7 @@
 
 <style>
 	.container {
-		min-height: calc(100% - var(--app-header-height));
+		min-height: calc(100vh - var(--app-header-height));
 		margin-top: calc(var(--app-header-height) * -1);
 		transform: translateY(var(--app-header-height));
 	}
