@@ -59,6 +59,14 @@ export function popover(
 	);
 
 	return {
+		update(newOptions) {
+			options = newOptions;
+			const newConfig = {
+				...mergedFloatingConfig,
+				...options.floatingConfig
+			};
+			destroyCallbacks[0] = useFloating(triggerEl, node, newConfig).destroy;
+		},
 		destroy() {
 			destroyCallbacks.forEach((cb) => cb());
 		}

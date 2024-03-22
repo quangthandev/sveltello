@@ -5,7 +5,7 @@
 	import NewItem from './NewItem.svelte';
 	import ListActionsMenu from './ListActionsMenu.svelte';
 	import { tick } from 'svelte';
-	import { queriesCtx } from './context';
+	import { queriesCtx } from '../../items/[id]/context';
 	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
 	import IconPlus from '$lib/components/icons/IconPlus.svelte';
 

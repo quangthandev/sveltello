@@ -10,7 +10,6 @@
 	import '../app.css';
 	import IconPlus from '$lib/components/icons/IconPlus.svelte';
 	import NewBoard from './boards/NewBoard.svelte';
-	import BoardQueriesProvider from './boards/[id]/BoardQueriesProvider.svelte';
 
 	export let data;
 
@@ -88,9 +87,7 @@
 
 	<div class="flex-grow min-h-0 h-full">
 		<SvelteQueryDevtools />
-		<BoardQueriesProvider>
-			<slot />
-		</BoardQueriesProvider>
+		<slot />
 	</div>
 </QueryClientProvider>
 

@@ -2,7 +2,7 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { ItemMutationFields } from './types';
 	import { page } from '$app/stores';
-	import { queriesCtx } from './context';
+	import { queriesCtx } from '../../items/[id]/context';
 	import { clickOutside } from '$lib/actions/click-outside';
 
 	export let columnId: string;

@@ -7,8 +7,8 @@
 	import NewList from './NewList.svelte';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
-	import BoardQueriesProvider from './BoardQueriesProvider.svelte';
 	import { cn } from '$lib/utils';
+	import ItemQueriesProvider from '../../items/[id]/ItemQueriesProvider.svelte';
 
 	export let data: PageData;
 
@@ -104,51 +104,51 @@
 	<title>{data.board.name}</title>
 </svelte:head>
 
-<BoardQueriesProvider>
-	<div
-		class={cn(
-			'max-w-full flex flex-col overflow-x-scroll select-none bg-no-repeat bg-center bg-cover',
-			'container'
-		)}
-		style:background-color={data.board.color}
-		style:background-image={data.board.imageFullUrl ? `url(${data.board.imageFullUrl})` : 'none'}
-	>
-		<h1>
-			<EditableText
-				action="?/updateBoardName"
-				value={data.board.name}
-				fieldName="name"
-				inputClassName="mx-8 my-4 text-2xl font-medium border border-slate-400 rounded-lg py-1 px-2 text-black"
-				buttonClassName={cn(
-					'mx-8 my-4 text-2xl font-medium block rounded-lg text-left border border-transparent py-1 px-2',
-					data.board.color.toLowerCase() === '#ffffff'
-						? 'text-black bg-neutral-300'
-						: 'text-white bg-black/50'
-				)}
-			>
-				<input type="hidden" name="id" value={data.board.id} />
-			</EditableText>
-		</h1>
-		<div class="flex items-start gap-4 px-8 pb-4">
-			<div
-				use:dndzone={{
-					items: columns,
-					flipDurationMs: 300,
-					type: 'columns'
-				}}
-				on:consider={handleDndConsider}
-				on:finalize={handleDndFinalize}
-				class="flex min-h-0 h-full items-start gap-4"
-			>
-				{#each columns as column (column.id)}
+<div
+	class={cn(
+		'max-w-full flex flex-col overflow-x-scroll select-none bg-no-repeat bg-center bg-cover',
+		'container'
+	)}
+	style:background-color={data.board.color}
+	style:background-image={data.board.imageFullUrl ? `url(${data.board.imageFullUrl})` : 'none'}
+>
+	<h1>
+		<EditableText
+			action="?/updateBoardName"
+			value={data.board.name}
+			fieldName="name"
+			inputClassName="mx-8 my-4 text-2xl font-medium border border-slate-400 rounded-lg py-1 px-2 text-black"
+			buttonClassName={cn(
+				'mx-8 my-4 text-2xl font-medium block rounded-lg text-left border border-transparent py-1 px-2',
+				data.board.color.toLowerCase() === '#ffffff'
+					? 'text-black bg-neutral-300'
+					: 'text-white bg-black/50'
+			)}
+		>
+			<input type="hidden" name="id" value={data.board.id} />
+		</EditableText>
+	</h1>
+	<div class="flex items-start gap-4 px-8 pb-4">
+		<div
+			use:dndzone={{
+				items: columns,
+				flipDurationMs: 300,
+				type: 'columns'
+			}}
+			on:consider={handleDndConsider}
+			on:finalize={handleDndFinalize}
+			class="flex min-h-0 h-full items-start gap-4"
+		>
+			{#each columns as column (column.id)}
+				<ItemQueriesProvider>
 					<List name={column.name} columnId={column.id} items={column.items} />
-				{/each}
-			</div>
-
-			<NewList boardId={data.board.id} />
+				</ItemQueriesProvider>
+			{/each}
 		</div>
+
+		<NewList boardId={data.board.id} />
 	</div>
-</BoardQueriesProvider>
+</div>
 
 <style>
 	.container {

@@ -5,53 +5,16 @@
 	import { cn } from '$lib/utils';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
 	import type { ItemWithColumn } from '../../types';
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
-	import type { Board, Column, Item } from '@prisma/client';
-	import { goto } from '$app/navigation';
 	import AttachPopover from './AttachPopover.svelte';
+	import { queriesCtx } from './context';
+	import { goto } from '$app/navigation';
 
 	export let item: ItemWithColumn;
 	export { className as class };
 
 	let className: string | undefined = '';
 
-	const queryClient = useQueryClient();
-
-	const deleteItem = createMutation<unknown, unknown, string>({
-		mutationFn: async (id) =>
-			(
-				await fetch(`/items/${id}`, {
-					method: 'DELETE'
-				})
-			).json(),
-		onMutate: async (id) => {
-			const prevBoardData = queryClient.getQueryData<
-				Board & { items: Omit<Item, 'content'>[]; columns: (Column & { items: Item[] })[] }
-			>(['boards', item.boardId.toString()]);
-
-			if (prevBoardData) {
-				queryClient.setQueryData(['boards', item.boardId.toString()], {
-					...prevBoardData,
-					columns: prevBoardData.columns.map((column) => ({
-						...column,
-						items: column.items.filter((item) => item.id !== id)
-					}))
-				});
-			}
-
-			goto(`/boards/${item.boardId}`);
-
-			return { prevBoardData };
-		},
-		onError: (_err, _variables, context: any) => {
-			if (context?.prevBoardData) {
-				queryClient.setQueryData(['boards', item.boardId.toString()], context.prevBoardData);
-			}
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ['boards', item.boardId.toString()] });
-		}
-	});
+	const { deleteItem } = queriesCtx.get();
 </script>
 
 <div class="flex flex-col gap-8">
@@ -87,7 +50,11 @@
 			</MoveOrCopyItemPopover>
 			<button
 				class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
-				on:click={() => $deleteItem.mutate(item.id)}
+				on:click={async () => {
+					await $deleteItem.mutateAsync(item.id);
+
+					goto(`/boards/${item.boardId}`);
+				}}
 			>
 				<IconDelete />
 				Delete

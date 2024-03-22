@@ -35,9 +35,6 @@
 
 	let placement: 'right' | 'bottom' = 'right';
 	$: placement = innerWidth < 640 ? 'bottom' : 'right';
-
-	let offset = 6;
-	$: offset = innerWidth < 640 ? -6 : 6;
 </script>
 
 <svelte:window bind:innerWidth />
@@ -48,7 +45,7 @@
 	</Popover.Trigger>
 
 	<Popover.Content
-		floatingConfig={{ placement, offset }}
+		floatingConfig={{ placement }}
 		class={cn('absolute top-0 left-0 bg-white shadow-2xl py-4 rounded-lg w-80 z-50')}
 	>
 		<header class="relative mb-4">
