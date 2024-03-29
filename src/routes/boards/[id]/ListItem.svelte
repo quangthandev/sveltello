@@ -6,12 +6,15 @@
 	import type { Column, Item } from '@prisma/client';
 	import ItemDetails from '../../items/[id]/ItemDetails.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
+	import markdownit from 'markdown-it';
 
 	export let title: string;
 	export let content: string | null;
 	export let id: string;
 	let className: string | undefined = undefined;
 	export { className as class };
+
+	const md = markdownit();
 
 	const queryClient = useQueryClient();
 
@@ -48,7 +51,7 @@
 	>
 		<h3>{title}</h3>
 		{#if content}
-			<div class="mt-2 truncate">{@html content}</div>
+			<div class="mt-2 truncate">{@html md.render(content)}</div>
 		{:else}
 			<span>&nbsp;</span>
 		{/if}

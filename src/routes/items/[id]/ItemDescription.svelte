@@ -5,6 +5,10 @@
 	import { escapeKeydown } from '$lib/actions/escape-keydown';
 	import TextEditor from '$lib/components/text-editor';
 	import { queriesCtx } from './context';
+	import TurndownService from 'turndown';
+	import markdownit from 'markdown-it';
+	import type { TypedSubmitFunction } from '$lib/form';
+	import type { ActionData } from './$types';
 
 	export let id: string;
 	export let boardId: string;
@@ -17,6 +21,32 @@
 	const queryClient = useQueryClient();
 
 	const { uploadImage } = queriesCtx.get();
+
+	const turndownService = new TurndownService();
+	const md = markdownit();
+
+	const handleSubmit: TypedSubmitFunction<ActionData> = async ({ formData }) => {
+		isSubmitting = true;
+
+		const html = textEditor.getHTML();
+		const markdown = turndownService.turndown(html);
+
+		formData.append('content', markdown);
+
+		return async ({ update }) => {
+			await update({ invalidateAll: false });
+
+			isSubmitting = false;
+			isEditing = false;
+
+			queryClient.invalidateQueries({
+				queryKey: ['items', id]
+			});
+			queryClient.invalidateQueries({
+				queryKey: ['boards', boardId]
+			});
+		};
+	};
 </script>
 
 <section class="relative grid grid-cols-item-section items-start w-full">
@@ -42,25 +72,7 @@
 			<form
 				action="?/updateItemContent"
 				method="POST"
-				use:enhance={({ formData }) => {
-					isSubmitting = true;
-
-					formData.append('content', textEditor.getHTML());
-
-					return async ({ update }) => {
-						await update({ invalidateAll: false });
-
-						isSubmitting = false;
-						isEditing = false;
-
-						queryClient.invalidateQueries({
-							queryKey: ['items', id]
-						});
-						queryClient.invalidateQueries({
-							queryKey: ['boards', boardId]
-						});
-					};
-				}}
+				use:enhance={handleSubmit}
 				use:escapeKeydown={{
 					handler: () => (isEditing = false)
 				}}
@@ -82,12 +94,13 @@
 						imageUploader: async (file) => {
 							const res = await $uploadImage.mutateAsync({ itemId: id, file });
 
-							// queryClient.invalidateQueries({ queryKey: ['items', id] });
+							// TODO: figure out why invalidating the query forces the editor to re-render
+							queryClient.invalidateQueries({ queryKey: ['items', id] });
 
 							return res.url;
 						}
 					}}
-					initialContent={content}
+					initialContent={md.render(content ?? '')}
 					autofocus={true}
 					bind:this={textEditor}
 				/>
@@ -107,9 +120,9 @@
 				</div>
 			</form>
 		{:else}
-			<p class="relative min-h-[60px] font-medium rounded-md">
+			<div class="relative min-h-[60px] font-medium rounded-md item-description">
 				{#if content !== null && content.trim() !== ''}
-					{@html content}
+					{@html md.render(content)}
 				{:else}
 					<button
 						class="absolute inset-0 text-left px-4 bg-gray-200 hover:bg-gray-300"
@@ -119,7 +132,7 @@
 						{'Add a more detailed description...'}
 					</button>
 				{/if}
-			</p>
+			</div>
 		{/if}
 
 		{#if content !== null && content.trim() !== '' && !isEditing}
