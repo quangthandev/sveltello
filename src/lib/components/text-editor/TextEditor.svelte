@@ -8,6 +8,7 @@
 	import type { Range } from 'quill/core/selection';
 	import type { BlotConstructor } from 'parchment';
 	import type { Context } from 'quill/modules/keyboard';
+	import ImageUploader from './modules/image-uploader';
 
 	interface StringMap {
 		[key: string]: any;
@@ -25,8 +26,10 @@
 		strict?: boolean | undefined;
 	}
 
+	type Options = QuillOptionsStatic & { imageUploader?: (file: File) => Promise<string> };
+
 	export let initialContent: string | null = '';
-	export let options: QuillOptionsStatic = {};
+	export let options: Options = {};
 	export let autofocus: boolean = false;
 
 	let quill: Quill;
@@ -44,7 +47,7 @@
 
 	function quillEditor(
 		node: HTMLDivElement,
-		options?: QuillOptionsStatic
+		options?: Options
 	): ActionReturn<TextEditorOptions, TextEditorAttributes> {
 		import('quill').then(({ default: Quill }) => {
 			// Register Quill Markdown module
@@ -59,6 +62,11 @@
 				static tagName = 'hr';
 			}
 			Quill.register(HorizontalRuleBlot, true);
+
+			// Register image uploader module
+			Quill.register({
+				'modules/imageUploader': ImageUploader
+			});
 
 			const defaultOptions: QuillOptionsStatic = {
 				modules: {
@@ -93,7 +101,10 @@
 				...options,
 				modules: {
 					...defaultOptions.modules,
-					quillMarkdown: {}
+					quillMarkdown: {},
+					imageUploader: {
+						upload: options?.imageUploader ? options.imageUploader : undefined
+					}
 				}
 			});
 

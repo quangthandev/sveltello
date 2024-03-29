@@ -13,4 +13,37 @@
 	body {
 		height: 100%;
 	}
+
+	code {
+		@apply bg-gray-200 text-black p-1 rounded-md;
+	}
+
+	blockquote {
+		@apply border-l-4 border-gray-400 pl-4 my-2;
+	}
+}
+
+@layer components {
+	.item-description {
+		ol {
+			@apply list-decimal list-inside pl-4;
+		}
+
+		ul {
+			@apply list-disc list-inside pl-4;
+		}
+	}
+
+	.quill-image-uploading {
+		@apply relative inline-block;
+
+		img {
+			@apply max-w-[98%] blur-[5px] opacity-30;
+		}
+	}
+
+	.quill-image-uploading::before {
+		@apply absolute top-1/2 left-1/2 w-[30px] h-[30px] mt-[-15px] ml-[-15px] border-2 border-solid border-gray-300 border-t-[#1e986c] rounded-full animate-spin;
+		content: '';
+	}
 }
