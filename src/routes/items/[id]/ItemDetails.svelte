@@ -22,12 +22,13 @@
 	});
 
 	$: item = $query.data;
+	$: isLoading = $query.isLoading || $query.isFetching;
 </script>
 
 <ItemQueriesProvider>
 	<div class="p-6 bg-gray-100">
 		<!-- Header -->
-		{#if $query.isLoading || $query.isFetching}
+		{#if isLoading}
 			<div class="flex items-start gap-x-3 mb-6">
 				<Skeleton class="h-6 w-6 mt-1 bg-neutral-200" />
 				<div>
@@ -42,7 +43,7 @@
 		<div class="flex flex-col lg:flex-row gap-2">
 			<div class="flex flex-col gap-8 flex-grow">
 				<!-- Description -->
-				<ItemDescription {item} isLoading={$query.isLoading || $query.isFetching} />
+				<ItemDescription {item} {isLoading} />
 
 				<!-- Attachments -->
 				{#if item && item.attachments.length > 0}
@@ -50,7 +51,7 @@
 				{/if}
 
 				<!-- Activity -->
-				{#if $query.isLoading || $query.isFetching}
+				{#if isLoading}
 					<div class="flex items-start gap-x-3 w-full">
 						<Skeleton class="h-6 w-6 bg-neutral-200" />
 						<div class="w-full">

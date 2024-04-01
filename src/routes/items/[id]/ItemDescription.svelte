@@ -11,26 +11,39 @@
 </script>
 
 <section class="relative grid grid-cols-item-section items-start w-full">
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		stroke-width="2"
-		stroke-linecap="round"
-		stroke-linejoin="round"
-		class="h-5 w-5 mt-0.5 text-neutral-700"
-	>
-		<line x1="21" x2="3" y1="6" y2="6"></line>
-		<line x1="15" x2="3" y1="12" y2="12"></line>
-		<line x1="17" x2="3" y1="18" y2="18"></line>
-	</svg>
+	{#if isLoading}
+		<Skeleton class="h-6 w-6 bg-neutral-200" />
+	{:else}
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			class="h-5 w-5 mt-0.5 text-neutral-700"
+		>
+			<line x1="21" x2="3" y1="6" y2="6"></line>
+			<line x1="15" x2="3" y1="12" y2="12"></line>
+			<line x1="17" x2="3" y1="18" y2="18"></line>
+		</svg>
+	{/if}
+
 	<div class="px-2 w-full">
-		<h3 class="text-xl font-medium mb-3">Description</h3>
+		{#if isLoading}
+			<Skeleton class="h-6 w-24 mb-1 bg-neutral-200" />
+		{:else if item}
+			<h3 class="text-xl font-medium mb-3">Description</h3>
+		{/if}
 		<div class="relative min-h-[60px] font-medium rounded-md item-description">
-			{#if item}
+			{#if isLoading && !item}
+				<div class="w-full">
+					<Skeleton class="w-full h-[78px] bg-neutral-200" />
+				</div>
+			{:else if item}
 				{#if isEditing}
 					<ItemDescriptionEditor
 						id={item.id}
@@ -50,14 +63,6 @@
 						</button>
 					{/if}
 				{/if}
-			{:else if isLoading}
-				<div class="flex items-start gap-x-3 w-full">
-					<Skeleton class="h-6 w-6 bg-neutral-200" />
-					<div class="w-full">
-						<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
-						<Skeleton class="w-full h-[78px] bg-neutral-200" />
-					</div>
-				</div>
 			{/if}
 		</div>
 	</div>

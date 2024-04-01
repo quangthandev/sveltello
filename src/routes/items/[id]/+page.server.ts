@@ -15,7 +15,7 @@ export async function load({ locals, params }) {
 	const item = await getItem(params.id, locals.user.id);
 
 	if (!item) {
-		throw error(404, 'Board not found');
+		throw error(404, 'Item not found');
 	}
 
 	return {
