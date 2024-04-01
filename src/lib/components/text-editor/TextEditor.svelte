@@ -5,28 +5,10 @@
 	import type { Delta } from 'quill/core';
 	import type { EmitterSource } from 'quill/core/emitter';
 	import type { Range } from 'quill/core/selection';
-	import { initQuill } from './quill';
-
-	interface StringMap {
-		[key: string]: any;
-	}
-
-	interface QuillOptionsStatic {
-		debug?: boolean;
-		modules?: StringMap | undefined;
-		placeholder?: string | undefined;
-		readOnly?: boolean | undefined;
-		theme?: string | undefined;
-		formats?: string[] | undefined;
-		bounds?: HTMLElement | string | undefined;
-		scrollingContainer?: HTMLElement | string | undefined;
-		strict?: boolean | undefined;
-	}
-
-	type Options = QuillOptionsStatic & { imageUploader?: (file: File) => Promise<string> };
+	import { initQuill, type Options as TextEditorOptions } from './quill';
 
 	export let initialContent: string | null = '';
-	export let options: Options = {};
+	export let options: TextEditorOptions = {};
 	export let autofocus: boolean = false;
 
 	let quillInstance: Quill;
@@ -37,13 +19,11 @@
 		'selection-change': { range: Range; oldRange: Range; source: EmitterSource };
 	}>();
 
-	type TextEditorOptions = QuillOptionsStatic;
-
 	interface TextEditorAttributes {}
 
 	function quillEditor(
 		node: HTMLDivElement,
-		options?: Options
+		options?: TextEditorOptions
 	): ActionReturn<TextEditorOptions, TextEditorAttributes> {
 		initQuill(node, options).then((quill) => {
 			quillInstance = quill;

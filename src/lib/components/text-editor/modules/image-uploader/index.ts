@@ -7,6 +7,7 @@ import type Toolbar from 'quill/modules/toolbar';
 
 type Options = {
 	upload: (file: File) => Promise<string>;
+	blotName: string;
 };
 
 class ImageUploader {
@@ -172,7 +173,7 @@ class ImageUploader {
 
 		if (!range) return;
 
-		this.placeholderDelta = this.quill.insertEmbed(range.index, 'imageBlot', url, 'user');
+		this.placeholderDelta = this.quill.insertEmbed(range.index, this.options.blotName, url, 'user');
 	}
 
 	insertToEditor(url: string) {

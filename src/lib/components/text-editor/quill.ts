@@ -8,7 +8,7 @@ interface StringMap {
 	[key: string]: unknown;
 }
 
-interface QuillOptionsStatic {
+export interface QuillOptionsStatic {
 	debug?: boolean;
 	modules?: StringMap | undefined;
 	placeholder?: string | undefined;
@@ -20,15 +20,10 @@ interface QuillOptionsStatic {
 	strict?: boolean | undefined;
 }
 
-type Options = QuillOptionsStatic & { imageUploader?: (file: File) => Promise<string> };
+export type Options = QuillOptionsStatic & { imageUploader?: (file: File) => Promise<string> };
 
 export async function initQuill(node: HTMLElement, options?: Options) {
 	const { default: Quill } = await import('quill');
-
-	// Register Quill Markdown module
-	Quill.register({
-		'modules/quillMarkdown': QuillMarkdown
-	});
 
 	// Register horizontal rule blot
 	const BlockEmbed = Quill.import('blots/block/embed') as BlotConstructor;
@@ -37,11 +32,6 @@ export async function initQuill(node: HTMLElement, options?: Options) {
 		static tagName = 'hr';
 	}
 	Quill.register(HorizontalRuleBlot, true);
-
-	// Register image uploader module
-	Quill.register({
-		'modules/imageUploader': ImageUploader
-	});
 
 	// Register loading image blot
 	const InlineBlot = Quill.import('blots/block') as BlotConstructor;
@@ -71,6 +61,16 @@ export async function initQuill(node: HTMLElement, options?: Options) {
 		static tagName = 'span';
 	}
 	Quill.register({ 'formats/imageBlot': LoadingImage });
+
+	// Register Quill Markdown module
+	Quill.register({
+		'modules/quillMarkdown': QuillMarkdown
+	});
+
+	// Register image uploader module
+	Quill.register({
+		'modules/imageUploader': ImageUploader
+	});
 
 	const defaultOptions: QuillOptionsStatic = {
 		modules: {
@@ -107,7 +107,8 @@ export async function initQuill(node: HTMLElement, options?: Options) {
 			...defaultOptions.modules,
 			quillMarkdown: {},
 			imageUploader: {
-				upload: options?.imageUploader ? options.imageUploader : undefined
+				upload: options?.imageUploader ? options.imageUploader : undefined,
+				blotName: 'imageBlot'
 			}
 		}
 	});
