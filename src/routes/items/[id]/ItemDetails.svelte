@@ -42,21 +42,7 @@
 		<div class="flex flex-col lg:flex-row gap-2">
 			<div class="flex flex-col gap-8 flex-grow">
 				<!-- Description -->
-				{#if $query.isLoading || $query.isFetching}
-					<div class="flex items-start gap-x-3 w-full">
-						<Skeleton class="h-6 w-6 bg-neutral-200" />
-						<div class="w-full">
-							<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
-							<Skeleton class="w-full h-[78px] bg-neutral-200" />
-						</div>
-					</div>
-				{:else if item}
-					<ItemDescription
-						id={item.id.toString()}
-						boardId={item.boardId.toString()}
-						content={item.content}
-					/>
-				{/if}
+				<ItemDescription {item} isLoading={$query.isLoading || $query.isFetching} />
 
 				<!-- Attachments -->
 				{#if item && item.attachments.length > 0}

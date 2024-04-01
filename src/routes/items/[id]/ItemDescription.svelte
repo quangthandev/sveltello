@@ -1,52 +1,13 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { useQueryClient } from '@tanstack/svelte-query';
-	import { clickOutside } from '$lib/actions/click-outside';
-	import { escapeKeydown } from '$lib/actions/escape-keydown';
-	import TextEditor from '$lib/components/text-editor';
-	import { queriesCtx } from './context';
-	import TurndownService from 'turndown';
-	import markdownit from 'markdown-it';
-	import type { TypedSubmitFunction } from '$lib/form';
-	import type { ActionData } from './$types';
+	import Skeleton from '$lib/components/Skeleton.svelte';
+	import ItemDescriptionEditor from './ItemDescriptionEditor.svelte';
+	import ItemDescriptionContent from './ItemDescriptionContent.svelte';
+	import type { Attachment, Column, Item } from '@prisma/client';
 
-	export let id: string;
-	export let boardId: string;
-	export let content: string | null;
+	export let item: (Item & { column: Column; attachments: Attachment[] }) | undefined;
+	export let isLoading = false;
 
 	let isEditing = false;
-	let isSubmitting = false;
-	let textEditor: TextEditor;
-
-	const queryClient = useQueryClient();
-
-	const { uploadImage } = queriesCtx.get();
-
-	const turndownService = new TurndownService();
-	const md = markdownit();
-
-	const handleSubmit: TypedSubmitFunction<ActionData> = async ({ formData }) => {
-		isSubmitting = true;
-
-		const html = textEditor.getHTML();
-		const markdown = turndownService.turndown(html);
-
-		formData.append('content', markdown);
-
-		return async ({ update }) => {
-			await update({ invalidateAll: false });
-
-			isSubmitting = false;
-			isEditing = false;
-
-			queryClient.invalidateQueries({
-				queryKey: ['items', id]
-			});
-			queryClient.invalidateQueries({
-				queryKey: ['boards', boardId]
-			});
-		};
-	};
 </script>
 
 <section class="relative grid grid-cols-item-section items-start w-full">
@@ -68,80 +29,36 @@
 	</svg>
 	<div class="px-2 w-full">
 		<h3 class="text-xl font-medium mb-3">Description</h3>
-		{#if isEditing}
-			<form
-				action="?/updateItemContent"
-				method="POST"
-				use:enhance={handleSubmit}
-				use:escapeKeydown={{
-					handler: () => (isEditing = false)
-				}}
-				use:clickOutside={{
-					handler: (e) => {
-						e.preventDefault();
-						e.stopPropagation();
-
-						if (textEditor.hasFocus()) return;
-
-						isEditing = false;
-					}
-				}}
-			>
-				<TextEditor
-					class="bg-white min-h-48"
-					options={{
-						placeholder: 'Add a more detailed description...',
-						imageUploader: async (file) => {
-							const res = await $uploadImage.mutateAsync({ itemId: id, file });
-
-							// TODO: figure out why invalidating the query forces the editor to re-render
-							queryClient.invalidateQueries({ queryKey: ['items', id] });
-
-							return res.url;
-						}
-					}}
-					initialContent={md.render(content ?? '')}
-					autofocus={true}
-					bind:this={textEditor}
-				/>
-				<input type="hidden" name="id" value={id} />
-				<div class="flex items-center gap-x-2 mt-2">
-					<button
-						type="submit"
-						class="bg-blue-600 text-white rounded-md py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-						disabled={isSubmitting}
-					>
-						Save
-					</button>
-					<button
-						on:click={() => (isEditing = false)}
-						class="px-4 py-2 font-medium rounded-md hover:bg-gray-300">Cancel</button
-					>
-				</div>
-			</form>
-		{:else}
-			<div class="relative min-h-[60px] font-medium rounded-md item-description">
-				{#if content !== null && content.trim() !== ''}
-					{@html md.render(content)}
+		<div class="relative min-h-[60px] font-medium rounded-md item-description">
+			{#if item}
+				{#if isEditing}
+					<ItemDescriptionEditor
+						id={item.id}
+						boardId={item.boardId.toString()}
+						content={item.content}
+						on:close={() => (isEditing = false)}
+					/>
 				{:else}
-					<button
-						class="absolute inset-0 text-left px-4 bg-gray-200 hover:bg-gray-300"
-						aria-label="Edit description"
-						on:click|preventDefault={() => (isEditing = true)}
-					>
-						{'Add a more detailed description...'}
-					</button>
-				{/if}
-			</div>
-		{/if}
+					<ItemDescriptionContent content={item.content} on:edit={() => (isEditing = true)} />
 
-		{#if content !== null && content.trim() !== '' && !isEditing}
-			<button
-				class="absolute top-0 right-4 px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
-				on:click={() => (isEditing = true)}
-			>
-				Edit
-			</button>
-		{/if}
+					{#if item.content !== null && item.content.trim() !== ''}
+						<button
+							class="absolute top-0 right-4 px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
+							on:click={() => (isEditing = true)}
+						>
+							Edit
+						</button>
+					{/if}
+				{/if}
+			{:else if isLoading}
+				<div class="flex items-start gap-x-3 w-full">
+					<Skeleton class="h-6 w-6 bg-neutral-200" />
+					<div class="w-full">
+						<Skeleton class="w-24 h-6 mb-2 bg-neutral-200" />
+						<Skeleton class="w-full h-[78px] bg-neutral-200" />
+					</div>
+				</div>
+			{/if}
+		</div>
 	</div>
 </section>
