@@ -11,7 +11,7 @@
 </script>
 
 <section class="relative grid grid-cols-item-section items-start w-full">
-	{#if isLoading}
+	{#if isLoading && !item}
 		<Skeleton class="h-6 w-6 bg-neutral-200" />
 	{:else}
 		<svg
@@ -33,7 +33,7 @@
 	{/if}
 
 	<div class="px-2 w-full">
-		{#if isLoading}
+		{#if isLoading && !item}
 			<Skeleton class="h-6 w-24 mb-1 bg-neutral-200" />
 		{:else if item}
 			<h3 class="text-xl font-medium mb-3">Description</h3>

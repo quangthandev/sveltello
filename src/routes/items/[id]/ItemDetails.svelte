@@ -28,7 +28,7 @@
 <ItemQueriesProvider>
 	<div class="p-6 bg-gray-100">
 		<!-- Header -->
-		{#if isLoading}
+		{#if isLoading && !item}
 			<div class="flex items-start gap-x-3 mb-6">
 				<Skeleton class="h-6 w-6 mt-1 bg-neutral-200" />
 				<div>
@@ -51,7 +51,7 @@
 				{/if}
 
 				<!-- Activity -->
-				{#if isLoading}
+				{#if isLoading && !item}
 					<div class="flex items-start gap-x-3 w-full">
 						<Skeleton class="h-6 w-6 bg-neutral-200" />
 						<div class="w-full">
