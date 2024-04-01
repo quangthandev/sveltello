@@ -1,7 +1,6 @@
 // Reference: https://github.com/NoelOConnell/quill-image-uploader
 
 import type Quill from 'quill';
-import LoadingImage from './blots/image';
 import type { Range } from 'quill/core/selection';
 import type { Op } from 'quill/core';
 import type Toolbar from 'quill/modules/toolbar';
@@ -173,12 +172,7 @@ class ImageUploader {
 
 		if (!range) return;
 
-		this.placeholderDelta = this.quill.insertEmbed(
-			range.index,
-			LoadingImage.blotName,
-			`${url}`,
-			'user'
-		);
+		this.placeholderDelta = this.quill.insertEmbed(range.index, 'imageBlot', url, 'user');
 	}
 
 	insertToEditor(url: string) {
@@ -189,7 +183,7 @@ class ImageUploader {
 		// Delete the placeholder image
 		this.quill.deleteText(range.index, lengthToDelete, 'user');
 		// Insert the server saved image
-		this.quill.insertEmbed(range.index, 'image', `${url}`, 'user');
+		this.quill.insertEmbed(range.index, 'image', url, 'user');
 
 		range.index++;
 		this.quill.setSelection(range, 'user');
