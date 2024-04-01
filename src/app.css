@@ -24,22 +24,20 @@
 }
 
 @layer components {
-	.item-description {
-		ol {
-			@apply list-decimal list-inside pl-4;
-		}
+	.item-description ol {
+		@apply list-decimal list-inside pl-4;
+	}
 
-		ul {
-			@apply list-disc list-inside pl-4;
-		}
+	.item-description ul {
+		@apply list-disc list-inside pl-4;
 	}
 
 	.quill-image-uploading {
 		@apply relative inline-block;
+	}
 
-		img {
-			@apply max-w-[98%] blur-[5px] opacity-30;
-		}
+	.quill-image-uploading img {
+		@apply max-w-[98%] blur-[5px] opacity-30;
 	}
 
 	.quill-image-uploading::before {
