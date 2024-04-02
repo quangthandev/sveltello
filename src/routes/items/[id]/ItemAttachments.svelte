@@ -98,7 +98,7 @@
 								</CardPopover>
 							</span>
 						</p>
-						{#if !attachment.isCover}
+						{#if !attachment.isCover && attachment.type.startsWith('image/')}
 							<form action="?/makeCover" method="post" use:enhance={handleMakeCover}>
 								<input type="hidden" name="attachmentId" value={attachment.id} />
 								<button class="underline text-sm text-muted-foreground">Make cover</button>
