@@ -41,7 +41,9 @@
 <a
 	href="/items/{id}"
 	class={cn(
-		'border-t-2 border-b-2 -mb-[2px] last:mb-0 px-2 py-1 border-t-transparent border-b-transparent',
+		'relative border-t-2 border-b-2 -mb-[2px] last:mb-0 px-2 py-1 border-t-transparent border-b-transparent',
+		'before:absolute before:inset-0 before:mx-[6px] before:my-[2px] before:rounded-lg',
+		'hover:before:border-2 hover:before:border-cyan-500',
 		className
 	)}
 	on:click={handleClick}
@@ -51,7 +53,7 @@
 	{/if}
 	<div
 		class={cn(
-			'bg-white shadow shadow-slate-300 border-4 border-transparent text-sm w-full py-1 px-2 relative hover:border-cyan-500 space-y-2',
+			'bg-white shadow shadow-slate-300 border-4 border-transparent text-sm w-full py-1 px-2 relative space-y-2',
 			cover ? 'rounded-b-lg' : 'rounded-lg'
 		)}
 	>
