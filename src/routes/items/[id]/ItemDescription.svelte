@@ -32,13 +32,13 @@
 		</svg>
 	{/if}
 
-	<div class="px-2 w-full">
+	<div class="px-2 w-full space-y-4">
 		{#if isLoading && !item}
 			<Skeleton class="h-6 w-24 mb-1 bg-neutral-200" />
 		{:else if item}
 			<h3 class="text-xl font-medium mb-3">Description</h3>
 		{/if}
-		<div class="relative min-h-[60px] font-medium rounded-md item-description">
+		<div class="min-h-[60px] font-medium rounded-md item-description">
 			{#if isLoading && !item}
 				<div class="w-full">
 					<Skeleton class="w-full h-[78px] bg-neutral-200" />
@@ -56,7 +56,7 @@
 
 					{#if item.content !== null && item.content.trim() !== ''}
 						<button
-							class="absolute top-0 right-4 px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
+							class="absolute top-0 right-0 px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
 							on:click={() => (isEditing = true)}
 						>
 							Edit
