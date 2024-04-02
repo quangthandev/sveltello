@@ -32,7 +32,7 @@
 		</svg>
 	{/if}
 
-	<div class="px-2 w-full space-y-4">
+	<div class="px-2 w-full space-y-2">
 		{#if isLoading && !item}
 			<Skeleton class="h-6 w-24 mb-1 bg-neutral-200" />
 		{:else if item}

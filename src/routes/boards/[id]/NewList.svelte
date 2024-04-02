@@ -76,11 +76,16 @@
 		/>
 		<div class="flex justify-between">
 			<button
-				class="rounded-md bg-blue-400 px-1 py-1 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+				class="rounded-md bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
 			>
 				Add Column
 			</button>
-			<button on:click={() => (editing = false)}>Cancel</button>
+			<button
+				on:click={() => (editing = false)}
+				class="px-4 py-2 font-medium rounded-md hover:bg-gray-300"
+			>
+				Cancel
+			</button>
 		</div>
 	</form>
 {:else}

@@ -13,7 +13,7 @@
 	{@html md.render(content)}
 {:else}
 	<button
-		class="absolute inset-0 text-left px-4 bg-gray-200 hover:bg-gray-300"
+		class="w-full h-[60px] text-left px-4 bg-gray-200 hover:bg-gray-300 rounded-md"
 		aria-label="Edit description"
 		on:click|preventDefault={() => dispatch('edit')}
 	>
