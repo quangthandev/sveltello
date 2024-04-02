@@ -4,7 +4,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import s3Client from '$lib/server/s3.js';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { R2_BUCKET_NAME, R2_PUBLIC_BUCKET_URL } from '$env/static/private';
-import { createAttachment } from '../queries.js';
+import { createAttachment, getItem, makeCover } from '../queries.js';
 import { checkAuthUser } from '$lib/server/auth.js';
 
 const uploadSchema = z.object({
@@ -66,6 +66,18 @@ export async function POST({ request, params, locals }) {
 	const url = `${R2_PUBLIC_BUCKET_URL}/${objectKey}`;
 
 	await createAttachment(params.id, fileName, fileType, url);
+
+	// Make the attachment as cover if it's the first attachment, ...
+	// ... and the item doesn't have a cover yet, and the file is an image
+	const item = await getItem(params.id, locals.user.id);
+	if (
+		item &&
+		item.attachments.length === 1 &&
+		item.cover === null &&
+		fileType.startsWith('image/')
+	) {
+		await makeCover(params.id, item.attachments[0].id, locals.user.id);
+	}
 
 	return json({ url });
 }
