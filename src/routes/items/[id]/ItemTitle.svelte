@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import EditableText from '../../boards/[id]/EditableText.svelte';
-	import { createEventDispatcher } from 'svelte';
-	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
 	import type { BoardWithColumns, ItemWithColumn } from '../../types';
 
@@ -18,8 +16,6 @@
 			return res.json();
 		}
 	});
-
-	const dispatch = createEventDispatcher<{ close: void }>();
 </script>
 
 <div class="flex items-start">
@@ -75,13 +71,4 @@
 			</p>
 		</div>
 	</div>
-	<button
-		on:click={() => {
-			dispatch('close');
-		}}
-		class="-mt-2 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
-		aria-label="close"
-	>
-		<IconClose />
-	</button>
 </div>

@@ -8,12 +8,13 @@
 	import { queriesCtx } from '../../items/[id]/context';
 	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
 	import IconPlus from '$lib/components/icons/IconPlus.svelte';
+	import type { ItemWithCoverAndAttachments } from '../../types';
 
 	export let name: string;
 	export let columnId: string;
-	export let items: Item[];
+	export let items: ItemWithCoverAndAttachments[];
 
-	let localItems: Item[] = items;
+	let localItems: ItemWithCoverAndAttachments[] = items;
 
 	$: if (items) {
 		dealWithServerUpdate();
@@ -43,7 +44,7 @@
 
 	const { updateItem } = queriesCtx.get();
 
-	function handleDndConsider(cId: string, e: CustomEvent<DndEvent<Item>>) {
+	function handleDndConsider(cId: string, e: CustomEvent<DndEvent<ItemWithCoverAndAttachments>>) {
 		if (columnId === cId) {
 			// Store source index when user starts dragging for later use
 			if (e.detail.info.trigger === TRIGGERS.DRAG_STARTED) {
@@ -54,7 +55,7 @@
 		}
 	}
 
-	function handleDndFinalize(cId: string, e: CustomEvent<DndEvent<Item>>) {
+	function handleDndFinalize(cId: string, e: CustomEvent<DndEvent<ItemWithCoverAndAttachments>>) {
 		if (columnId === cId) {
 			const { items: newItems } = e.detail;
 
@@ -128,7 +129,14 @@
 	>
 		{#each localItems as item (item.id)}
 			<li>
-				<ListItem title={item.title} content={item.content} id={item.id} class="list-item" />
+				<ListItem
+					title={item.title}
+					content={item.content}
+					id={item.id}
+					cover={item.cover}
+					attachmentsCount={item.attachments.length || 0}
+					class="list-item"
+				/>
 			</li>
 		{/each}
 	</ol>

@@ -1,6 +1,6 @@
 import { checkAuthUser } from '$lib/server/auth.js';
 import { error } from '@sveltejs/kit';
-import { getItem, updateItemContent, updateItemTitle } from './queries.js';
+import { getItem, makeCover, updateItemContent, updateItemTitle } from './queries.js';
 import { z } from 'zod';
 import { upsertItem } from '../../boards/[id]/queries.js';
 import { getColumn } from '../../columns/queries.js';
@@ -19,7 +19,13 @@ export async function load({ locals, params }) {
 	}
 
 	return {
-		item
+		item: {
+			...item,
+			attachments: item.attachments.map((attachment) => ({
+				...attachment,
+				isCover: item.cover?.attachmentId === attachment.id
+			}))
+		}
 	};
 }
 
@@ -36,6 +42,10 @@ const moveOrCopyItemSchema = z.object({
 	columnId: z.string(),
 	title: z.string(),
 	posIndex: z.string()
+});
+
+const makeCoverSchema = z.object({
+	attachmentId: z.string()
 });
 
 export const actions = {
@@ -160,5 +170,20 @@ export const actions = {
 			},
 			locals.user.id
 		);
+	},
+	makeCover: async ({ request, locals, params }) => {
+		const id = params.id;
+
+		if (!id) {
+			throw error(422, 'ID is required');
+		}
+
+		checkAuthUser(locals, `/items/${params.id}`);
+
+		const data = await request.formData();
+
+		const { attachmentId } = await makeCoverSchema.parseAsync(Object.fromEntries(data));
+
+		await makeCover(id, attachmentId, locals.user.id);
 	}
 };

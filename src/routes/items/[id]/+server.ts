@@ -16,7 +16,13 @@ export async function GET({ locals, params }) {
 		throw error(404, 'Board not found');
 	}
 
-	return json(item);
+	return json({
+		...item,
+		attachments: item.attachments.map((attachment) => ({
+			...attachment,
+			isCover: item.cover?.attachmentId === attachment.id
+		}))
+	});
 }
 
 export async function DELETE({ locals, params }) {

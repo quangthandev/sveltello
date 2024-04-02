@@ -1,16 +1,49 @@
 <script lang="ts">
 	import { getRelativeTime } from '$lib/utils';
-	import type { Attachment } from '@prisma/client';
+	import type { Attachment, Item } from '@prisma/client';
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
 	import { queriesCtx } from './context';
 	import CardPopover from '$lib/components/CardPopover.svelte';
+	import { enhance } from '$app/forms';
+	import type { TypedSubmitFunction } from '$lib/form';
+	import type { ActionData } from './$types';
+	import { useQueryClient } from '@tanstack/svelte-query';
 
 	export let itemId: string;
-	export let attachments: Attachment[];
+	export let attachments: (Attachment & { isCover: boolean })[];
+
+	const queryClient = useQueryClient();
 
 	const { deleteAttachment } = queriesCtx.get();
 
 	const deleteMutation = deleteAttachment(itemId);
+
+	const handleMakeCover: TypedSubmitFunction<ActionData> = ({ formData }) => {
+		const attachmentId = formData.get('attachmentId');
+
+		const item = queryClient.getQueryData<Item & { attachments: Attachment[] }>(['items', itemId]);
+
+		if (!item) {
+			return;
+		}
+
+		const newAttachments = item.attachments.map((attachment) => ({
+			...attachment,
+			isCover: attachment.id === attachmentId
+		}));
+
+		queryClient.setQueryData(['items', itemId], {
+			...item,
+			attachments: newAttachments
+		});
+
+		return async ({ update }) => {
+			await update({ invalidateAll: false });
+
+			queryClient.invalidateQueries({ queryKey: ['items', itemId] });
+			queryClient.invalidateQueries({ queryKey: ['boards', item.boardId.toString()] });
+		};
+	};
 </script>
 
 <section class="grid grid-cols-item-section items-start">
@@ -38,7 +71,7 @@
 						{/if}
 					</a>
 
-					<div class="flex flex-col gap-1">
+					<div class="flex flex-col gap-1 items-start">
 						<p class="font-bold attachment-name">{attachment.name}</p>
 						<p class="flex gap-2 text-sm text-muted-foreground">
 							<span>
@@ -65,6 +98,12 @@
 								</CardPopover>
 							</span>
 						</p>
+						{#if !attachment.isCover}
+							<form action="?/makeCover" method="post" use:enhance={handleMakeCover}>
+								<input type="hidden" name="attachmentId" value={attachment.id} />
+								<button class="underline text-sm text-muted-foreground">Make cover</button>
+							</form>
+						{/if}
 					</div>
 				</li>
 			{/each}

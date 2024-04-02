@@ -13,6 +13,14 @@ export type BoardWithColumns = Prisma.BoardGetPayload<{
 export type ItemWithColumn = Prisma.ItemGetPayload<{
 	include: {
 		column: true;
+		cover: true;
+	};
+}>;
+
+export type ItemWithCoverAndAttachments = Prisma.ItemGetPayload<{
+	include: {
+		cover: true;
+		attachments: true;
 	};
 }>;
 

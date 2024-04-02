@@ -13,7 +13,11 @@ export async function getBoard(boardId: number, userId: string) {
 				orderBy: { order: 'asc' },
 				include: {
 					items: {
-						orderBy: { order: 'asc' }
+						orderBy: { order: 'asc' },
+						include: {
+							cover: true,
+							attachments: true
+						}
 					}
 				}
 			}
