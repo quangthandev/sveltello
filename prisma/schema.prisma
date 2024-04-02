@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
@@ -12,10 +12,10 @@ datasource db {
 }
 
 model User {
-  id     String  @id @default(uuid())
-  email  String  @unique
+  id       String    @id @default(uuid())
+  email    String    @unique
   password String
-  boards Board[]
+  boards   Board[]
   sessions Session[]
 }
 
@@ -27,19 +27,19 @@ model Session {
 }
 
 model Board {
-  id        Int      @id @default(autoincrement())
-  name      String
-  color     String   @default("#e0e0e0")
+  id            Int      @id @default(autoincrement())
+  name          String
+  color         String   @default("#e0e0e0")
   imageId       String?
   imageThumbUrl String?
   imageFullUrl  String?
   imageUserName String?
   imageLinkHTML String?
-  createdAt DateTime @default(now())
-  columns   Column[]
-  items     Item[]
-  user   User  @relation(fields: [userId], references: [id])
-  userId String
+  createdAt     DateTime @default(now())
+  columns       Column[]
+  items         Item[]
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
 }
 
 model Column {
@@ -69,17 +69,38 @@ model Item {
 
   attachments Attachment[]
 
+  cover Cover?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Attachment {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  type     String
+  type      String
   url       String
-  item      Item   @relation(fields: [itemId], references: [id])
+
+  item      Item     @relation(fields: [itemId], references: [id])
   itemId    String
+
+  cover     Cover?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cover {
+  id        String   @id @default(uuid())
+  color     String?
+  url       String?
+
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    String  @unique
+
+  attachment Attachment? @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+  attachmentId String? @unique
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
