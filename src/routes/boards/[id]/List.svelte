@@ -134,7 +134,7 @@
 					content={item.content}
 					id={item.id}
 					cover={item.cover}
-					attachmentsCount={item.attachments.length || 0}
+					attachmentsCount={item.attachments?.length || 0}
 					class="list-item"
 				/>
 			</li>
