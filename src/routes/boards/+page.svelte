@@ -6,10 +6,6 @@
 	export let data;
 </script>
 
-<svelte:head>
-	<title>Boards</title>
-</svelte:head>
-
 <div class="flex min-h-full flex-1 flex-col mt-10">
 	<div class="p-8">
 		<h2 class="font-bold mb-2 text-xl">Boards</h2>

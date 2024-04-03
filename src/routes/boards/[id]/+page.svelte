@@ -144,7 +144,12 @@
 		>
 			{#each columns as column (column.id)}
 				<ItemQueriesProvider>
-					<List name={column.name} columnId={column.id} items={column.items} />
+					<List
+						name={column.name}
+						boardName={data.board.name}
+						columnId={column.id}
+						items={column.items}
+					/>
 				</ItemQueriesProvider>
 			{/each}
 		</div>

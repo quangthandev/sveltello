@@ -29,7 +29,7 @@ export async function load({ locals, params }) {
 		throw error(404, 'Board not found');
 	}
 
-	return { board, boards };
+	return { title: board.name, board, boards };
 }
 
 const updateBoardNameSchema = z.object({

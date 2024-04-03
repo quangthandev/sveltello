@@ -11,6 +11,7 @@
 	import type { ItemWithCoverAndAttachments } from '../../types';
 
 	export let name: string;
+	export let boardName: string;
 	export let columnId: string;
 	export let items: ItemWithCoverAndAttachments[];
 
@@ -129,14 +130,7 @@
 	>
 		{#each localItems as item (item.id)}
 			<li>
-				<ListItem
-					title={item.title}
-					content={item.content}
-					id={item.id}
-					cover={item.cover}
-					attachmentsCount={item.attachments?.length || 0}
-					class="list-item"
-				/>
+				<ListItem {item} {boardName} class="list-item" />
 			</li>
 		{/each}
 	</ol>

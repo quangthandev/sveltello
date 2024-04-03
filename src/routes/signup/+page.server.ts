@@ -4,6 +4,10 @@ import { lucia } from '$lib/server/auth.js';
 import { z } from 'zod';
 import { EmailSchema, PasswordSchema } from '../schemas.js';
 
+export function load() {
+	return { title: 'Sign Up' };
+}
+
 const schema = z.object({
 	email: EmailSchema,
 	password: PasswordSchema

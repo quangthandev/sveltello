@@ -3,18 +3,18 @@
 	import { page } from '$app/stores';
 	import Modal from '$lib/components/Modal.svelte';
 	import { cn } from '$lib/utils';
-	import type { Column, Cover, Item } from '@prisma/client';
+	import type { Column, Item } from '@prisma/client';
 	import ItemDetails from '../../items/[id]/ItemDetails.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
+	import type { ItemWithCoverAndAttachments } from '../../types';
 
-	export let title: string;
-	export let content: string | null;
-	export let id: string;
+	export let item: ItemWithCoverAndAttachments;
+	export let boardName: string;
 	let className: string | undefined = undefined;
 	export { className as class };
-	export let cover: Cover | null;
-	export let attachmentsCount: number;
+
+	const { id, title, content, attachments, cover } = item;
 
 	const queryClient = useQueryClient();
 
@@ -34,7 +34,11 @@
 			}
 		});
 
+		// Shallow routing
 		pushState(href, { id });
+
+		// Change page title
+		document.title = `${title} on ${boardName} | Svello`;
 	}
 </script>
 
@@ -58,7 +62,7 @@
 		)}
 	>
 		<h3>{title}</h3>
-		{#if content || attachmentsCount}
+		{#if content || attachments.length > 0}
 			<div class="flex items-center gap-2">
 				{#if content}
 					<svg
@@ -74,10 +78,10 @@
 						/>
 					</svg>
 				{/if}
-				{#if attachmentsCount}
+				{#if attachments.length > 0}
 					<span class="flex gap-1" title="attachments">
 						<IconAttachment />
-						{attachmentsCount}
+						{attachments.length}
 					</span>
 				{/if}
 			</div>

@@ -8,7 +8,7 @@ export async function load({ locals }) {
 
 	const boards = await getBoards(locals.user.id);
 
-	return { boards };
+	return { title: 'Boards', boards };
 }
 
 const createBoardSchema = z.object({

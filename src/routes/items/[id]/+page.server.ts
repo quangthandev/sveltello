@@ -19,6 +19,7 @@ export async function load({ locals, params }) {
 	}
 
 	return {
+		title: `${item.title} on ${item.board.name}`,
 		item: {
 			...item,
 			attachments: item.attachments.map((attachment) => ({

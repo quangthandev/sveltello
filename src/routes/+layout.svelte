@@ -23,7 +23,7 @@
 </script>
 
 <svelte:head>
-	<title>{$page.data.title ?? 'SvelteKit Kanban Board'}</title>
+	<title>{$page.data.title ? `${$page.data.title} | Svello` : 'Svello'}</title>
 	<meta name="description" content="A Trello clone built with SvelteKit" />
 </svelte:head>
 
@@ -32,7 +32,7 @@
 		class="bg-slate-900 border-b border-slate-800 flex items-center justify-between py-4 px-8 box-border h-appHeader"
 	>
 		<div class="flex items-center gap-8">
-			<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Home </a>
+			<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Svello </a>
 			{#if data.user}
 				<NewBoard let:trigger>
 					<button

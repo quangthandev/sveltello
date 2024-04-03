@@ -9,6 +9,11 @@ export function getItem(id: string, userId: string) {
 			}
 		},
 		include: {
+			board: {
+				select: {
+					name: true
+				}
+			},
 			column: true,
 			attachments: true,
 			cover: true

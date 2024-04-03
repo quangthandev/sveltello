@@ -10,6 +10,8 @@ export function load({ locals }) {
 	if (user) {
 		throw redirect(302, '/boards');
 	}
+
+	return { title: 'Login' };
 }
 
 const schema = z.object({
