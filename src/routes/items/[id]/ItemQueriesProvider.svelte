@@ -4,7 +4,6 @@
 	import type { Attachment, Board, Column, Item } from '@prisma/client';
 	import { page } from '$app/stores';
 	import { writable } from 'svelte/store';
-	import { goto } from '$app/navigation';
 
 	const queryClient = useQueryClient();
 

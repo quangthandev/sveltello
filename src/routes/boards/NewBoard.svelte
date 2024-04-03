@@ -7,7 +7,7 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import ImagePicker from './ImagePicker.svelte';
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
-	import type { TypedSubmitFunction, TypedSubmitFunctionWithCallback } from '$lib/form';
+	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
 	import type { ActionData } from './$types';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
