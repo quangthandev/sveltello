@@ -38,7 +38,7 @@
 		pushState(href, { id });
 
 		// Change page title
-		document.title = `${title} on ${boardName} | Svello`;
+		document.title = `${title} on ${boardName} | Sveltello`;
 	}
 </script>
 
