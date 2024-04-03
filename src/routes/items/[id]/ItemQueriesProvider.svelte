@@ -138,6 +138,12 @@
 
 	const uploadImage = createMutation<{ url: string }, unknown, { itemId: string; file: File }>({
 		mutationFn: async ({ itemId, file }) => {
+			// Limit file size to 4.5MB due to Vercel's serverless function payload limit
+			if (file.size > 4.5 * 1024 * 1024) {
+				alert('File size is too large. Please upload a file smaller than 4.5MB');
+				return;
+			}
+
 			const formData = new FormData();
 			formData.append('file', file);
 
