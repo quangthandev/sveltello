@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import Input from '$lib/components/Input.svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import * as Popover from '$lib/components/popover';
@@ -7,12 +7,18 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import ImagePicker from './ImagePicker.svelte';
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
-	import type { TypedSubmitFunction } from '$lib/form';
+	import type { TypedSubmitFunction, TypedSubmitFunctionWithCallback } from '$lib/form';
 	import type { ActionData } from './$types';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+
+	let isSubmitting = false;
 
 	const queryClient = useQueryClient();
 
-	const handleSubmit: TypedSubmitFunction<ActionData> = ({ formData }) => {
+	const handleSubmit: TypedSubmitFunctionWithCallback<ActionData> = ({ formData }, onSuccess) => {
+		isSubmitting = true;
+
 		const images = queryClient.getQueryData<Random[]>(['unsplash-random']);
 		const seletecImage = images?.find((photo) => photo.id === formData.get('photo'));
 
@@ -26,8 +32,24 @@
 
 		formData.delete('photo');
 
-		return async ({ update }) => {
-			await update({ invalidateAll: false });
+		return async ({ result }) => {
+			if (result.type === 'redirect') {
+				const prevPageRoute = $page.route.id;
+
+				await goto(result.location, {
+					invalidateAll: true
+				});
+
+				isSubmitting = false;
+				onSuccess();
+
+				// Reload the page if current route is /boards/[id]
+				if (prevPageRoute === '/boards/[id]') {
+					location.reload();
+				}
+			} else {
+				applyAction(result);
+			}
 		};
 	};
 
@@ -39,7 +61,7 @@
 
 <svelte:window bind:innerWidth />
 
-<Popover.Root let:open>
+<Popover.Root let:open let:close>
 	<Popover.Trigger asChild let:triggerAction={trigger}>
 		<slot {trigger} />
 	</Popover.Trigger>
@@ -60,8 +82,8 @@
 		<form
 			class="px-8 max-w-md space-y-4"
 			method="post"
-			action="?/create"
-			use:enhance={handleSubmit}
+			action="/boards?/create"
+			use:enhance={(input) => handleSubmit(input, close)}
 		>
 			<ImagePicker visible={open} />
 			<div class="flex items-center gap-1">
@@ -73,6 +95,7 @@
 			</div>
 			<button
 				class="w-full bg-blue-600 hover:opacity-90 text-white rounded-md py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
+				disabled={isSubmitting}
 			>
 				Create
 			</button>

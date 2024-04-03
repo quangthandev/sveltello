@@ -9,12 +9,15 @@
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
 	import ItemQueriesProvider from '../../items/[id]/ItemQueriesProvider.svelte';
+	import type { ItemWithCoverAndAttachments } from '../../types';
 
 	export let data: PageData;
 
 	const queryClient = useQueryClient();
 
-	const query = createQuery<Board & { items: Item[]; columns: (Column & { items: Item[] })[] }>({
+	const query = createQuery<
+		Board & { items: Item[]; columns: (Column & { items: ItemWithCoverAndAttachments[] })[] }
+	>({
 		queryKey: ['boards', $page.params.id],
 		queryFn: async () => (await fetch(`/boards/${$page.params.id}`)).json(),
 		initialData: data.board
