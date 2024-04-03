@@ -1,14 +1,29 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import CardPopover from '$lib/components/CardPopover.svelte';
+	import IconDelete from '$lib/components/icons/IconDelete.svelte';
 	import { cn } from '$lib/utils';
 	import type { Board } from '@prisma/client';
+	import type { TypedSubmitFunction } from '$lib/form';
+	import type { ActionData } from './$types';
 
 	export let board: Board;
 	let className = '';
 	export { className as class };
 
+	let isDeleting = false;
+
 	const { id, name, color, imageThumbUrl } = board;
+
+	const handleSubmit: TypedSubmitFunction<ActionData> = () => {
+		isDeleting = true;
+
+		return async ({ update }) => {
+			await update({ invalidateAll: true });
+
+			isDeleting = false;
+		};
+	};
 </script>
 
 <a
@@ -28,24 +43,15 @@
 			class="absolute top-4 right-4 text-gray-400 hover:text-red-500"
 			use:trigger
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 24 24"
-				width="24"
-				height="24"
-				fill="currentColor"
-			>
-				<path
-					d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"
-				/>
-			</svg>
+			<IconDelete />
 		</button>
 		<div slot="content" class="px-4 space-y-4">
 			<p>Are you sure you want to delete this board?</p>
-			<form method="post" action="?/delete" use:enhance>
+			<form method="post" action="?/delete" use:enhance={handleSubmit}>
 				<input type="hidden" name="boardId" value={id} />
 				<button
 					class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
+					disabled={isDeleting}
 				>
 					Delete
 				</button>
