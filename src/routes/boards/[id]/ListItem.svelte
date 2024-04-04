@@ -62,7 +62,7 @@
 		)}
 	>
 		<h3>{title}</h3>
-		{#if content || attachments.length > 0}
+		{#if content || attachments?.length > 0}
 			<div class="flex items-center gap-2">
 				{#if content}
 					<svg
@@ -78,7 +78,7 @@
 						/>
 					</svg>
 				{/if}
-				{#if attachments.length > 0}
+				{#if attachments?.length > 0}
 					<span class="flex gap-1" title="attachments">
 						<IconAttachment />
 						{attachments.length}
