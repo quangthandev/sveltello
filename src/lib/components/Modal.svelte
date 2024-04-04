@@ -11,6 +11,8 @@
 
 	let className: string | undefined = undefined;
 	export { className as class };
+	let containerClassName: string | undefined = undefined;
+	export { containerClassName as containerClass };
 
 	let modalEl: HTMLDivElement;
 
@@ -35,7 +37,10 @@
 		role="presentation"
 		tabindex="-1"
 		transition:fade|global={{ easing: cubicOut, duration: 300 }}
-		class="fixed inset-0 z-40 flex items-center justify-center bg-black/15 p-8"
+		class={cn(
+			'fixed inset-0 z-40 flex items-center justify-center bg-black/15 p-8',
+			containerClassName
+		)}
 	>
 		<div
 			role="dialog"

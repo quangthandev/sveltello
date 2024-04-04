@@ -92,7 +92,8 @@
 {#if pageState.id && pageState.id === id}
 	<Modal
 		on:close={() => history.back()}
-		class="w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar"
+		containerClass={cn('items-start mt-16')}
+		class={cn('w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar')}
 	>
 		<ItemDetails {id} on:close={() => history.back()} />
 	</Modal>

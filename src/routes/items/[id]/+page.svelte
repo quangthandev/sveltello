@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import ItemDetails from './ItemDetails.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import { cn } from '$lib/utils';
 
 	let previousPage: string = base;
 
@@ -16,7 +17,8 @@
 	on:close={() => {
 		goto(previousPage ? previousPage : `/boards`);
 	}}
-	class="w-11/12 md:w-9/12 lg:w-[768px]"
+	containerClass={cn('items-start mt-16')}
+	class={cn('w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar')}
 >
 	<ItemDetails id={$page.params.id} />
 </Modal>

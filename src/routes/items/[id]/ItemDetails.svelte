@@ -90,7 +90,7 @@
 
 				<!-- Actions section -->
 				{#if item}
-					<ItemActions {item} class="min-w-48" />
+					<ItemActions {item} class="min-w-48 translate-y-0 lg:-translate-y-10" />
 				{/if}
 			</div>
 		</div>
