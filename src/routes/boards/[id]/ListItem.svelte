@@ -14,7 +14,7 @@
 	let className: string | undefined = undefined;
 	export { className as class };
 
-	const { id, title, content, attachments, cover } = item;
+	$: ({ id, title, content, attachments, cover } = item);
 
 	const queryClient = useQueryClient();
 
