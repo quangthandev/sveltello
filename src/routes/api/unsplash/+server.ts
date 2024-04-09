@@ -1,4 +1,4 @@
-import { unsplash } from '$lib/server/unsplash.js';
+import { unsplash } from '$lib/server/unsplash';
 import { error, json } from '@sveltejs/kit';
 
 export async function GET() {

@@ -1,8 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { userExists, createUser } from './queries.js';
-import { lucia } from '$lib/server/auth.js';
+import { userExists, createUser } from './queries';
+import { lucia } from '$lib/server/auth';
 import { z } from 'zod';
-import { EmailSchema, PasswordSchema } from '../schemas.js';
+import { EmailSchema, PasswordSchema } from '../schemas';
 
 export function load() {
 	return { title: 'Sign Up' };
@@ -28,7 +28,10 @@ export const actions = {
 
 			const user = await createUser(email, password);
 
-			const session = await lucia.createSession(user.id, {});
+			const session = await lucia.createSession(user.id, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			cookies.set(sessionCookie.name, sessionCookie.value, {
 				path: '.',

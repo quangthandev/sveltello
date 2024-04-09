@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
-import { getBoard, upsertItem } from './queries.js';
-import { checkAuthUser } from '$lib/server/auth.js';
+import { getBoard, upsertItem } from './queries';
+import { checkAuthUser } from '$lib/server/auth';
 
 export async function GET({ params, locals }) {
 	if (!params.id) {

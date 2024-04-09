@@ -1,9 +1,9 @@
-import { checkAuthUser } from '$lib/server/auth.js';
+import { checkAuthUser } from '$lib/server/auth';
 import { error } from '@sveltejs/kit';
-import { getItem, makeCover, updateItemContent, updateItemTitle } from './queries.js';
+import { getItem, makeCover, updateItemContent, updateItemTitle } from './queries';
 import { z } from 'zod';
-import { upsertItem } from '../../boards/[id]/queries.js';
-import { getColumn } from '../../columns/queries.js';
+import { upsertItem } from '../../boards/[id]/queries';
+import { getColumn } from '../../columns/queries';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
@@ -14,7 +14,7 @@ export async function load({ locals, params }) {
 
 	const item = await getItem(params.id, locals.user.id);
 
-	if (!item) {
+	if (!item || !item.board) {
 		throw error(404, 'Item not found');
 	}
 

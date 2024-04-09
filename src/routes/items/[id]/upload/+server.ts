@@ -1,11 +1,11 @@
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import s3Client from '$lib/server/s3.js';
+import s3Client from '$lib/server/s3';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { R2_BUCKET_NAME, R2_PUBLIC_BUCKET_URL } from '$env/static/private';
-import { createAttachment, getItem, makeCover } from '../queries.js';
-import { checkAuthUser } from '$lib/server/auth.js';
+import { createAttachment, getItem, makeCover } from '../queries';
+import { checkAuthUser } from '$lib/server/auth';
 
 const uploadSchema = z.object({
 	file: z.instanceof(File)

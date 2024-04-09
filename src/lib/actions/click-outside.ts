@@ -2,7 +2,7 @@
 
 import { readable, writable, type Readable } from 'svelte/store';
 import { get } from 'svelte/store';
-import { addEventListener, isFunction } from '$lib/utils.js';
+import { addEventListener, isFunction } from '$lib/utils';
 
 export type ClickOutsideConfig = {
 	/**
