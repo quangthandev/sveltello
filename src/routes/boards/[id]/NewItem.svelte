@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { ItemMutationFields } from './types';
 	import { page } from '$app/stores';
 	import { queriesCtx } from '../../items/[id]/context';
 	import { clickOutside } from '$lib/actions/click-outside';
+	import { generateId } from 'lucia';
 
 	export let columnId: string;
 	export let nextOrder: number;
@@ -21,7 +21,7 @@
 
 	function handleSubmit(e: SubmitEvent) {
 		const formData = new FormData(e.target as HTMLFormElement);
-		const id = crypto.randomUUID();
+		const id = generateId(15);
 
 		const data: Record<string, unknown> = {};
 		data.id = id;
@@ -45,13 +45,13 @@
 	on:submit|preventDefault={handleSubmit}
 	use:clickOutside={{ handler: () => dispatch('complete') }}
 >
-	<input type="hidden" name={ItemMutationFields.columnId.name} value={columnId} />
-	<input type="hidden" name={ItemMutationFields.order.name} value={nextOrder} />
+	<input type="hidden" name="columnId" value={columnId} />
+	<input type="hidden" name="order" value={nextOrder} />
 
 	<textarea
 		required
 		bind:this={textareaEl}
-		name={ItemMutationFields.title.name}
+		name="title"
 		placeholder="Enter a title for this card"
 		class="outline-none shadow text-sm rounded-lg w-full py-1 px-2 resize-none placeholder:text-sm placeholder:text-slate-500 h-14"
 		on:keydown={(event) => {

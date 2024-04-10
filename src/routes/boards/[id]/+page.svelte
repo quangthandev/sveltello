@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
-	import type { Board, Item, Column } from '@prisma/client';
 	import type { PageData } from './$types';
 	import List from './List.svelte';
 	import EditableText from './EditableText.svelte';
@@ -9,15 +8,13 @@
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
 	import ItemQueriesProvider from '../../items/[id]/ItemQueriesProvider.svelte';
-	import type { ItemWithCoverAndAttachments } from '../../types';
+	import type { Board, BoardWithColumns, Column, Item } from '../../types';
 
 	export let data: PageData;
 
 	const queryClient = useQueryClient();
 
-	const query = createQuery<
-		Board & { items: Item[]; columns: (Column & { items: ItemWithCoverAndAttachments[] })[] }
-	>({
+	const query = createQuery<BoardWithColumns>({
 		queryKey: ['boards', $page.params.id],
 		queryFn: async () => (await fetch(`/boards/${$page.params.id}`)).json(),
 		initialData: data.board

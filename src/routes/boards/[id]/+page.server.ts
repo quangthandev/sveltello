@@ -97,6 +97,20 @@ export const actions = {
 		const data = await request.formData();
 		const { id, name } = await copyColumnSchema.parseAsync(Object.fromEntries(data));
 
-		await copyColumn(id, name, Number(params.id), locals.user.id);
+		// Check if the board exists
+		const board = await getBoard(parseInt(params.id), locals.user.id);
+
+		if (!board) {
+			throw error(404, 'Board not found');
+		}
+
+		try {
+			await copyColumn(id, name, board.id, locals.user.id);
+		} catch (err) {
+			if (err instanceof Error) {
+				throw error(400, err.message);
+			}
+			throw error(500, 'Something went wrong. Please try again.');
+		}
 	}
 };

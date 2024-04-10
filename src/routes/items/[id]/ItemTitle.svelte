@@ -2,9 +2,9 @@
 	import { createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import EditableText from '../../boards/[id]/EditableText.svelte';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
-	import type { BoardWithColumns, ItemWithColumn } from '../../types';
+	import type { BoardWithColumns, ItemFullPayload } from '../../types';
 
-	export let item: ItemWithColumn;
+	export let item: ItemFullPayload;
 	const { id, boardId, title } = item;
 
 	const queryClient = useQueryClient();
@@ -46,7 +46,7 @@
 							queryKey: ['items', id]
 						});
 						queryClient.invalidateQueries({
-							queryKey: ['boards', boardId]
+							queryKey: ['boards', boardId.toString()]
 						});
 					}}
 					fieldName="title"

@@ -4,12 +4,12 @@
 	import IconCopy from '$lib/components/icons/IconCopy.svelte';
 	import { cn } from '$lib/utils';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
-	import type { ItemWithColumn } from '../../types';
+	import type { ItemFullPayload } from '../../types';
 	import AttachPopover from './AttachPopover.svelte';
 	import { queriesCtx } from './context';
 	import { goto } from '$app/navigation';
 
-	export let item: ItemWithColumn;
+	export let item: ItemFullPayload;
 	export { className as class };
 
 	let className: string | undefined = '';

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Item } from '@prisma/client';
 	import EditableText from './EditableText.svelte';
 	import ListItem from './ListItem.svelte';
 	import NewItem from './NewItem.svelte';

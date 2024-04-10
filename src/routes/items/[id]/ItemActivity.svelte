@@ -2,9 +2,9 @@
 	import { page } from '$app/stores';
 	import Avatar from '$lib/components/Avatar.svelte';
 	import { formatTimestamp } from '$lib/utils';
-	import type { Column, Item } from '@prisma/client';
+	import type { ItemFullPayload } from '../../types';
 
-	export let item: Item & { column: Column };
+	export let item: ItemFullPayload;
 </script>
 
 <section class="grid grid-cols-item-section items-start w-full">
