@@ -7,13 +7,14 @@
 	import type { ActionData } from './$types';
 	import type { WithOptional } from '$lib/utils';
 	import type { Board, Column } from '../../types';
+	import { generateId } from 'lucia';
 
 	export let boardId: number;
 
 	let inputEl: HTMLInputElement;
 
 	let editing: boolean;
-	let id: string = crypto.randomUUID();
+	let id: string = generateId(15);
 
 	const queryClient = useQueryClient();
 
@@ -44,7 +45,7 @@
 				queryKey: ['boards', boardId.toString()]
 			});
 			editing = true;
-			id = crypto.randomUUID();
+			id = generateId(15);
 			await tick();
 			inputEl.focus();
 		};

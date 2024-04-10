@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { generateId } from 'lucia';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	export let label: string;
 	export let id: string | null | undefined = undefined;
 
-	id = id ?? crypto.randomUUID();
+	id = id ?? generateId(15);
 
 	type $$Props = HTMLInputAttributes & {
 		label: string;
