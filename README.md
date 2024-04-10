@@ -7,7 +7,7 @@ A demo Trello clone fullstack application built with SvelteKit. UI and domain mo
 - UI: SvelteKit, TailwindCSS
 - Auth: Lucia
 - Database: SQLite (Turso)
-- ORM: Prisma
+- ORM: Drizzle
 - Build: Vite
 - Language: TypeScript
 
@@ -30,10 +30,10 @@ R2_BUCKET_NAME=[your R2 bucket name]
 R2_PUBLIC_BUCKET_URL=[your R2 public bucket url]
 ```
 
-- Migrate prisma schema
+- Migrate database
 
 ```bash
-npx prisma migrate dev
+npm run db:migrate
 ```
 
 - Start a development server:
