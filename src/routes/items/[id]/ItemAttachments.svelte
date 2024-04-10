@@ -78,11 +78,7 @@
 								Added {getRelativeTime(attachment.createdAt)}
 							</span>
 							<span>
-								<CardPopover
-									title="Delete Attachment"
-									let:trigger
-									on:confirm={() => $deleteMutation.mutate(attachment.id)}
-								>
+								<CardPopover title="Delete Attachment" let:trigger>
 									<button use:trigger class="underline"> Delete </button>
 									<div slot="content" class="px-4 space-y-4">
 										<p>Deleting an attachment is permanent.</p>

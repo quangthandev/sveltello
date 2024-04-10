@@ -8,6 +8,7 @@
 	import AttachPopover from './AttachPopover.svelte';
 	import { queriesCtx } from './context';
 	import { goto } from '$app/navigation';
+	import CardPopover from '$lib/components/CardPopover.svelte';
 
 	export let item: ItemFullPayload;
 	export { className as class };
@@ -48,17 +49,30 @@
 					Copy
 				</button>
 			</MoveOrCopyItemPopover>
-			<button
-				class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
-				on:click={async () => {
-					await $deleteItem.mutateAsync(item.id);
+			<CardPopover title="Delete Card" let:trigger>
+				<button
+					use:trigger
+					class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+				>
+					<IconDelete />
+					Delete
+				</button>
+				<div slot="content" class="px-4 space-y-4">
+					<p>Deleting a card is permanent.</p>
+					<p>There is no undo.</p>
+					<button
+						class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
+						disabled={$deleteItem.isPending}
+						on:click={async () => {
+							await $deleteItem.mutateAsync(item.id);
 
-					goto(`/boards/${item.boardId}`);
-				}}
-			>
-				<IconDelete />
-				Delete
-			</button>
+							goto(`/boards/${item.boardId}`);
+						}}
+					>
+						Delete
+					</button>
+				</div>
+			</CardPopover>
 		</div>
 	</div>
 </div>
