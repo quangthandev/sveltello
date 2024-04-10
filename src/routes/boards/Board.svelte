@@ -3,9 +3,9 @@
 	import CardPopover from '$lib/components/CardPopover.svelte';
 	import IconDelete from '$lib/components/icons/IconDelete.svelte';
 	import { cn } from '$lib/utils';
-	import type { Board } from '@prisma/client';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { ActionData } from './$types';
+	import type { Board } from '../types';
 
 	export let board: Board;
 	let className = '';

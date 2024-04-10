@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import { queriesCtx, type MutationData } from './context';
-	import type { Attachment, Board, Column, Item } from '@prisma/client';
 	import { page } from '$app/stores';
 	import { writable } from 'svelte/store';
+	import type { Attachment, Board, Column, Item } from '../../types';
 
 	const queryClient = useQueryClient();
 

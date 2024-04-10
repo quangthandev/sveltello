@@ -1,8 +1,8 @@
 // Reference: https://github.com/melt-ui/melt-ui/blob/develop/src/lib/internal/actions/escape-keydown/action.ts
 
 import { get, readable, type Readable } from 'svelte/store';
-import type { EscapeKeydownConfig } from './types.js';
-import { isFunction, isHTMLElement, isReadable, noop } from '$lib/utils.js';
+import type { EscapeKeydownConfig } from './types';
+import { isFunction, isHTMLElement, isReadable, noop } from '$lib/utils';
 
 /**
  * Creates a readable store that tracks the latest Escape Keydown that occurred on the document.

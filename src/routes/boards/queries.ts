@@ -1,25 +1,23 @@
-import prisma from '$lib/server/prisma';
+import { db } from '$lib/server/drizzle/db';
+import { board, column, item } from '$lib/server/drizzle/schema';
+import { and, asc, eq } from 'drizzle-orm';
 
 export async function getBoards(userId: string) {
-	return prisma.board.findMany({
-		where: {
-			userId: userId
-		},
-		include: {
+	const boards = await db.query.board.findMany({
+		where: eq(board.userId, userId),
+		with: {
 			columns: {
-				orderBy: {
-					order: 'asc'
-				},
-				include: {
+				orderBy: [asc(column.order)],
+				with: {
 					items: {
-						orderBy: {
-							order: 'asc'
-						}
+						orderBy: [asc(item.order)]
 					}
 				}
 			}
 		}
 	});
+
+	return boards;
 }
 
 export async function createBoard(
@@ -29,32 +27,26 @@ export async function createBoard(
 	imageId?: string,
 	imageThumbUrl?: string,
 	imageFullUrl?: string,
-	imageUserName?: string,
-	imageLinkHTML?: string
+	imageUsername?: string,
+	imageLinkHtml?: string
 ) {
-	return prisma.board.create({
-		data: {
+	const result = await db
+		.insert(board)
+		.values({
+			userId,
 			name,
 			color,
 			imageId,
 			imageThumbUrl,
 			imageFullUrl,
-			imageUserName,
-			imageLinkHTML,
-			user: {
-				connect: {
-					id: userId
-				}
-			}
-		}
-	});
+			imageUsername,
+			imageLinkHtml
+		})
+		.returning();
+
+	return result[0];
 }
 
 export async function deleteBoard(boardId: number, userId: string) {
-	return prisma.board.delete({
-		where: {
-			id: boardId,
-			userId
-		}
-	});
+	return await db.delete(board).where(and(eq(board.id, boardId), eq(board.userId, userId)));
 }

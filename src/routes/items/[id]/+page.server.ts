@@ -1,9 +1,18 @@
-import { checkAuthUser } from '$lib/server/auth.js';
+import { generateId } from 'lucia';
+import { checkAuthUser } from '$lib/server/auth';
 import { error } from '@sveltejs/kit';
-import { getItem, makeCover, updateItemContent, updateItemTitle } from './queries.js';
+import {
+	createAttachment,
+	getAttachments,
+	getCover,
+	getItem,
+	makeCover,
+	updateItemContent,
+	updateItemTitle
+} from './queries';
 import { z } from 'zod';
-import { upsertItem } from '../../boards/[id]/queries.js';
-import { getColumn } from '../../columns/queries.js';
+import { upsertItem } from '../../boards/[id]/queries';
+import { getColumn } from '../../columns/queries';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
@@ -14,7 +23,7 @@ export async function load({ locals, params }) {
 
 	const item = await getItem(params.id, locals.user.id);
 
-	if (!item) {
+	if (!item || !item.board) {
 		throw error(404, 'Item not found');
 	}
 
@@ -100,7 +109,7 @@ export const actions = {
 		}
 
 		// Calculate order from position index
-		const index = parseInt(posIndex);
+		const index = Number(posIndex);
 		let order;
 		if (index === 1) {
 			if (column.items.length === 0) {
@@ -120,7 +129,7 @@ export const actions = {
 				title,
 				columnId,
 				order,
-				boardId: parseInt(boardId)
+				boardId: Number(boardId)
 			},
 			locals.user.id
 		);
@@ -147,7 +156,7 @@ export const actions = {
 		}
 
 		// Calculate order from position index
-		const index = parseInt(posIndex);
+		const index = Number(posIndex);
 		let order;
 		if (index === 1) {
 			if (column.items.length === 0) {
@@ -161,16 +170,41 @@ export const actions = {
 			order = (column.items[index - 2].order + column.items[index - 1].order) / 2;
 		}
 
-		await upsertItem(
+		// Create new item
+		const createdItem = await upsertItem(
 			{
-				id: crypto.randomUUID(),
+				id: generateId(15),
 				title,
 				columnId,
 				order,
-				boardId: parseInt(boardId)
+				boardId: Number(boardId)
 			},
 			locals.user.id
 		);
+
+		// Copy attachments
+		const attachments = await getAttachments(id, locals.user.id);
+		const createdAttachments = [];
+		for (const attachment of attachments) {
+			const created = await createAttachment(
+				createdItem[0].id,
+				attachment.name,
+				attachment.type,
+				attachment.url
+			);
+			createdAttachments.push(created[0]);
+		}
+
+		// Create cover for newly created item
+		const originalItemCover = await getCover(id, locals.user.id);
+		if (originalItemCover && originalItemCover.attachmentId) {
+			const index = attachments.findIndex(
+				(attachment) => attachment.id === originalItemCover.attachmentId
+			);
+			if (index !== -1) {
+				await makeCover(createdItem[0].id, createdAttachments[index].id, locals.user.id);
+			}
+		}
 	},
 	makeCover: async ({ request, locals, params }) => {
 		const id = params.id;

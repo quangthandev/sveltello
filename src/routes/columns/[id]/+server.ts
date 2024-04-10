@@ -1,6 +1,6 @@
-import { checkAuthUser } from '$lib/server/auth.js';
+import { checkAuthUser } from '$lib/server/auth';
 import { json } from '@sveltejs/kit';
-import { updateColumnOrder } from '../../boards/[id]/queries.js';
+import { updateColumnOrder } from '../../boards/[id]/queries';
 
 export async function PATCH({ request, locals, params }) {
 	checkAuthUser(locals, `/columns/${params.id}`);

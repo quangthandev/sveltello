@@ -2,7 +2,7 @@
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import IconArrowLeft from '$lib/components/icons/IconArrowLeft.svelte';
 	import IconArrowRight from '$lib/components/icons/IconArrowRight.svelte';
-	import type { Column } from '@prisma/client';
+	import type { Column } from '../../types';
 	import type { BoardWithColumns, ItemWithColumn } from '../../types';
 
 	export let item: ItemWithColumn;

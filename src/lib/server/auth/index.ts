@@ -1,10 +1,18 @@
 import { Lucia } from 'lucia';
-import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
-import prisma from '$lib/server/prisma';
 import { dev } from '$app/environment';
 import { redirect } from '@sveltejs/kit';
 
-const adapter = new PrismaAdapter(prisma.session, prisma.user);
+import { dbClient } from '$lib/server/drizzle/db';
+import {
+	adapterOptions,
+	generateSessionAttributes,
+	generateUserAttributes,
+	type DatabaseSessionAttributes,
+	type DatabaseUserAttributes
+} from './utils';
+import { LibSQLAdapter } from '@lucia-auth/adapter-sqlite';
+
+const adapter = new LibSQLAdapter(dbClient, adapterOptions);
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {
@@ -14,9 +22,10 @@ export const lucia = new Lucia(adapter, {
 		}
 	},
 	getUserAttributes: (attributes) => {
-		return {
-			email: attributes.email
-		};
+		return generateUserAttributes(attributes);
+	},
+	getSessionAttributes: (attributes) => {
+		return generateSessionAttributes(attributes);
 	}
 });
 
@@ -24,11 +33,8 @@ declare module 'lucia' {
 	interface Register {
 		Lucia: typeof lucia;
 		DatabaseUserAttributes: DatabaseUserAttributes;
+		DatabaseSessionAttributes: DatabaseSessionAttributes;
 	}
-}
-
-interface DatabaseUserAttributes {
-	email: string;
 }
 
 /**

@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { login } from './queries.js';
-import { lucia } from '$lib/server/auth.js';
-import { EmailSchema, PasswordSchema } from '../schemas.js';
+import { login } from './queries';
+import { lucia } from '$lib/server/auth';
+import { EmailSchema, PasswordSchema } from '../schemas';
 import { z } from 'zod';
 
 export function load({ locals }) {
@@ -34,7 +34,10 @@ export const actions = {
 				});
 			}
 
-			const session = await lucia.createSession(userId, {});
+			const session = await lucia.createSession(userId, {
+				created_at: new Date(),
+				updated_at: new Date()
+			});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			cookies.set(sessionCookie.name, sessionCookie.value, {
 				path: '.',

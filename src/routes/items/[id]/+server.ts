@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
-import { deleteCard, moveItemToColumn, upsertItem } from '../../boards/[id]/queries.js';
-import { checkAuthUser } from '$lib/server/auth.js';
-import { getItem } from './queries.js';
+import { moveItemToColumn, upsertItem } from '../../boards/[id]/queries';
+import { checkAuthUser } from '$lib/server/auth';
+import { deleteItem, getItem } from './queries';
 
 export async function GET({ locals, params }) {
 	if (!params.id) {
@@ -18,7 +18,7 @@ export async function GET({ locals, params }) {
 
 	return json({
 		...item,
-		attachments: item.attachments.map((attachment) => ({
+		attachments: (item.attachments ?? []).map((attachment) => ({
 			...attachment,
 			isCover: item.cover?.attachmentId === attachment.id
 		}))
@@ -34,7 +34,7 @@ export async function DELETE({ locals, params }) {
 
 	checkAuthUser(locals, `/items/${params.id}`);
 
-	await deleteCard(id, locals.user.id);
+	await deleteItem(id, locals.user.id);
 
 	return json({ message: 'ok' });
 }

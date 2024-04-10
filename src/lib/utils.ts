@@ -6,7 +6,7 @@ export function cn(...args: ClassValue[]): string {
 	return twMerge(clsx(args));
 }
 
-export function formatTimestamp(timestamp: Date): string {
+export function formatTimestamp(timestamp: Date | string): string {
 	return new Date(timestamp).toLocaleString('en-US', {
 		month: 'short',
 		day: 'numeric',
@@ -27,7 +27,7 @@ const units: Record<RelativeTimeUnit, number> = {
 	second: 1000
 } as const;
 
-export function getRelativeTime(d1: Date, d2 = new Date()) {
+export function getRelativeTime(d1: Date | string, d2 = new Date()) {
 	const elapsed = new Date(d1).getTime() - d2.getTime();
 
 	for (const unit of Object.keys(units) as RelativeTimeUnit[]) {

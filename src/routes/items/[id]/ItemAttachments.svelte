@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { getRelativeTime } from '$lib/utils';
-	import type { Attachment, Item } from '@prisma/client';
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
 	import { queriesCtx } from './context';
 	import CardPopover from '$lib/components/CardPopover.svelte';
@@ -8,6 +7,7 @@
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { ActionData } from './$types';
 	import { useQueryClient } from '@tanstack/svelte-query';
+	import type { Attachment, ItemFullPayload } from '../../types';
 
 	export let itemId: string;
 	export let attachments: (Attachment & { isCover: boolean })[];
@@ -21,7 +21,7 @@
 	const handleMakeCover: TypedSubmitFunction<ActionData> = ({ formData }) => {
 		const attachmentId = formData.get('attachmentId');
 
-		const item = queryClient.getQueryData<Item & { attachments: Attachment[] }>(['items', itemId]);
+		const item = queryClient.getQueryData<ItemFullPayload>(['items', itemId]);
 
 		if (!item) {
 			return;

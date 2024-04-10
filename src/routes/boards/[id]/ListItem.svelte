@@ -3,18 +3,17 @@
 	import { page } from '$app/stores';
 	import Modal from '$lib/components/Modal.svelte';
 	import { cn } from '$lib/utils';
-	import type { Column, Item } from '@prisma/client';
 	import ItemDetails from '../../items/[id]/ItemDetails.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
-	import type { ItemWithCoverAndAttachments } from '../../types';
+	import type { ItemWithColumn, ItemWithCoverAndAttachments } from '../../types';
 
 	export let item: ItemWithCoverAndAttachments;
 	export let boardName: string;
 	let className: string | undefined = undefined;
 	export { className as class };
 
-	const { id, title, content, attachments, cover } = item;
+	$: ({ id, title, content, attachments, cover } = item);
 
 	const queryClient = useQueryClient();
 
@@ -26,7 +25,7 @@
 
 		const { href } = e.currentTarget as HTMLAnchorElement;
 
-		queryClient.prefetchQuery<Item & { column: Column }>({
+		queryClient.prefetchQuery<ItemWithColumn>({
 			queryKey: ['items', id],
 			queryFn: async () => {
 				const res = await fetch(`/items/${id}`);

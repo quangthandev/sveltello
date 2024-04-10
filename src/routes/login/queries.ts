@@ -1,20 +1,22 @@
-import prisma from '$lib/server/prisma';
+import { db } from '$lib/server/drizzle/db';
+import { user } from '$lib/server/drizzle/schema';
+import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 
 export async function login(email: string, password: string) {
-	const user = await prisma.user.findUnique({
-		where: { email }
+	const existingUser = await db.query.user.findFirst({
+		where: eq(user.email, email)
 	});
 
-	if (!user) {
+	if (!existingUser) {
 		return false;
 	}
 
-	const validPassword = await new Argon2id().verify(user.password, password);
+	const validPassword = await new Argon2id().verify(existingUser.password, password);
 
 	if (!validPassword) {
 		return false;
 	}
 
-	return user.id;
+	return existingUser.id;
 }

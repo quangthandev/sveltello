@@ -3,10 +3,10 @@
 	import { enhance } from '$app/forms';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import type { Board, Column, Item } from '@prisma/client';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { ActionData } from './$types';
 	import type { WithOptional } from '$lib/utils';
+	import type { Board, Column } from '../../types';
 
 	export let boardId: number;
 

@@ -1,4 +1,4 @@
-import { lucia } from '$lib/server/auth.js';
+import { lucia } from '$lib/server/auth';
 import { fail, redirect } from '@sveltejs/kit';
 
 export function load() {

@@ -2,9 +2,9 @@
 	import Skeleton from '$lib/components/Skeleton.svelte';
 	import ItemDescriptionEditor from './ItemDescriptionEditor.svelte';
 	import ItemDescriptionContent from './ItemDescriptionContent.svelte';
-	import type { Attachment, Column, Item } from '@prisma/client';
+	import type { ItemFullPayload } from '../../types';
 
-	export let item: (Item & { column: Column; attachments: Attachment[] }) | undefined;
+	export let item: ItemFullPayload | undefined;
 	export let isLoading = false;
 
 	let isEditing = false;

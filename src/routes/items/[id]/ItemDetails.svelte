@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { createQuery } from '@tanstack/svelte-query';
-	import type { Attachment } from '@prisma/client';
 	import ItemDescription from './ItemDescription.svelte';
 	import Skeleton from '$lib/components/Skeleton.svelte';
 	import ItemTitle from './ItemTitle.svelte';
@@ -9,15 +8,13 @@
 	import ItemActions from './ItemActions.svelte';
 	import ItemAttachments from './ItemAttachments.svelte';
 	import ItemQueriesProvider from './ItemQueriesProvider.svelte';
-	import type { ItemWithColumn } from '../../types';
+	import type { ItemFullPayload } from '../../types';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import { createEventDispatcher } from 'svelte';
 
 	export let id: string;
 
-	const query = createQuery<
-		ItemWithColumn & { attachments: (Attachment & { isCover: boolean })[] }
-	>({
+	const query = createQuery<ItemFullPayload>({
 		queryKey: ['items', id],
 		queryFn: async () => {
 			const res = await fetch(`/items/${id}`);
