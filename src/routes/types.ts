@@ -30,3 +30,4 @@ export type ItemMutation = Required<
 export type ColumnWithItems = Column & {
 	items: Item[];
 };
+export type ColumnMutation = Omit<typeof column.$inferInsert, 'order' | 'createdAt' | 'updatedAt'>;

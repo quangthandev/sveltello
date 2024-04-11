@@ -1,67 +1,85 @@
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { enhance } from '$app/forms';
 	import { clickOutside } from '$lib/actions/click-outside';
-	import { useQueryClient } from '@tanstack/svelte-query';
-	import type { TypedSubmitFunction } from '$lib/form';
-	import type { ActionData } from './$types';
+	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import type { WithOptional } from '$lib/utils';
-	import type { Board, Column } from '../../types';
+	import type { Board, Column, ColumnMutation } from '../../types';
 	import { generateId } from 'lucia';
 
 	export let boardId: number;
 
 	let inputEl: HTMLInputElement;
-
 	let editing: boolean;
-	let id: string = generateId(15);
 
 	const queryClient = useQueryClient();
 
-	const handleSubmit: TypedSubmitFunction<ActionData> = () => {
-		queryClient.setQueryData<Board & { columns: WithOptional<Column, 'order'>[] }>(
-			['boards', boardId.toString()],
-			(prevData) => {
-				if (!prevData) return;
-				return {
-					...prevData,
+	const createColumnMutation = createMutation<unknown, unknown, ColumnMutation>({
+		mutationFn: async (data) => {
+			await fetch('/api/columns', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+		},
+		onMutate: async (data) => {
+			const prevBoardData = queryClient.getQueryData<
+				Board & { columns: WithOptional<Column, 'order'>[] }
+			>(['boards', boardId.toString()]);
+
+			if (prevBoardData) {
+				queryClient.setQueryData(['boards', boardId.toString()], {
+					...prevBoardData,
 					columns: [
-						...prevData.columns,
+						...prevBoardData.columns,
 						{
-							id,
-							name: inputEl.value,
+							id: data.id,
+							name: data.name,
 							boardId,
 							items: []
 						}
 					]
-				};
+				});
 			}
-		);
-		editing = false;
 
-		return async ({ update }) => {
-			await update({ invalidateAll: false });
+			return { prevBoardData };
+		},
+		onError: (_err: any, _variables: any, context: any) => {
+			if (context?.prevBoardData) {
+				queryClient.setQueryData(['boards', boardId.toString()], context.prevBoardData);
+			}
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({
 				queryKey: ['boards', boardId.toString()]
 			});
-			editing = true;
-			id = generateId(15);
-			await tick();
-			inputEl.focus();
+		}
+	});
+
+	const handleSubmit = (e: SubmitEvent) => {
+		const formData = new FormData(e.target as HTMLFormElement);
+		const id = generateId(15);
+
+		const data: ColumnMutation = {
+			id,
+			boardId,
+			name: formData.get('name') as string
 		};
+
+		$createColumnMutation.mutate(data);
+
+		inputEl.value = '';
 	};
 </script>
 
 {#if editing}
 	<form
-		method="post"
-		action="?/createColumn"
 		class="p-2 flex-shrink-0 flex flex-col gap-5 overflow-hidden max-h-full w-80 border rounded-xl shadow bg-slate-100"
-		use:enhance={handleSubmit}
+		on:submit|preventDefault={handleSubmit}
 		use:clickOutside={{ handler: () => (editing = false) }}
 	>
 		<input type="hidden" name="boardId" value={boardId} />
-		<input type="hidden" name="id" value={id} />
 		<input
 			required
 			bind:this={inputEl}

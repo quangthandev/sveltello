@@ -60,6 +60,7 @@
 		"@tanstack/svelte-query-devtools": "^5.18.1",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.30.7",
+		"drizzle-zod": "^0.5.1",
 		"lucia": "^3.1.1",
 		"markdown-it": "^14.1.0",
 		"oslo": "^1.1.1",

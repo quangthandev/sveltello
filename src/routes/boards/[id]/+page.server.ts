@@ -1,12 +1,5 @@
 import { error } from '@sveltejs/kit';
-import {
-	copyColumn,
-	createColumn,
-	deleteColumn,
-	getBoard,
-	updateBoardName,
-	updateColumnName
-} from './queries';
+import { copyColumn, deleteColumn, getBoard, updateBoardName, updateColumnName } from './queries';
 import { z } from 'zod';
 import { checkAuthUser } from '$lib/server/auth';
 import { getBoards } from '../queries';
@@ -37,12 +30,6 @@ const updateBoardNameSchema = z.object({
 	id: z.string()
 });
 
-const createColumnSchema = z.object({
-	id: z.string().optional(),
-	name: z.string(),
-	boardId: z.string()
-});
-
 const updateColumnNameSchema = z.object({
 	columnId: z.string(),
 	name: z.string()
@@ -65,14 +52,6 @@ export const actions = {
 		const { name, id } = await updateBoardNameSchema.parseAsync(Object.fromEntries(data));
 
 		await updateBoardName(parseInt(id), name, locals.user.id);
-	},
-	createColumn: async ({ request, locals, params }) => {
-		checkAuthUser(locals, `/boards/${params.id}`);
-
-		const data = await request.formData();
-		const { id, name, boardId } = await createColumnSchema.parseAsync(Object.fromEntries(data));
-
-		await createColumn(parseInt(boardId), name, locals.user.id, id);
 	},
 	updateColumnName: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
