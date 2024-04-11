@@ -2,14 +2,14 @@
 	import { enhance } from '$app/forms';
 	import TextEditor from '$lib/components/text-editor/TextEditor.svelte';
 	import type { TypedSubmitFunction } from '$lib/form';
-	import type { ActionData } from './$types';
 	import TurndownService from 'turndown';
 	import markdownit from 'markdown-it';
 	import { escapeKeydown } from '$lib/actions/escape-keydown';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { clickOutside } from '$lib/actions/click-outside';
-	import { queriesCtx } from './context';
 	import { createEventDispatcher } from 'svelte';
+	import { queriesCtx } from '../../../../routes/items/[id]/context';
+	import type { ActionData } from '../../../../routes/items/[id]/$types';
 
 	export let id: string;
 	export let boardId: string;

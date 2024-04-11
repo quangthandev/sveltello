@@ -4,7 +4,7 @@
 	import * as Popover from '$lib/components/popover';
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import { queriesCtx } from './context';
+	import { queriesCtx } from '../../../../routes/items/[id]/context';
 
 	export let itemId: string;
 

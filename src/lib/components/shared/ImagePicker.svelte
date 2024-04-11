@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Skeleton from '$lib/components/Skeleton.svelte';
+	import Skeleton from '$lib/components/ui/Skeleton.svelte';
 	import { cn } from '$lib/utils';
 	import { createQuery } from '@tanstack/svelte-query';
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';

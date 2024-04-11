@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import CardPopover from '$lib/components/CardPopover.svelte';
-	import IconDelete from '$lib/components/icons/IconDelete.svelte';
 	import { cn } from '$lib/utils';
 	import type { TypedSubmitFunction } from '$lib/form';
-	import type { ActionData } from './$types';
-	import type { Board } from '../types';
+	import type { Board } from '$lib/types';
+	import CardPopover from '$lib/components/shared/CardPopover.svelte';
+	import IconDelete from '$lib/components/icons/IconDelete.svelte';
+	import type { ActionData } from '../../../../routes/boards/$types';
+	import { useQueryClient } from '@tanstack/svelte-query';
 
 	export let board: Board;
 	let className = '';
 	export { className as class };
+
+	const queryClient = useQueryClient();
 
 	let isDeleting = false;
 
@@ -18,8 +21,21 @@
 	const handleSubmit: TypedSubmitFunction<ActionData> = () => {
 		isDeleting = true;
 
+		const prevBoards = queryClient.getQueryData<Board[]>(['boards']);
+
+		if (prevBoards) {
+			queryClient.setQueryData(
+				['boards'],
+				prevBoards.filter((board) => board.id !== id)
+			);
+		}
+
 		return async ({ update }) => {
 			await update({ invalidateAll: true });
+
+			queryClient.invalidateQueries({
+				queryKey: ['boards']
+			});
 
 			isDeleting = false;
 		};

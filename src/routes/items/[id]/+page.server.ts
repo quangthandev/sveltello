@@ -9,10 +9,10 @@ import {
 	makeCover,
 	updateItemContent,
 	updateItemTitle
-} from './queries';
+} from '$lib/features/items/queries';
 import { z } from 'zod';
-import { upsertItem } from '../../boards/[id]/queries';
-import { getColumn } from '../../columns/queries';
+import { getColumn } from '$lib/features/columns/queries';
+import { upsertItem } from '$lib/features/boards/queries';
 
 export async function load({ locals, params }) {
 	if (!params.id) {

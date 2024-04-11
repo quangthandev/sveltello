@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { pushState } from '$app/navigation';
 	import { page } from '$app/stores';
-	import Modal from '$lib/components/Modal.svelte';
+	import Modal from '$lib/components/ui/Modal.svelte';
 	import { cn } from '$lib/utils';
-	import ItemDetails from '../../items/[id]/ItemDetails.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
-	import type { ItemWithColumn, ItemWithCoverAndAttachments } from '../../types';
+	import type { ItemWithColumn, ItemWithCoverAndAttachments } from '$lib/types';
+	import ItemDetails from '$lib/features/items/components/ItemDetails.svelte';
 
 	export let item: ItemWithCoverAndAttachments;
 	export let boardName: string;

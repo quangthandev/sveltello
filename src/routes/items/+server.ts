@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
-import { upsertItem } from '../boards/[id]/queries';
 import { z } from 'zod';
 import { checkAuthUser } from '$lib/server/auth';
+import { upsertItem } from '$lib/features/boards/queries';
 
 const itemSchema = z.object({
 	id: z.string(),

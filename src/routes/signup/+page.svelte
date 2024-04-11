@@ -1,6 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
-	import Input from '$lib/components/Input.svelte';
+	import Input from '$lib/components/ui/Input.svelte';
 	import IconLoading from '$lib/components/icons/IconLoading.svelte';
 	import { cn } from '$lib/utils';
 

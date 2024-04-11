@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
 	import type { PageData } from './$types';
-	import List from './List.svelte';
-	import EditableText from './EditableText.svelte';
-	import NewList from './NewList.svelte';
+	import List from '$lib/features/columns/components/List.svelte';
+	import EditableText from '$lib/components/shared/EditableText.svelte';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
-	import ItemQueriesProvider from '../../items/[id]/ItemQueriesProvider.svelte';
-	import type { Board, BoardWithColumns, Column, Item } from '../../types';
+	import type { Board, BoardWithColumns, Column, Item } from '$lib/types';
+	import ItemQueriesProvider from '$lib/features/items/components/ItemQueriesProvider.svelte';
+	import NewList from '$lib/features/columns/components/NewList.svelte';
 
 	export let data: PageData;
 

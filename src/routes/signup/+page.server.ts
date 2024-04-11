@@ -1,8 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { userExists, createUser } from './queries';
 import { lucia } from '$lib/server/auth';
 import { z } from 'zod';
 import { EmailSchema, PasswordSchema } from '../schemas';
+import { createUser, userExists } from '$lib/features/auth/queries';
 
 export function load() {
 	return { title: 'Sign Up' };

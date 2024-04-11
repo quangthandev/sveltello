@@ -3,7 +3,7 @@
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import type { WithOptional } from '$lib/utils';
-	import type { Board, Column, ColumnMutation } from '../../types';
+	import type { Board, Column, ColumnMutation } from '$lib/types';
 	import { generateId } from 'lucia';
 
 	export let boardId: number;

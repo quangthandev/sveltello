@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import EditableText from '../../boards/[id]/EditableText.svelte';
+	import EditableText from '$lib/components/shared/EditableText.svelte';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
-	import type { BoardWithColumns, ItemFullPayload } from '../../types';
+	import type { BoardWithColumns, ItemFullPayload } from '$lib/types';
 
 	export let item: ItemFullPayload;
 	const { id, boardId, title } = item;

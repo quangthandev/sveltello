@@ -4,11 +4,11 @@
 	import IconCopy from '$lib/components/icons/IconCopy.svelte';
 	import { cn } from '$lib/utils';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
-	import type { ItemFullPayload } from '../../types';
 	import AttachPopover from './AttachPopover.svelte';
-	import { queriesCtx } from './context';
 	import { goto } from '$app/navigation';
-	import CardPopover from '$lib/components/CardPopover.svelte';
+	import CardPopover from '$lib/components/shared/CardPopover.svelte';
+	import type { ItemFullPayload } from '$lib/types';
+	import { queriesCtx } from '../../../../routes/items/[id]/context';
 
 	export let item: ItemFullPayload;
 	export { className as class };

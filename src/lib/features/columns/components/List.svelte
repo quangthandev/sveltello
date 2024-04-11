@@ -1,13 +1,13 @@
 <script lang="ts">
-	import EditableText from './EditableText.svelte';
 	import ListItem from './ListItem.svelte';
-	import NewItem from './NewItem.svelte';
 	import ListActionsMenu from './ListActionsMenu.svelte';
 	import { tick } from 'svelte';
-	import { queriesCtx } from '../../items/[id]/context';
 	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
 	import IconPlus from '$lib/components/icons/IconPlus.svelte';
-	import type { ItemWithCoverAndAttachments } from '../../types';
+	import type { ItemWithCoverAndAttachments } from '$lib/types';
+	import { queriesCtx } from '../../../../routes/items/[id]/context';
+	import EditableText from '$lib/components/shared/EditableText.svelte';
+	import NewItem from '$lib/features/items/components/NewItem.svelte';
 
 	export let name: string;
 	export let boardName: string;

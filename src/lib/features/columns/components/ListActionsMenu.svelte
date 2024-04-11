@@ -5,12 +5,12 @@
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { TypedSubmitFunction } from '$lib/form';
-	import type { ActionData } from './$types';
 	import * as Popover from '$lib/components/popover';
 	import IconMore from '$lib/components/icons/IconMore.svelte';
 	import IconChevronLeft from '$lib/components/icons/IconChevronLeft.svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
-	import type { BoardWithColumns } from '../../types';
+	import type { BoardWithColumns } from '$lib/types';
+	import type { ActionData } from '../../../../routes/boards/[id]/$types';
 
 	export let id: string;
 	export let name: string;

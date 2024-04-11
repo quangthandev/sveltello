@@ -4,7 +4,7 @@
 	import { cn } from '$lib/utils';
 	import MoveItemSuggestion from './MoveItemSuggestion.svelte';
 	import MoveItemForm from './MoveItemForm.svelte';
-	import type { BoardWithColumns, ItemWithColumn } from '../../types';
+	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import CopyItemForm from './CopyItemForm.svelte';
 

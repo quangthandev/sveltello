@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
-import { moveItemToColumn, upsertItem } from '../../boards/[id]/queries';
 import { checkAuthUser } from '$lib/server/auth';
-import { deleteItem, getItem } from './queries';
+import { deleteItem, getItem } from '$lib/features/items/queries';
+import { moveItemToColumn, upsertItem } from '$lib/features/boards/queries';
 
 export async function GET({ locals, params }) {
 	if (!params.id) {

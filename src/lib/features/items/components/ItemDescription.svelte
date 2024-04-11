@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Skeleton from '$lib/components/Skeleton.svelte';
+	import Skeleton from '$lib/components/ui/Skeleton.svelte';
 	import ItemDescriptionEditor from './ItemDescriptionEditor.svelte';
 	import ItemDescriptionContent from './ItemDescriptionContent.svelte';
-	import type { ItemFullPayload } from '../../types';
+	import type { ItemFullPayload } from '$lib/types';
 
 	export let item: ItemFullPayload | undefined;
 	export let isLoading = false;

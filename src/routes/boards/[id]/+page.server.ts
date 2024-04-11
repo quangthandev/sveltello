@@ -1,8 +1,14 @@
 import { error } from '@sveltejs/kit';
-import { copyColumn, deleteColumn, getBoard, updateBoardName, updateColumnName } from './queries';
+import {
+	copyColumn,
+	deleteColumn,
+	getBoard,
+	updateBoardName,
+	updateColumnName
+} from '$lib/features/boards/queries';
 import { z } from 'zod';
 import { checkAuthUser } from '$lib/server/auth';
-import { getBoards } from '../queries';
+import { getBoards } from '$lib/features/boards/queries';
 
 export async function load({ locals, params }) {
 	if (!params.id) {

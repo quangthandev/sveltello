@@ -1,8 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { login } from './queries';
-import { lucia } from '$lib/server/auth';
-import { EmailSchema, PasswordSchema } from '../schemas';
 import { z } from 'zod';
+import { lucia } from '$lib/server/auth';
+import { login } from '$lib/features/auth/queries';
+import { EmailSchema, PasswordSchema } from '../schemas';
 
 export function load({ locals }) {
 	const user = locals.user;

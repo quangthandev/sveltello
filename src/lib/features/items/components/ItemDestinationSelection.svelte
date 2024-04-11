@@ -1,19 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Skeleton from '$lib/components/Skeleton.svelte';
-	import { createQuery } from '@tanstack/svelte-query';
-	import type { BoardWithColumns, ColumnWithItems, ItemWithColumn } from '../../types';
+	import Skeleton from '$lib/components/ui/Skeleton.svelte';
+	import useBoards from '$lib/features/boards/query-client/use-boards-query';
+	import type { BoardWithColumns, ColumnWithItems, ItemWithColumn } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 
 	export let item: ItemWithColumn;
 	export let initialPosIndex: number;
 	const { boardId, columnId } = item;
 
-	const query = createQuery<{ boards: BoardWithColumns[] }>({
-		queryKey: ['boards'],
-		queryFn: async () => (await fetch('/boards')).json(),
-		initialData: $page.data.boards
-	});
+	const query = useBoards($page.data.boards);
 
 	// Initialize selected values
 	let selectedBoardId = boardId;
@@ -26,7 +22,7 @@
 	let column: ColumnWithItems | undefined;
 
 	$: {
-		boards = $query.data?.boards ?? [];
+		boards = $query.data;
 		board = boards.find((board) => board.id === selectedBoardId);
 	}
 
@@ -52,7 +48,7 @@
 	}
 </script>
 
-{#if $query.isFetching || $query.isLoading}
+{#if $query.isLoading}
 	<Skeleton class="h-16 rounded-md bg-gray-200" />
 {:else}
 	<div class="relative min-h-[48px] px-4 py-2 rounded-md bg-gray-200">
@@ -78,7 +74,7 @@
 		</select>
 	</div>
 {/if}
-{#if $query.isFetching || $query.isLoading}
+{#if $query.isLoading}
 	<Skeleton class="h-16 rounded-md bg-gray-200" />
 {:else}
 	<div class="flex justify-between gap-2">

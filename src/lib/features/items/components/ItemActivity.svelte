@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Avatar from '$lib/components/Avatar.svelte';
+	import Avatar from '$lib/components/ui/Avatar.svelte';
 	import { formatTimestamp } from '$lib/utils';
-	import type { ItemFullPayload } from '../../types';
+	import type { ItemFullPayload } from '$lib/types';
 
 	export let item: ItemFullPayload;
 </script>

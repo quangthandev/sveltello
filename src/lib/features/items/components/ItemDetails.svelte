@@ -2,13 +2,13 @@
 	import { page } from '$app/stores';
 	import { createQuery } from '@tanstack/svelte-query';
 	import ItemDescription from './ItemDescription.svelte';
-	import Skeleton from '$lib/components/Skeleton.svelte';
+	import Skeleton from '$lib/components/ui/Skeleton.svelte';
 	import ItemTitle from './ItemTitle.svelte';
 	import ItemActivity from './ItemActivity.svelte';
 	import ItemActions from './ItemActions.svelte';
 	import ItemAttachments from './ItemAttachments.svelte';
 	import ItemQueriesProvider from './ItemQueriesProvider.svelte';
-	import type { ItemFullPayload } from '../../types';
+	import type { ItemFullPayload } from '$lib/types';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import { createEventDispatcher } from 'svelte';
 

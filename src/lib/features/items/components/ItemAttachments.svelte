@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { getRelativeTime } from '$lib/utils';
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
-	import { queriesCtx } from './context';
-	import CardPopover from '$lib/components/CardPopover.svelte';
+	import CardPopover from '$lib/components/shared/CardPopover.svelte';
 	import { enhance } from '$app/forms';
 	import type { TypedSubmitFunction } from '$lib/form';
-	import type { ActionData } from './$types';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import type { Attachment, ItemFullPayload } from '../../types';
+	import type { Attachment, ItemFullPayload } from '$lib/types';
+	import { queriesCtx } from '../../../../routes/items/[id]/context';
+	import type { ActionData } from '../../../../routes/items/[id]/$types';
 
 	export let itemId: string;
 	export let attachments: (Attachment & { isCover: boolean })[];

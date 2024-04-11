@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { queriesCtx } from '../../items/[id]/context';
-	import { clickOutside } from '$lib/actions/click-outside';
 	import { generateId } from 'lucia';
+	import { clickOutside } from '$lib/actions/click-outside';
+	import { queriesCtx } from '../../../../routes/items/[id]/context';
 
 	export let columnId: string;
 	export let nextOrder: number;

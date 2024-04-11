@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import Input from '$lib/components/Input.svelte';
+	import Input from '$lib/components/ui/Input.svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import * as Popover from '$lib/components/popover';
+	import ImagePicker from '$lib/components/shared/ImagePicker.svelte';
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import ImagePicker from './ImagePicker.svelte';
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
-	import type { ActionData } from './$types';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import type { ActionData } from '../../../../routes/boards/$types';
 
 	let isSubmitting = false;
 
