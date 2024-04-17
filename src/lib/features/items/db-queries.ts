@@ -1,7 +1,7 @@
-import { db } from '$lib/server/drizzle/db';
-import { attachment, board, cover, item } from '$lib/server/drizzle/schema';
+import { db } from '$lib/drizzle/db';
+import { attachment, board, cover, item } from '$lib/drizzle/schema';
 import { and, eq } from 'drizzle-orm';
-import { getItemByUserBoard } from '$lib/server/drizzle/utils';
+import { getItemByUserBoard } from '$lib/drizzle/utils';
 
 export async function getItem(id: string, userId: string) {
 	const existingItem = await getItemByUserBoard(id, userId);

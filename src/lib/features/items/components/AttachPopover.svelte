@@ -4,7 +4,7 @@
 	import * as Popover from '$lib/components/popover';
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import { useUploadImage } from '../query-client/use-items-mutations';
+	import { useUploadImage } from '../query-client/mutations';
 
 	export let itemId: string;
 

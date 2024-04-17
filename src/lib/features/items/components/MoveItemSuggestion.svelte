@@ -4,7 +4,7 @@
 	import IconArrowRight from '$lib/components/icons/IconArrowRight.svelte';
 	import type { Column } from '$lib/types';
 	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
-	import { useMoveItem } from '../query-client/use-items-mutations';
+	import { useMoveItem } from '../query-client/mutations';
 
 	export let item: ItemWithColumn;
 

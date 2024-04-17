@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { checkAuthUser } from '$lib/server/auth';
-import { upsertItem } from '$lib/features/boards/queries';
+import { upsertItem } from '$lib/features/boards/db-queries';
 import { createItemSchema } from '$lib/features/items/schemas';
 
 export async function POST({ request, locals }) {

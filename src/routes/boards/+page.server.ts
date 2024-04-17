@@ -1,6 +1,6 @@
 import { checkAuthUser } from '$lib/server/auth';
 import { z } from 'zod';
-import { createBoard, deleteBoard, getBoards } from '$lib/features/boards/queries';
+import { createBoard, deleteBoard, getBoards } from '$lib/features/boards/db-queries';
 import { fail, redirect } from '@sveltejs/kit';
 
 export async function load({ locals }) {

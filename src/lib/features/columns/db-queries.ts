@@ -1,7 +1,7 @@
-import { db } from '$lib/server/drizzle/db';
-import { column, item } from '$lib/server/drizzle/schema';
+import { db } from '$lib/drizzle/db';
+import { column, item } from '$lib/drizzle/schema';
 import { and, asc, eq } from 'drizzle-orm';
-import { getColumnByUserBoard } from '$lib/server/drizzle/utils';
+import { getColumnByUserBoard } from '$lib/drizzle/utils';
 
 export async function getColumn(id: string, userId: string) {
 	const existed = await getColumnByUserBoard(id, userId);

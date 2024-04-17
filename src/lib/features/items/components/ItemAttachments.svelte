@@ -7,7 +7,7 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { Attachment, ItemFullPayload } from '$lib/types';
 	import type { ActionData } from '../../../../routes/items/[id]/$types';
-	import { useDeleteAttachment } from '../query-client/use-items-mutations';
+	import { useDeleteAttachment } from '../query-client/mutations';
 
 	export let itemId: string;
 	export let attachments: (Attachment & { isCover: boolean })[];

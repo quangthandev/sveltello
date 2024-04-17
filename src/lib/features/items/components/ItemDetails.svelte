@@ -8,7 +8,7 @@
 	import ItemAttachments from './ItemAttachments.svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { useItem } from '../query-client/use-items-queries';
+	import { useItem } from '../query-client/queries';
 
 	export let id: string;
 

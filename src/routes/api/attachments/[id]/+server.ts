@@ -1,6 +1,6 @@
 import { checkAuthUser } from '$lib/server/auth';
 import { error, json } from '@sveltejs/kit';
-import { deleteAttachment } from '$lib/features/items/queries';
+import { deleteAttachment } from '$lib/features/items/db-queries';
 
 export async function DELETE({ params, locals }) {
 	checkAuthUser(locals);

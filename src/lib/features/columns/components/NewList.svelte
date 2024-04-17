@@ -3,7 +3,8 @@
 	import { clickOutside } from '$lib/actions/click-outside';
 	import type { ColumnMutation } from '$lib/types';
 	import { generateId } from 'lucia';
-	import { useCreateColumn } from '../query-client/use-columns-mutations';
+	import { useCreateColumn } from '../query-client/mutations';
+	import { insertColumnSchema } from '../schemas';
 
 	export let boardId: number;
 
@@ -21,6 +22,10 @@
 			boardId,
 			name: formData.get('name') as string
 		};
+
+		const result = insertColumnSchema.safeParse(data);
+
+		console.log(result);
 
 		$createColumnMutation.mutate(data);
 

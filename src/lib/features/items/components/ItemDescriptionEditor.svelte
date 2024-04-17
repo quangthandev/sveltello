@@ -9,7 +9,7 @@
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { createEventDispatcher } from 'svelte';
 	import type { ActionData } from '../../../../routes/items/[id]/$types';
-	import { useUploadImage } from '../query-client/use-items-mutations';
+	import { useUploadImage } from '../query-client/mutations';
 
 	export let id: string;
 	export let boardId: number;

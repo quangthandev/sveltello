@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { generateId } from 'lucia';
 	import { clickOutside } from '$lib/actions/click-outside';
-	import { useCreateItem } from '../query-client/use-items-mutations';
+	import { useCreateItem } from '../query-client/mutations';
 	import { createItemSchema } from '../schemas';
 	import type { ZodError } from 'zod';
 

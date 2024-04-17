@@ -1,4 +1,4 @@
-import type { attachment, board, column, cover, item } from '$lib/server/drizzle/schema';
+import type { attachment, board, column, cover, item } from '$lib/drizzle/schema';
 
 export type Board = typeof board.$inferSelect;
 export type Column = typeof column.$inferSelect;

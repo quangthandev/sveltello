@@ -1,7 +1,7 @@
-import { db } from '$lib/server/drizzle/db';
+import { db } from '$lib/drizzle/db';
 import { and, asc, eq } from 'drizzle-orm';
-import { attachment, board, column, cover, item } from '$lib/server/drizzle/schema';
-import { getColumnByUserBoard, getItemByUserBoard } from '$lib/server/drizzle/utils';
+import { attachment, board, column, cover, item } from '$lib/drizzle/schema';
+import { getColumnByUserBoard, getItemByUserBoard } from '$lib/drizzle/utils';
 import type { Attachment, Item, ItemMutation } from '$lib/types';
 
 export async function getBoards(userId: string) {

@@ -8,8 +8,8 @@
 	import { cn } from '$lib/utils';
 	import type { Board, Column, Item } from '$lib/types';
 	import NewList from '$lib/features/columns/components/NewList.svelte';
-	import { useBoard } from '$lib/features/boards/query-client/use-boards-query';
-	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/use-columns-mutations';
+	import { useBoard } from '$lib/features/boards/query-client/queries';
+	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/mutations';
 
 	export let data: PageData;
 

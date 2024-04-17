@@ -1,24 +1,21 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/auth';
 import { z } from 'zod';
-import { EmailSchema, PasswordSchema } from '../schemas';
 import { createUser, userExists } from '$lib/features/auth/queries';
+import { authCredentialsSchema } from '$lib/features/auth/schemas.js';
 
 export function load() {
 	return { title: 'Sign Up' };
 }
-
-const schema = z.object({
-	email: EmailSchema,
-	password: PasswordSchema
-});
 
 export const actions = {
 	default: async ({ cookies, request }) => {
 		const formData = await request.formData();
 
 		try {
-			const { email, password } = await schema.parseAsync(Object.fromEntries(formData));
+			const { email, password } = await authCredentialsSchema.parseAsync(
+				Object.fromEntries(formData)
+			);
 
 			if (await userExists(email)) {
 				return fail(400, {

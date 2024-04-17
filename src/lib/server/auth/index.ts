@@ -2,7 +2,7 @@ import { Lucia } from 'lucia';
 import { dev } from '$app/environment';
 import { redirect } from '@sveltejs/kit';
 
-import { dbClient } from '$lib/server/drizzle/db';
+import { dbClient } from '$lib/drizzle/db';
 import {
 	adapterOptions,
 	generateSessionAttributes,

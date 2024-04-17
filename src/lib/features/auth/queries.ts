@@ -1,5 +1,5 @@
-import { db } from '$lib/server/drizzle/db';
-import { user } from '$lib/server/drizzle/schema';
+import { db } from '$lib/drizzle/db';
+import { user } from '$lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 

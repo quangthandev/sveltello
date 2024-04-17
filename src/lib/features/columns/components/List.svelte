@@ -7,7 +7,7 @@
 	import type { ItemWithCoverAndAttachments } from '$lib/types';
 	import EditableText from '$lib/components/shared/EditableText.svelte';
 	import NewItem from '$lib/features/items/components/NewItem.svelte';
-	import { useUpdateItem } from '$lib/features/items/query-client/use-items-mutations';
+	import { useUpdateItem } from '$lib/features/items/query-client/mutations';
 
 	export let name: string;
 	export let boardName: string;

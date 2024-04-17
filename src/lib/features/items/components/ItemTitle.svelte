@@ -3,7 +3,7 @@
 	import EditableText from '$lib/components/shared/EditableText.svelte';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
-	import { useBoard } from '$lib/features/boards/query-client/use-boards-query';
+	import { useBoard } from '$lib/features/boards/query-client/queries';
 
 	export let item: ItemFullPayload;
 	const { id, boardId, title } = item;

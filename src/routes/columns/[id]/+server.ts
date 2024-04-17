@@ -1,4 +1,4 @@
-import { updateColumnOrder } from '$lib/features/boards/queries';
+import { updateColumnOrder } from '$lib/features/boards/db-queries';
 import { checkAuthUser } from '$lib/server/auth';
 import { json } from '@sveltejs/kit';
 

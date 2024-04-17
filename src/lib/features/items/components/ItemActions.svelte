@@ -8,7 +8,7 @@
 	import { goto } from '$app/navigation';
 	import CardPopover from '$lib/components/shared/CardPopover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
-	import { useDeleteItem } from '../query-client/use-items-mutations';
+	import { useDeleteItem } from '../query-client/mutations';
 
 	export let item: ItemFullPayload;
 	export { className as class };

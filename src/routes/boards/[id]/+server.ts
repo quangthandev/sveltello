@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { checkAuthUser } from '$lib/server/auth';
-import { getBoard, upsertItem } from '$lib/features/boards/queries';
+import { getBoard, upsertItem } from '$lib/features/boards/db-queries';
 
 export async function GET({ params, locals }) {
 	if (!params.id) {

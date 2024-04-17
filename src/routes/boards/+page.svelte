@@ -2,7 +2,7 @@
 	import { cn } from '$lib/utils';
 	import Board from '$lib/features/boards/components/Board.svelte';
 	import NewBoard from '$lib/features/boards/components/NewBoard.svelte';
-	import { useBoards } from '$lib/features/boards/query-client/use-boards-query';
+	import { useBoards } from '$lib/features/boards/query-client/queries';
 
 	export let data;
 

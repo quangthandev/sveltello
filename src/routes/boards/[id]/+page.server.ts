@@ -5,10 +5,10 @@ import {
 	getBoard,
 	updateBoardName,
 	updateColumnName
-} from '$lib/features/boards/queries';
+} from '$lib/features/boards/db-queries';
 import { z } from 'zod';
 import { checkAuthUser } from '$lib/server/auth';
-import { getBoards } from '$lib/features/boards/queries';
+import { getBoards } from '$lib/features/boards/db-queries';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
