@@ -23,6 +23,9 @@ export type ItemWithCoverAndAttachments = Item & {
 	cover: Cover | null;
 	attachments: ItemFullPayload['attachments'];
 };
+export type ItemWithAttachments = Item & {
+	attachments: Attachment[];
+};
 export type ItemMutation = Required<
 	Omit<typeof item.$inferInsert, 'content' | 'createdAt' | 'updatedAt'>
 >;

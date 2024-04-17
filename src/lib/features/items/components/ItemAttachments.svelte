@@ -6,17 +6,15 @@
 	import type { TypedSubmitFunction } from '$lib/form';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { Attachment, ItemFullPayload } from '$lib/types';
-	import { queriesCtx } from '../../../../routes/items/[id]/context';
 	import type { ActionData } from '../../../../routes/items/[id]/$types';
+	import { useDeleteAttachment } from '../query-client/use-items-mutations';
 
 	export let itemId: string;
 	export let attachments: (Attachment & { isCover: boolean })[];
 
 	const queryClient = useQueryClient();
 
-	const { deleteAttachment } = queriesCtx.get();
-
-	const deleteMutation = deleteAttachment(itemId);
+	const deleteAttachmentMutation = useDeleteAttachment(itemId);
 
 	const handleMakeCover: TypedSubmitFunction<ActionData> = ({ formData }) => {
 		const attachmentId = formData.get('attachmentId');
@@ -41,7 +39,7 @@
 			await update({ invalidateAll: false });
 
 			queryClient.invalidateQueries({ queryKey: ['items', itemId] });
-			queryClient.invalidateQueries({ queryKey: ['boards', item.boardId.toString()] });
+			queryClient.invalidateQueries({ queryKey: ['boards', item.boardId] });
 		};
 	};
 </script>
@@ -85,8 +83,8 @@
 										<p>There is no undo.</p>
 										<button
 											class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-											disabled={$deleteMutation.isPending}
-											on:click={() => $deleteMutation.mutate(attachment.id)}
+											disabled={$deleteAttachmentMutation.isPending}
+											on:click={() => $deleteAttachmentMutation.mutate(attachment.id)}
 										>
 											Delete
 										</button>

@@ -4,11 +4,11 @@
 	import * as Popover from '$lib/components/popover';
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import { queriesCtx } from '../../../../routes/items/[id]/context';
+	import { useUploadImage } from '../query-client/use-items-mutations';
 
 	export let itemId: string;
 
-	const { uploadImage } = queriesCtx.get();
+	const uploadImageMutation = useUploadImage();
 
 	const queryClient = useQueryClient();
 
@@ -17,7 +17,7 @@
 
 		if (!file) return;
 
-		await $uploadImage.mutateAsync({ itemId, file });
+		await $uploadImageMutation.mutateAsync({ itemId, file });
 
 		queryClient.invalidateQueries({ queryKey: ['items', itemId] });
 	}
@@ -52,7 +52,7 @@
 				for="item-attachment-file-picker"
 				class={cn(
 					'flex items-center justify-center w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer',
-					{ 'opacity-50 cursor-not-allowed': $uploadImage.isPending }
+					{ 'opacity-50 cursor-not-allowed': $uploadImageMutation.isPending }
 				)}
 			>
 				Choose a file
@@ -63,7 +63,7 @@
 				type="file"
 				accept="image/*, application/pdf"
 				hidden
-				disabled={$uploadImage.isPending}
+				disabled={$uploadImageMutation.isPending}
 				on:change={handleFileChange}
 			/>
 		</div>

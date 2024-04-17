@@ -8,11 +8,11 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { createEventDispatcher } from 'svelte';
-	import { queriesCtx } from '../../../../routes/items/[id]/context';
 	import type { ActionData } from '../../../../routes/items/[id]/$types';
+	import { useUploadImage } from '../query-client/use-items-mutations';
 
 	export let id: string;
-	export let boardId: string;
+	export let boardId: number;
 	export let content: string | null;
 
 	let isSubmitting = false;
@@ -25,7 +25,7 @@
 
 	const queryClient = useQueryClient();
 
-	const { uploadImage } = queriesCtx.get();
+	const uploadImageMutation = useUploadImage();
 
 	const handleSubmit: TypedSubmitFunction<ActionData> = async ({ formData }) => {
 		isSubmitting = true;
@@ -74,7 +74,7 @@
 		options={{
 			placeholder: 'Add a more detailed description...',
 			imageUploader: async (file) => {
-				const res = await $uploadImage.mutateAsync({ itemId: id, file });
+				const res = await $uploadImageMutation.mutateAsync({ itemId: id, file });
 
 				queryClient.invalidateQueries({ queryKey: ['items', id] });
 
@@ -90,7 +90,7 @@
 		<button
 			type="submit"
 			class="bg-blue-600 text-white rounded-md py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-			disabled={isSubmitting || $uploadImage.isPending}
+			disabled={isSubmitting || $uploadImageMutation.isPending}
 		>
 			Save
 		</button>

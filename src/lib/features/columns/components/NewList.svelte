@@ -1,61 +1,16 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { clickOutside } from '$lib/actions/click-outside';
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
-	import type { WithOptional } from '$lib/utils';
-	import type { Board, Column, ColumnMutation } from '$lib/types';
+	import type { ColumnMutation } from '$lib/types';
 	import { generateId } from 'lucia';
+	import { useCreateColumn } from '../query-client/use-columns-mutations';
 
 	export let boardId: number;
 
 	let inputEl: HTMLInputElement;
 	let editing: boolean;
 
-	const queryClient = useQueryClient();
-
-	const createColumnMutation = createMutation<unknown, unknown, ColumnMutation>({
-		mutationFn: async (data) => {
-			await fetch('/api/columns', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			});
-		},
-		onMutate: async (data) => {
-			const prevBoardData = queryClient.getQueryData<
-				Board & { columns: WithOptional<Column, 'order'>[] }
-			>(['boards', boardId.toString()]);
-
-			if (prevBoardData) {
-				queryClient.setQueryData(['boards', boardId.toString()], {
-					...prevBoardData,
-					columns: [
-						...prevBoardData.columns,
-						{
-							id: data.id,
-							name: data.name,
-							boardId,
-							items: []
-						}
-					]
-				});
-			}
-
-			return { prevBoardData };
-		},
-		onError: (_err: any, _variables: any, context: any) => {
-			if (context?.prevBoardData) {
-				queryClient.setQueryData(['boards', boardId.toString()], context.prevBoardData);
-			}
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({
-				queryKey: ['boards', boardId.toString()]
-			});
-		}
-	});
+	const createColumnMutation = useCreateColumn(boardId);
 
 	const handleSubmit = (e: SubmitEvent) => {
 		const formData = new FormData(e.target as HTMLFormElement);

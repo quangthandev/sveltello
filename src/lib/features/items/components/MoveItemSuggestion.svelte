@@ -1,15 +1,16 @@
 <script lang="ts">
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import { useQueryClient } from '@tanstack/svelte-query';
 	import IconArrowLeft from '$lib/components/icons/IconArrowLeft.svelte';
 	import IconArrowRight from '$lib/components/icons/IconArrowRight.svelte';
 	import type { Column } from '$lib/types';
 	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
+	import { useMoveItem } from '../query-client/use-items-mutations';
 
 	export let item: ItemWithColumn;
 
 	const queryClient = useQueryClient();
 
-	const board = queryClient.getQueryData<BoardWithColumns>(['boards', item.boardId.toString()]);
+	const board = queryClient.getQueryData<BoardWithColumns>(['boards', item.boardId]);
 	const columns = board?.columns ?? [];
 
 	let suggestedColumn: Column | undefined;
@@ -28,31 +29,20 @@
 		}
 	}
 
-	const moveItem = createMutation<unknown, unknown, string>({
-		mutationFn: async (columnId) => {
-			const res = await fetch(`/items/${item.id}`, {
-				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ columnId: columnId })
-			});
-			return res.json();
-		},
+	const moveItemMutation = useMoveItem({
+		id: item.id,
+		boardId: item.boardId,
 		onMutate: () => {
 			isMoving = true;
 		},
 		onSettled: () => {
 			isMoving = false;
-			queryClient.invalidateQueries({
-				queryKey: ['boards', item.boardId.toString()]
-			});
 		}
 	});
 
 	function handleMove() {
 		if (suggestedColumn) {
-			$moveItem.mutate(suggestedColumn.id);
+			$moveItemMutation.mutate(suggestedColumn.id);
 		}
 	}
 </script>

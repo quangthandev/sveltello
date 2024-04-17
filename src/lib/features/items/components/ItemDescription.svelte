@@ -47,7 +47,7 @@
 				{#if isEditing}
 					<ItemDescriptionEditor
 						id={item.id}
-						boardId={item.boardId.toString()}
+						boardId={item.boardId}
 						content={item.content}
 						on:close={() => (isEditing = false)}
 					/>

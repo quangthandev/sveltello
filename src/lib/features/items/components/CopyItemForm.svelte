@@ -35,7 +35,7 @@
 			await update({ invalidateAll: false });
 
 			queryClient.invalidateQueries({
-				queryKey: ['boards', item.boardId.toString()]
+				queryKey: ['boards', item.boardId]
 			});
 			queryClient.invalidateQueries({
 				queryKey: ['items', item.id]

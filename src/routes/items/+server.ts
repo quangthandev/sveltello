@@ -1,22 +1,14 @@
 import { json } from '@sveltejs/kit';
-import { z } from 'zod';
 import { checkAuthUser } from '$lib/server/auth';
 import { upsertItem } from '$lib/features/boards/queries';
-
-const itemSchema = z.object({
-	id: z.string(),
-	title: z.string(),
-	columnId: z.string(),
-	order: z.string().transform((val) => Number(val)),
-	boardId: z.number()
-});
+import { createItemSchema } from '$lib/features/items/schemas';
 
 export async function POST({ request, locals }) {
 	checkAuthUser(locals);
 
 	const body = await request.json();
 
-	const { id, title, columnId, order, boardId } = itemSchema.parse(body);
+	const { id, title, columnId, order, boardId } = createItemSchema.parse(body);
 
 	const data = await upsertItem(
 		{

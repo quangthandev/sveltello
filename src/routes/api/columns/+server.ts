@@ -2,7 +2,7 @@ import { checkAuthUser } from '$lib/server/auth';
 import { json } from '@sveltejs/kit';
 import { z } from 'zod';
 import { createColumn } from '$lib/features/boards/queries';
-import { insertColumnSchema } from './schemas';
+import { insertColumnSchema } from '$lib/features/columns/schemas.js';
 
 export async function POST({ request, locals }) {
 	checkAuthUser(locals);

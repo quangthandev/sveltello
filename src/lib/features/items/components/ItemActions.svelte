@@ -8,14 +8,14 @@
 	import { goto } from '$app/navigation';
 	import CardPopover from '$lib/components/shared/CardPopover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
-	import { queriesCtx } from '../../../../routes/items/[id]/context';
+	import { useDeleteItem } from '../query-client/use-items-mutations';
 
 	export let item: ItemFullPayload;
 	export { className as class };
 
 	let className: string | undefined = '';
 
-	const { deleteItem } = queriesCtx.get();
+	const deleteItemMutation = useDeleteItem(item.boardId);
 </script>
 
 <div class="flex flex-col gap-8">
@@ -62,9 +62,9 @@
 					<p>There is no undo.</p>
 					<button
 						class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-						disabled={$deleteItem.isPending}
+						disabled={$deleteItemMutation.isPending}
 						on:click={async () => {
-							await $deleteItem.mutateAsync(item.id);
+							await $deleteItemMutation.mutateAsync(item.id);
 
 							goto(`/boards/${item.boardId}`);
 						}}

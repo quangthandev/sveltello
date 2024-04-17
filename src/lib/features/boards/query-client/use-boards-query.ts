@@ -1,11 +1,16 @@
 import { createQuery } from '@tanstack/svelte-query';
 import type { BoardWithColumns } from '$lib/types';
 
-const useBoards = (initialData: BoardWithColumns[]) =>
+export const useBoards = (initialData: BoardWithColumns[]) =>
 	createQuery<BoardWithColumns[]>({
 		queryKey: ['boards'],
 		queryFn: async () => (await fetch('/boards')).json(),
 		initialData
 	});
 
-export default useBoards;
+export const useBoard = (id: number, initialData?: BoardWithColumns) =>
+	createQuery<BoardWithColumns>({
+		queryKey: ['boards', id],
+		queryFn: async () => (await fetch(`/boards/${id}`)).json(),
+		initialData: initialData!
+	});

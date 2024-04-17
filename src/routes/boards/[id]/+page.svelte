@@ -3,48 +3,25 @@
 	import type { PageData } from './$types';
 	import List from '$lib/features/columns/components/List.svelte';
 	import EditableText from '$lib/components/shared/EditableText.svelte';
-	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
-	import type { Board, BoardWithColumns, Column, Item } from '$lib/types';
-	import ItemQueriesProvider from '$lib/features/items/components/ItemQueriesProvider.svelte';
+	import type { Board, Column, Item } from '$lib/types';
 	import NewList from '$lib/features/columns/components/NewList.svelte';
+	import { useBoard } from '$lib/features/boards/query-client/use-boards-query';
+	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/use-columns-mutations';
 
 	export let data: PageData;
 
 	const queryClient = useQueryClient();
 
-	const query = createQuery<BoardWithColumns>({
-		queryKey: ['boards', $page.params.id],
-		queryFn: async () => (await fetch(`/boards/${$page.params.id}`)).json(),
-		initialData: data.board
-	});
+	const query = useBoard(Number($page.params.id), data.board);
 
 	$: columns = $query.data.columns;
 
 	let sourceIndex: number | null = null;
 
-	// Column mutation
-	type MutationData = {
-		id: string;
-		order: number;
-	};
-
-	const updateColumn = createMutation<unknown, unknown, MutationData>({
-		mutationFn: async (data) => {
-			const res = await fetch(`/columns/${data.id}`, {
-				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ order: data.order })
-			});
-			return res.json();
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ['boards', $page.params.id] });
-		}
-	});
+	const updateColumn = useUpdateColumnOrder(Number($page.params.id));
 
 	function handleDndConsider(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
 		// Store source index when user starts dragging for later use
@@ -54,10 +31,10 @@
 
 		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
 			'boards',
-			$page.params.id
+			Number($page.params.id)
 		]);
 		if (prevBoardData) {
-			queryClient.setQueryData(['boards', $page.params.id], {
+			queryClient.setQueryData(['boards', Number($page.params.id)], {
 				...prevBoardData,
 				columns: e.detail.items
 			});
@@ -67,7 +44,7 @@
 	function handleDndFinalize(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
 		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
 			'boards',
-			$page.params.id
+			Number($page.params.id)
 		]);
 
 		if (!prevBoardData) return;
@@ -75,7 +52,7 @@
 		const newItems = e.detail.items;
 
 		// Update the items in the query cache
-		queryClient.setQueryData(['boards', $page.params.id], {
+		queryClient.setQueryData(['boards', Number($page.params.id)], {
 			...prevBoardData,
 			columns: newItems
 		});
@@ -140,14 +117,13 @@
 			class="flex min-h-0 h-full items-start gap-4"
 		>
 			{#each columns as column (column.id)}
-				<ItemQueriesProvider>
-					<List
-						name={column.name}
-						boardName={data.board.name}
-						columnId={column.id}
-						items={column.items}
-					/>
-				</ItemQueriesProvider>
+				<List
+					name={column.name}
+					boardName={data.board.name}
+					boardId={data.board.id}
+					columnId={column.id}
+					items={column.items}
+				/>
 			{/each}
 		</div>
 

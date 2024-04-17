@@ -22,7 +22,7 @@
 
 	const queryClient = useQueryClient();
 
-	$: boardId = $page.params.id;
+	$: boardId = Number($page.params.id);
 
 	const handleCopyList: TypedSubmitFunction<ActionData> = () => {
 		return async ({ update }) => {

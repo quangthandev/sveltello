@@ -1,21 +1,16 @@
 <script lang="ts">
-	import { createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { useQueryClient } from '@tanstack/svelte-query';
 	import EditableText from '$lib/components/shared/EditableText.svelte';
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
-	import type { BoardWithColumns, ItemFullPayload } from '$lib/types';
+	import type { ItemFullPayload } from '$lib/types';
+	import { useBoard } from '$lib/features/boards/query-client/use-boards-query';
 
 	export let item: ItemFullPayload;
 	const { id, boardId, title } = item;
 
 	const queryClient = useQueryClient();
 
-	const boardQuery = createQuery<BoardWithColumns>({
-		queryKey: ['boards', boardId.toString()],
-		queryFn: async () => {
-			const res = await fetch(`/boards/${boardId}`);
-			return res.json();
-		}
-	});
+	const boardQuery = useBoard(boardId);
 </script>
 
 <div class="flex items-start">
@@ -46,7 +41,7 @@
 							queryKey: ['items', id]
 						});
 						queryClient.invalidateQueries({
-							queryKey: ['boards', boardId.toString()]
+							queryKey: ['boards', boardId]
 						});
 					}}
 					fieldName="title"

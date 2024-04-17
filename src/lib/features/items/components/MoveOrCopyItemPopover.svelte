@@ -14,7 +14,7 @@
 
 	const queryClient = useQueryClient();
 
-	const board = queryClient.getQueryData<BoardWithColumns>(['boards', item.boardId.toString()]);
+	const board = queryClient.getQueryData<BoardWithColumns>(['boards', item.boardId]);
 	const column = board?.columns.find((column) => column.id === item.columnId);
 
 	let initialPosIndex = 0;

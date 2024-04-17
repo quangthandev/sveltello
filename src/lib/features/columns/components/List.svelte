@@ -5,12 +5,13 @@
 	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
 	import IconPlus from '$lib/components/icons/IconPlus.svelte';
 	import type { ItemWithCoverAndAttachments } from '$lib/types';
-	import { queriesCtx } from '../../../../routes/items/[id]/context';
 	import EditableText from '$lib/components/shared/EditableText.svelte';
 	import NewItem from '$lib/features/items/components/NewItem.svelte';
+	import { useUpdateItem } from '$lib/features/items/query-client/use-items-mutations';
 
 	export let name: string;
 	export let boardName: string;
+	export let boardId: number;
 	export let columnId: string;
 	export let items: ItemWithCoverAndAttachments[];
 
@@ -42,7 +43,7 @@
 		}
 	}
 
-	const { updateItem } = queriesCtx.get();
+	const updateItemMutation = useUpdateItem(boardId);
 
 	function handleDndConsider(cId: string, e: CustomEvent<DndEvent<ItemWithCoverAndAttachments>>) {
 		if (columnId === cId) {
@@ -79,7 +80,7 @@
 				// Update the item
 				const item = localItems.find((item) => item.id === droppedItemId);
 				if (item) {
-					$updateItem.mutate({ ...item, order: newOrder, columnId });
+					$updateItemMutation.mutate({ ...item, order: newOrder, columnId });
 				}
 
 				// Reset the source index
@@ -136,6 +137,7 @@
 
 	{#if editing}
 		<NewItem
+			{boardId}
 			{columnId}
 			nextOrder={localItems.length === 0 ? 1 : localItems[localItems.length - 1].order + 1}
 			on:create={async () => {

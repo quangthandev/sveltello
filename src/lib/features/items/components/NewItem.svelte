@@ -3,8 +3,11 @@
 	import { page } from '$app/stores';
 	import { generateId } from 'lucia';
 	import { clickOutside } from '$lib/actions/click-outside';
-	import { queriesCtx } from '../../../../routes/items/[id]/context';
+	import { useCreateItem } from '../query-client/use-items-mutations';
+	import { createItemSchema } from '../schemas';
+	import type { ZodError } from 'zod';
 
+	export let boardId: number;
 	export let columnId: string;
 	export let nextOrder: number;
 
@@ -17,26 +20,30 @@
 		textareaEl.focus();
 	});
 
-	const { createItem } = queriesCtx.get();
+	const createItemMutation = useCreateItem(boardId);
 
 	function handleSubmit(e: SubmitEvent) {
 		const formData = new FormData(e.target as HTMLFormElement);
 		const id = generateId(15);
 
-		const data: Record<string, unknown> = {};
-		data.id = id;
-		data.boardId = parseInt($page.params.id);
+		const data: Record<string, unknown> = {
+			id,
+			boardId: parseInt($page.params.id)
+		};
+
 		for (let field of formData) {
 			const [key, value] = field;
 			data[key] = value;
 		}
 
-		// @ts-expect-error
-		$createItem.mutate(data);
-
-		textareaEl.value = '';
-
-		dispatch('create');
+		try {
+			const parsedData = createItemSchema.parse(data);
+			$createItemMutation.mutate(parsedData);
+			textareaEl.value = '';
+			dispatch('create');
+		} catch (error) {
+			console.error((error as ZodError).message);
+		}
 	}
 </script>
 

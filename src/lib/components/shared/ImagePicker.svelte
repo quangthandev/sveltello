@@ -1,25 +1,11 @@
 <script lang="ts">
 	import Skeleton from '$lib/components/ui/Skeleton.svelte';
+	import { useRandomPhotos } from '$lib/features/unsplash/query-client';
 	import { cn } from '$lib/utils';
-	import { createQuery } from '@tanstack/svelte-query';
-	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 
 	export let visible = false;
 
-	const query = createQuery<Random[]>({
-		queryKey: ['unsplash-random'],
-		queryFn: async () => {
-			const res = await fetch('/api/unsplash');
-
-			if (!res.ok) {
-				throw new Error('Failed to fetch photos');
-			}
-
-			return res.json();
-		},
-		enabled: visible,
-		staleTime: Infinity // store the data indefinitely until users manually refetch
-	});
+	const query = useRandomPhotos(visible);
 
 	let selectedImageId: string;
 </script>
