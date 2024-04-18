@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import { lucia } from '$lib/server/auth';
 import { login } from '$lib/features/auth/queries';
-import { authCredentialsSchema } from '$lib/features/auth/schemas.js';
+import { authCredentialsSchema } from '$lib/features/auth/schemas';
 
 export function load({ locals }) {
 	const user = locals.user;

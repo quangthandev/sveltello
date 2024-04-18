@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { checkAuthUser } from '$lib/server/auth';
-import { getBoard, upsertItem } from '$lib/features/boards/db-queries';
+import { getBoard } from '$lib/features/boards/db-queries';
 
 export async function GET({ params, locals }) {
 	if (!params.id) {
@@ -16,25 +16,4 @@ export async function GET({ params, locals }) {
 	}
 
 	return json(board);
-}
-
-export async function POST({ request, locals, params }) {
-	checkAuthUser(locals);
-
-	const boardId = params.id;
-
-	const { id, title, columnId, order } = await request.json();
-
-	await upsertItem(
-		{
-			id,
-			title,
-			columnId,
-			order: order,
-			boardId: parseInt(boardId)
-		},
-		locals.user.id
-	);
-
-	return json({ message: 'ok' });
 }

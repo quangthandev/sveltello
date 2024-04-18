@@ -2,6 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import { checkAuthUser } from '$lib/server/auth';
 import { deleteItem, getItem } from '$lib/features/items/db-queries';
 import { moveItemToColumn, upsertItem } from '$lib/features/boards/db-queries';
+import { createItemSchema, moveItemToColumnSchema } from '$lib/features/items/schemas.js';
 
 export async function GET({ locals, params }) {
 	if (!params.id) {
@@ -48,7 +49,17 @@ export async function PUT({ request, locals, params }) {
 
 	checkAuthUser(locals, `/items/${params.id}`);
 
-	const { title, columnId, order, boardId } = await request.json();
+	const data = await request.json();
+
+	const result = await createItemSchema.safeParseAsync(data);
+
+	if (!result.success) {
+		return error(422, {
+			message: result.error.message
+		});
+	}
+
+	const { title, columnId, order, boardId } = result.data;
 
 	await upsertItem(
 		{
@@ -56,7 +67,7 @@ export async function PUT({ request, locals, params }) {
 			title,
 			columnId,
 			order: order,
-			boardId: parseInt(boardId)
+			boardId: boardId
 		},
 		locals.user.id
 	);
@@ -73,7 +84,17 @@ export async function PATCH({ request, locals, params }) {
 
 	checkAuthUser(locals, `/items/${params.id}`);
 
-	const { columnId } = await request.json();
+	const data = await request.json();
+
+	const result = await moveItemToColumnSchema.safeParseAsync(data);
+
+	if (!result.success) {
+		return error(422, {
+			message: result.error.message
+		});
+	}
+
+	const { columnId } = result.data;
 
 	await moveItemToColumn(id, columnId, locals.user.id);
 

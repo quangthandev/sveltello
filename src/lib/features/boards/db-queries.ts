@@ -25,12 +25,12 @@ export async function getBoards(userId: string) {
 export async function createBoard(
 	userId: string,
 	name: string,
-	color: string,
-	imageId?: string,
-	imageThumbUrl?: string,
-	imageFullUrl?: string,
-	imageUsername?: string,
-	imageLinkHtml?: string
+	color?: string,
+	imageId?: string | null,
+	imageThumbUrl?: string | null,
+	imageFullUrl?: string | null,
+	imageUsername?: string | null,
+	imageLinkHtml?: string | null
 ) {
 	const result = await db
 		.insert(board)

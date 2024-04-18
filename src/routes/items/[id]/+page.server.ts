@@ -10,9 +10,14 @@ import {
 	updateItemContent,
 	updateItemTitle
 } from '$lib/features/items/db-queries';
-import { z } from 'zod';
 import { getColumn } from '$lib/features/columns/db-queries';
 import { upsertItem } from '$lib/features/boards/db-queries';
+import {
+	makeCoverSchema,
+	moveOrCopyItemToDestinationSchema,
+	updateItemContentSchema,
+	updateItemTitleSchema
+} from '$lib/features/items/schemas';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
@@ -38,25 +43,6 @@ export async function load({ locals, params }) {
 		}
 	};
 }
-
-const updateItemTitleSchema = z.object({
-	title: z.string()
-});
-
-const updateItemContentSchema = z.object({
-	content: z.string()
-});
-
-const moveOrCopyItemSchema = z.object({
-	boardId: z.string(),
-	columnId: z.string(),
-	title: z.string(),
-	posIndex: z.string()
-});
-
-const makeCoverSchema = z.object({
-	attachmentId: z.string()
-});
 
 export const actions = {
 	updateItemTitle: async ({ request, locals, params }) => {
@@ -85,6 +71,10 @@ export const actions = {
 		const data = await request.formData();
 		const { content } = await updateItemContentSchema.parseAsync(Object.fromEntries(data));
 
+		if (!content) {
+			throw error(422, 'Content is required');
+		}
+
 		await updateItemContent(id, content, locals.user.id);
 	},
 	moveItemToDestination: async ({ request, locals, params }) => {
@@ -98,9 +88,8 @@ export const actions = {
 
 		const data = await request.formData();
 
-		const { boardId, columnId, posIndex, title } = await moveOrCopyItemSchema.parseAsync(
-			Object.fromEntries(data)
-		);
+		const { boardId, columnId, posIndex, title } =
+			await moveOrCopyItemToDestinationSchema.parseAsync(Object.fromEntries(data));
 
 		const column = await getColumn(columnId, locals.user.id);
 
@@ -145,9 +134,8 @@ export const actions = {
 
 		const data = await request.formData();
 
-		const { boardId, columnId, posIndex, title } = await moveOrCopyItemSchema.parseAsync(
-			Object.fromEntries(data)
-		);
+		const { boardId, columnId, posIndex, title } =
+			await moveOrCopyItemToDestinationSchema.parseAsync(Object.fromEntries(data));
 
 		const column = await getColumn(columnId, locals.user.id);
 
@@ -218,6 +206,10 @@ export const actions = {
 		const data = await request.formData();
 
 		const { attachmentId } = await makeCoverSchema.parseAsync(Object.fromEntries(data));
+
+		if (!attachmentId) {
+			throw error(422, 'Attachment ID is required');
+		}
 
 		await makeCover(id, attachmentId, locals.user.id);
 	}

@@ -111,7 +111,7 @@
 			inputClassName="border border-slate-400 w-full rounded-lg py-1 px-2 font-medium text-black"
 			buttonClassName="block rounded-lg text-left w-full border border-transparent py-1 px-2 font-medium text-slate-600"
 		>
-			<input type="hidden" name="columnId" value={columnId} />
+			<input type="hidden" name="id" value={columnId} />
 		</EditableText>
 		<ListActionsMenu id={columnId} {name} onAddCard={() => (editing = true)} />
 	</div>

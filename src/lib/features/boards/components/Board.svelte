@@ -64,7 +64,7 @@
 		<div slot="content" class="px-4 space-y-4">
 			<p>Are you sure you want to delete this board?</p>
 			<form method="post" action="?/delete" use:enhance={handleSubmit}>
-				<input type="hidden" name="boardId" value={id} />
+				<input type="hidden" name="id" value={id} />
 				<button
 					class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
 					disabled={isDeleting}

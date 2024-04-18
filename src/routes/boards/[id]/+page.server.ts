@@ -6,9 +6,14 @@ import {
 	updateBoardName,
 	updateColumnName
 } from '$lib/features/boards/db-queries';
-import { z } from 'zod';
 import { checkAuthUser } from '$lib/server/auth';
 import { getBoards } from '$lib/features/boards/db-queries';
+import { updateBoardNameSchema } from '$lib/features/boards/schemas';
+import {
+	copyColumnSchema,
+	deleteColumnSchema,
+	updateColumnNameSchema
+} from '$lib/features/columns/schemas';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
@@ -31,25 +36,6 @@ export async function load({ locals, params }) {
 	return { title: board.name, board, boards };
 }
 
-const updateBoardNameSchema = z.object({
-	name: z.string(),
-	id: z.string()
-});
-
-const updateColumnNameSchema = z.object({
-	columnId: z.string(),
-	name: z.string()
-});
-
-const copyColumnSchema = z.object({
-	id: z.string(),
-	name: z.string()
-});
-
-const deleteColumnSchema = z.object({
-	id: z.string()
-});
-
 export const actions = {
 	updateBoardName: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
@@ -57,15 +43,23 @@ export const actions = {
 		const data = await request.formData();
 		const { name, id } = await updateBoardNameSchema.parseAsync(Object.fromEntries(data));
 
-		await updateBoardName(parseInt(id), name, locals.user.id);
+		if (!id) {
+			throw error(400, 'Invalid board id');
+		}
+
+		await updateBoardName(id, name, locals.user.id);
 	},
 	updateColumnName: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
 
 		const data = await request.formData();
-		const { columnId, name } = await updateColumnNameSchema.parseAsync(Object.fromEntries(data));
+		const { id, name } = await updateColumnNameSchema.parseAsync(Object.fromEntries(data));
 
-		await updateColumnName(columnId, name, locals.user.id);
+		if (!id) {
+			throw error(400, 'Invalid column id');
+		}
+
+		await updateColumnName(id, name, locals.user.id);
 	},
 	deleteColumn: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
@@ -74,6 +68,10 @@ export const actions = {
 
 		const { id } = await deleteColumnSchema.parseAsync(Object.fromEntries(data));
 
+		if (!id) {
+			throw error(400, 'Invalid column id');
+		}
+
 		await deleteColumn(id, locals.user.id);
 	},
 	copyColumn: async ({ request, locals, params }) => {
@@ -81,6 +79,10 @@ export const actions = {
 
 		const data = await request.formData();
 		const { id, name } = await copyColumnSchema.parseAsync(Object.fromEntries(data));
+
+		if (!id) {
+			throw error(400, 'Invalid column id');
+		}
 
 		// Check if the board exists
 		const board = await getBoard(parseInt(params.id), locals.user.id);

@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { lucia } from '$lib/server/auth';
 import { z } from 'zod';
 import { createUser, userExists } from '$lib/features/auth/queries';
-import { authCredentialsSchema } from '$lib/features/auth/schemas.js';
+import { authCredentialsSchema } from '$lib/features/auth/schemas';
 
 export function load() {
 	return { title: 'Sign Up' };

@@ -57,7 +57,7 @@
 				<ItemDescription {item} {isLoading} />
 
 				<!-- Attachments -->
-				{#if item && item.attachments.length > 0}
+				{#if item && item.attachments?.length > 0}
 					<ItemAttachments itemId={id} attachments={item.attachments} />
 				{/if}
 

@@ -11,12 +11,16 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import type { ActionData } from '../../../../routes/boards/$types';
+	import { createBoardSchema } from '../schemas';
 
 	let isSubmitting = false;
 
 	const queryClient = useQueryClient();
 
-	const handleSubmit: TypedSubmitFunctionWithCallback<ActionData> = ({ formData }, onSuccess) => {
+	const handleSubmit: TypedSubmitFunctionWithCallback<ActionData> = (
+		{ formData, cancel },
+		onSuccess
+	) => {
 		isSubmitting = true;
 
 		const images = queryClient.getQueryData<Random[]>(['unsplash-random']);
@@ -27,10 +31,22 @@
 			formData.set('imageThumbUrl', seletecImage.urls.thumb);
 			formData.set('imageFullUrl', seletecImage.urls.full);
 			formData.set('imageUsername', seletecImage.user.username);
-			formData.set('imageLinkHTML', seletecImage.links.html);
+			formData.set('imageLinkHtml', seletecImage.links.html);
 		}
 
 		formData.delete('photo');
+
+		const data = Object.fromEntries(formData.entries());
+
+		// Validate the form data
+		const validationResult = createBoardSchema.safeParse(data);
+
+		if (!validationResult.success) {
+			isSubmitting = false;
+			console.error(validationResult.error);
+			cancel();
+			return;
+		}
 
 		return async ({ result }) => {
 			if (result.type === 'redirect') {
