@@ -139,10 +139,6 @@ export async function copyColumn(id: string, name: string, boardId: number, user
 		}
 	});
 
-	if (columnItems.length === 0) {
-		return;
-	}
-
 	const boardColumns = await db.query.column.findMany({
 		where: eq(column.boardId, existed.Board.id),
 		orderBy: [asc(column.order)]
@@ -167,56 +163,58 @@ export async function copyColumn(id: string, name: string, boardId: number, user
 		.returning()
 		.get();
 
-	// Copy items
-	const createdItems = await db
-		.insert(item)
-		.values(
-			columnItems
-				.map((item) => ({
-					boardId: createdColumn.boardId,
-					columnId: createdColumn.id,
-					title: item.title,
-					content: item.content,
-					order: item.order
-				}))
-				.filter((item): item is Item => item !== null)
-		)
-		.returning();
+	if (columnItems.length > 0) {
+		// Copy items
+		const createdItems = await db
+			.insert(item)
+			.values(
+				columnItems
+					.map((item) => ({
+						boardId: createdColumn.boardId,
+						columnId: createdColumn.id,
+						title: item.title,
+						content: item.content,
+						order: item.order
+					}))
+					.filter((item): item is Item => item !== null)
+			)
+			.returning();
 
-	// Copy attachments and cover
-	for (const item of columnItems) {
-		if (!item || item.attachments.length === 0) {
-			continue;
-		}
+		// Copy attachments and cover
+		for (const item of columnItems) {
+			if (!item || item.attachments.length === 0) {
+				continue;
+			}
 
-		const itemCover = await db.query.cover.findFirst({
-			where: eq(cover.itemId, item.id)
-		});
-
-		const attachmentsToCopy = item.attachments
-			.map((attachment) => {
-				const createdItemId = createdItems.find((i) => i.title === item.title)?.id;
-
-				if (!createdItemId) {
-					return null;
-				}
-
-				return {
-					itemId: createdItemId,
-					name: attachment.name,
-					url: attachment.url,
-					type: attachment.type
-				};
-			})
-			.filter((attachment): attachment is Attachment => attachment !== null);
-
-		await db.insert(attachment).values(attachmentsToCopy);
-
-		if (itemCover) {
-			await db.insert(cover).values({
-				itemId: createdItems.find((i) => i.title === item.title)!.id,
-				url: itemCover.url
+			const itemCover = await db.query.cover.findFirst({
+				where: eq(cover.itemId, item.id)
 			});
+
+			const attachmentsToCopy = item.attachments
+				.map((attachment) => {
+					const createdItemId = createdItems.find((i) => i.title === item.title)?.id;
+
+					if (!createdItemId) {
+						return null;
+					}
+
+					return {
+						itemId: createdItemId,
+						name: attachment.name,
+						url: attachment.url,
+						type: attachment.type
+					};
+				})
+				.filter((attachment): attachment is Attachment => attachment !== null);
+
+			await db.insert(attachment).values(attachmentsToCopy);
+
+			if (itemCover) {
+				await db.insert(cover).values({
+					itemId: createdItems.find((i) => i.title === item.title)!.id,
+					url: itemCover.url
+				});
+			}
 		}
 	}
 }
