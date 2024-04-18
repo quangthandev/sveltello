@@ -25,9 +25,13 @@
 
 		const result = insertColumnSchema.safeParse(data);
 
-		console.log(result);
+		if (!result.success) {
+			// TODO: Handle error e.g. display error message with toast
+			console.error(result.error);
+			return;
+		}
 
-		$createColumnMutation.mutate(data);
+		$createColumnMutation.mutate(result.data);
 
 		inputEl.value = '';
 	};
