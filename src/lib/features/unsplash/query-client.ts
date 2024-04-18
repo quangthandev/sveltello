@@ -1,7 +1,7 @@
 import { createQuery } from '@tanstack/svelte-query';
 import type { Random } from 'unsplash-js/dist/methods/photos/types';
 
-export const useRandomPhotos = (visible: boolean) =>
+export const useRandomPhotos = ({ enabled = true }: { enabled: boolean }) =>
 	createQuery<Random[]>({
 		queryKey: ['unsplash-random'],
 		queryFn: async () => {
@@ -13,6 +13,6 @@ export const useRandomPhotos = (visible: boolean) =>
 
 			return res.json();
 		},
-		enabled: visible,
+		enabled,
 		staleTime: Infinity // store the data indefinitely until users manually refetch
 	});

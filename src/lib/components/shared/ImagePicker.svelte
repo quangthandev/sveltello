@@ -5,7 +5,7 @@
 
 	export let visible = false;
 
-	const query = useRandomPhotos(visible);
+	const query = useRandomPhotos({ enabled: visible });
 
 	let selectedImageId: string;
 </script>

@@ -1,5 +1,5 @@
 import { updateColumnOrder } from '$lib/features/boards/db-queries';
-import { updateColumnOrderSchema } from '$lib/features/columns/schemas.js';
+import { updateColumnOrderSchema } from '$lib/features/columns/schemas';
 import { checkAuthUser } from '$lib/server/auth';
 import { error, json } from '@sveltejs/kit';
 

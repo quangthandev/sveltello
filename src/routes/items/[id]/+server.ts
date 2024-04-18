@@ -2,7 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import { checkAuthUser } from '$lib/server/auth';
 import { deleteItem, getItem } from '$lib/features/items/db-queries';
 import { moveItemToColumn, upsertItem } from '$lib/features/boards/db-queries';
-import { createItemSchema, moveItemToColumnSchema } from '$lib/features/items/schemas.js';
+import { createItemSchema, moveItemToColumnSchema } from '$lib/features/items/schemas';
 
 export async function GET({ locals, params }) {
 	if (!params.id) {
