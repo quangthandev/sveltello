@@ -10,11 +10,12 @@
 	import { useDeleteAttachment } from '../query-client/mutations';
 
 	export let itemId: string;
+	export let boardId: number;
 	export let attachments: (Attachment & { isCover: boolean })[];
 
 	const queryClient = useQueryClient();
 
-	const deleteAttachmentMutation = useDeleteAttachment(itemId);
+	const deleteAttachmentMutation = useDeleteAttachment(itemId, boardId);
 
 	const handleMakeCover: TypedSubmitFunction<ActionData> = ({ formData }) => {
 		const attachmentId = formData.get('attachmentId');

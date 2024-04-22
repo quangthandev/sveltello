@@ -25,7 +25,7 @@
 
 	const queryClient = useQueryClient();
 
-	const uploadImageMutation = useUploadImage();
+	const uploadImageMutation = useUploadImage(id, boardId);
 
 	const handleSubmit: TypedSubmitFunction<ActionData> = async ({ formData }) => {
 		isSubmitting = true;
@@ -74,7 +74,7 @@
 		options={{
 			placeholder: 'Add a more detailed description...',
 			imageUploader: async (file) => {
-				const res = await $uploadImageMutation.mutateAsync({ itemId: id, file });
+				const res = await $uploadImageMutation.mutateAsync(file);
 
 				queryClient.invalidateQueries({ queryKey: ['items', id] });
 

@@ -23,7 +23,7 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Add to card</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<AttachPopover itemId={item.id} />
+			<AttachPopover itemId={item.id} boardId={item.boardId} />
 		</div>
 	</div>
 

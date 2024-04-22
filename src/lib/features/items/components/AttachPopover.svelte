@@ -3,23 +3,19 @@
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import * as Popover from '$lib/components/popover';
 	import { cn } from '$lib/utils';
-	import { useQueryClient } from '@tanstack/svelte-query';
 	import { useUploadImage } from '../query-client/mutations';
 
 	export let itemId: string;
+	export let boardId: number;
 
-	const uploadImageMutation = useUploadImage();
+	const uploadImageMutation = useUploadImage(itemId, boardId);
 
-	const queryClient = useQueryClient();
-
-	async function handleFileChange(event: Event) {
+	function handleFileChange(event: Event) {
 		const file = (event.target as HTMLInputElement).files?.[0];
 
 		if (!file) return;
 
-		await $uploadImageMutation.mutateAsync({ itemId, file });
-
-		queryClient.invalidateQueries({ queryKey: ['items', itemId] });
+		$uploadImageMutation.mutate(file);
 	}
 </script>
 

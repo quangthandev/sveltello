@@ -58,7 +58,7 @@
 
 				<!-- Attachments -->
 				{#if item && item.attachments?.length > 0}
-					<ItemAttachments itemId={id} attachments={item.attachments} />
+					<ItemAttachments itemId={id} boardId={item.boardId} attachments={item.attachments} />
 				{/if}
 
 				<!-- Activity section -->

@@ -157,9 +157,11 @@ export const useMoveItem = ({
 	});
 };
 
-export const useUploadImage = () =>
-	createMutation<{ url: string }, unknown, { itemId: string; file: File }>({
-		mutationFn: async ({ itemId, file }) => {
+export const useUploadImage = (itemId: string, boardId: number) => {
+	const queryClient = useQueryClient();
+
+	return createMutation<{ url: string }, unknown, File>({
+		mutationFn: async (file) => {
 			// Limit file size to 4.5MB due to Vercel's serverless function payload limit
 			if (file.size > 4.5 * 1024 * 1024) {
 				alert('File size is too large. Please upload a file smaller than 4.5MB');
@@ -174,10 +176,16 @@ export const useUploadImage = () =>
 				body: formData
 			});
 			return await res.json();
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ['items', itemId] });
+			// TODO: find a more efficient way to invalidate board items' attachments, instead of invalidating the whole board
+			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
 	});
+};
 
-export const useDeleteAttachment = (itemId: string) => {
+export const useDeleteAttachment = (itemId: string, boardId: number) => {
 	const queryClient = useQueryClient();
 
 	return createMutation<unknown, unknown, string, { prevAttachments: Attachment[] }>({
@@ -213,6 +221,8 @@ export const useDeleteAttachment = (itemId: string) => {
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ['items', itemId] });
+			// TODO: find a more efficient way to invalidate board items' attachments, instead of invalidating the whole board
+			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
 	});
 };
