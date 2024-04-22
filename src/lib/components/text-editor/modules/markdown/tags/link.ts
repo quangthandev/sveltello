@@ -1,4 +1,4 @@
-import { createTag } from './create-tag';
+import { createTag } from '../create-tag';
 
 const link = createTag({
 	format: 'link',

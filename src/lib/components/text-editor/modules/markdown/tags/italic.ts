@@ -1,4 +1,4 @@
-import { createTag } from './create-tag';
+import { createTag } from '../create-tag';
 
 const italic = createTag({
 	format: 'italic',

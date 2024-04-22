@@ -4,7 +4,7 @@ import type Quill from 'quill';
 import type { Delta } from 'quill/core';
 import type { EmitterSource } from 'quill/core/emitter';
 import { tags } from './tags';
-import type { Tag, TagName } from './tags/create-tag';
+import type { Tag, TagName } from './create-tag';
 
 export type Options = {
 	ignoreTags?: TagName[];
