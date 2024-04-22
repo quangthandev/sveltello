@@ -6,7 +6,7 @@ export const createItemSchema = z.object({
 	id: z.string(),
 	title: z.string(),
 	columnId: z.string(),
-	order: z.union([z.string(), z.number()]).transform((val) => Number(val)),
+	order: z.coerce.number(),
 	boardId: z.number()
 });
 
@@ -23,12 +23,12 @@ export const moveItemToColumnSchema = createInsertSchema(item, {
 }).pick({ columnId: true });
 
 export const moveOrCopyItemToDestinationSchema = createInsertSchema(item, {
-	boardId: z.string(),
+	boardId: z.coerce.number(),
 	columnId: (schema) => schema.columnId,
 	title: (schema) => schema.title
 })
 	.extend({
-		posIndex: z.string()
+		posIndex: z.coerce.number()
 	})
 	.pick({ boardId: true, columnId: true, title: true, posIndex: true });
 

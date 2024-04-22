@@ -14,12 +14,7 @@ export const createBoardSchema = createInsertSchema(board, {
 });
 
 export const updateBoardNameSchema = createInsertSchema(board, {
-	id: z
-		.string()
-		.transform((val) => Number(val))
-		.refine((val) => !isNaN(val), {
-			message: 'Invalid board id'
-		}),
+	id: z.coerce.number(),
 	name: (schema) => schema.name
 }).pick({ id: true, name: true });
 

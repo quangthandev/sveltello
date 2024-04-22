@@ -12,7 +12,7 @@ export async function POST({ request, locals }) {
 
 		const { id, name, boardId } = await insertColumnSchema.parseAsync(data);
 
-		const column = await createColumn(Number(boardId), name, locals.user.id, id);
+		const column = await createColumn(boardId, name, locals.user.id, id);
 
 		return json(column, { status: 201 });
 	} catch (err) {

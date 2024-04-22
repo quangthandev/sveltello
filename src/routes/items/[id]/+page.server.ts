@@ -98,7 +98,7 @@ export const actions = {
 		}
 
 		// Calculate order from position index
-		const index = Number(posIndex);
+		const index = posIndex;
 		let order;
 		if (index === 1) {
 			if (column.items.length === 0) {
@@ -118,7 +118,7 @@ export const actions = {
 				title,
 				columnId,
 				order,
-				boardId: Number(boardId)
+				boardId: boardId
 			},
 			locals.user.id
 		);
@@ -144,7 +144,7 @@ export const actions = {
 		}
 
 		// Calculate order from position index
-		const index = Number(posIndex);
+		const index = posIndex;
 		let order;
 		if (index === 1) {
 			if (column.items.length === 0) {
@@ -165,7 +165,7 @@ export const actions = {
 				title,
 				columnId,
 				order,
-				boardId: Number(boardId)
+				boardId: boardId
 			},
 			locals.user.id
 		);
