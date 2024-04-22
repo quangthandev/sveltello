@@ -47,7 +47,7 @@ export class Tag<T extends QuillFormat = QuillFormat> {
 		public format: T,
 		public pattern: RegExp,
 		public tagNames: TagName[],
-		formatter: (format: T, pattern: RegExp) => (params: FormatterAttributes) => void,
+		formatter: (params: FormatterAttributes) => void,
 		private customMatcher?: (
 			text: string,
 			pattern: RegExp,
@@ -56,7 +56,7 @@ export class Tag<T extends QuillFormat = QuillFormat> {
 	) {
 		this.format = format;
 		this.pattern = pattern;
-		this.formatter = formatter(this.format, this.pattern);
+		this.formatter = formatter;
 	}
 
 	match(text: string, lineStart: number) {
@@ -72,7 +72,7 @@ export function createTag<T extends QuillFormat>(params: {
 	format: T;
 	pattern: RegExp;
 	tagNames: TagName[];
-	formatter: (format: T, pattern: RegExp) => (params: FormatterAttributes) => void;
+	formatter: (params: FormatterAttributes) => void;
 	customMatcher?: (text: string, pattern: RegExp, lineStart?: number) => RegExpExecArray | null;
 }) {
 	const { format, pattern, tagNames, formatter, customMatcher } = params;

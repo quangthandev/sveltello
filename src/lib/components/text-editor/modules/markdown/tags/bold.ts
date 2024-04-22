@@ -1,23 +1,21 @@
-import { createTag } from './factory';
+import { createTag } from './create-tag';
 
 const bold = createTag({
 	format: 'bold',
 	pattern: /(\*|_){2}(.+?)(?:\1){2}/g,
 	tagNames: ['bold'],
-	formatter:
-		(format) =>
-		({ quill, match, lineStart }) => {
-			const [annotatedText, , matchedText] = match;
-			const startIndex = lineStart + match.index;
+	formatter: function ({ quill, match, lineStart }) {
+		const [annotatedText, , matchedText] = match;
+		const startIndex = lineStart + match.index;
 
+		setTimeout(() => {
+			quill.deleteText(startIndex, annotatedText.length);
 			setTimeout(() => {
-				quill.deleteText(startIndex, annotatedText.length);
-				setTimeout(() => {
-					quill.insertText(startIndex, matchedText, { [format]: true }, 'silent');
-					quill.format(format, false);
-				});
-			}, 0);
-		},
+				quill.insertText(startIndex, matchedText, { [this.format]: true }, 'silent');
+				quill.format(this.format, false);
+			});
+		}, 0);
+	},
 	customMatcher: (text, pattern) => {
 		const match = pattern.exec(text);
 
