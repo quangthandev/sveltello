@@ -71,11 +71,7 @@ export const actions = {
 		const data = await request.formData();
 		const { content } = await updateItemContentSchema.parseAsync(Object.fromEntries(data));
 
-		if (!content) {
-			throw error(422, 'Content is required');
-		}
-
-		await updateItemContent(id, content, locals.user.id);
+		await updateItemContent(id, locals.user.id, content);
 	},
 	moveItemToDestination: async ({ request, locals, params }) => {
 		const id = params.id;

@@ -15,7 +15,7 @@ export const updateItemTitleSchema = createInsertSchema(item, {
 }).pick({ title: true });
 
 export const updateItemContentSchema = createInsertSchema(item, {
-	content: (schema) => schema.content
+	content: (schema) => schema.content.optional()
 }).pick({ content: true });
 
 export const moveItemToColumnSchema = createInsertSchema(item, {

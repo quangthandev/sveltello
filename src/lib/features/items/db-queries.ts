@@ -46,7 +46,7 @@ export async function updateItemTitle(id: string, title: string, userId: string)
 		.where(and(eq(item.id, existed.Item.id), eq(item.boardId, existed.Board.id)));
 }
 
-export async function updateItemContent(id: string, content: string, userId: string) {
+export async function updateItemContent(id: string, userId: string, content?: string | null) {
 	const existed = await getItemByUserBoard(id, userId);
 
 	if (!existed?.Board) {
