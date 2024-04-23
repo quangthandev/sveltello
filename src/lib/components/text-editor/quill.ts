@@ -87,7 +87,7 @@ export async function initQuill(node: HTMLElement, options?: Options) {
 						handler: (range: Range, context: Context) => {
 							// Remove formatting when deleting at the beginning of a line and the line is empty
 							if (range.index === 0 && range.length === 0 && context.empty && context.format) {
-								quill.removeFormat(range, context.format);
+								quill.removeFormat(range.index, range.length);
 								return false;
 							}
 

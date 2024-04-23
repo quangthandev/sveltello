@@ -113,5 +113,5 @@
 <div bind:this={editor} use:quillEditor={options} {...$$restProps} />
 
 <style>
-	@import url('https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css');
+	@import url('https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css');
 </style>
