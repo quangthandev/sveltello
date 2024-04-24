@@ -3,11 +3,11 @@ import {
 	copyColumn,
 	deleteColumn,
 	getBoard,
+	getBoardsWithColumns,
 	updateBoardName,
 	updateColumnName
 } from '$lib/features/boards/db-queries';
 import { checkAuthUser } from '$lib/server/auth';
-import { getBoards } from '$lib/features/boards/db-queries';
 import { updateBoardNameSchema } from '$lib/features/boards/schemas';
 import {
 	copyColumnSchema,
@@ -27,7 +27,7 @@ export async function load({ locals, params }) {
 	}
 
 	const board = await getBoard(parseInt(params.id), locals.user.id);
-	const boards = await getBoards(locals.user.id);
+	const boards = await getBoardsWithColumns(locals.user.id);
 
 	if (!board) {
 		throw error(404, 'Board not found');

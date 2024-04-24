@@ -5,21 +5,20 @@ import { getColumnByUserBoard, getItemByUserBoard } from '$lib/drizzle/utils';
 import type { Attachment, Item, ItemMutation } from '$lib/types';
 
 export async function getBoards(userId: string) {
-	const boards = await db.query.board.findMany({
+	return await db.query.board.findMany({
+		where: eq(board.userId, userId)
+	});
+}
+
+export async function getBoardsWithColumns(userId: string) {
+	return await db.query.board.findMany({
 		where: eq(board.userId, userId),
 		with: {
 			columns: {
-				orderBy: [asc(column.order)],
-				with: {
-					items: {
-						orderBy: [asc(item.order)]
-					}
-				}
+				orderBy: [asc(column.order)]
 			}
 		}
 	});
-
-	return boards;
 }
 
 export async function createBoard(
