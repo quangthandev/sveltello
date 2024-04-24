@@ -6,31 +6,31 @@ export type Item = typeof item.$inferSelect;
 export type Attachment = typeof attachment.$inferSelect;
 export type Cover = typeof cover.$inferSelect;
 
-export type BoardWithColumns = Board & {
+export interface BoardWithColumns extends Board {
 	columns: (Column & { items: ItemWithCoverAndAttachments[] })[];
-};
+}
 
-export type ItemWithColumn = Item & {
+export interface ItemWithColumn extends Item {
 	column: Column;
-};
-export type ItemFullPayload = Item & {
+}
+export interface ItemFullPayload extends Item {
 	board: Board;
 	column: Column;
 	cover: Cover | null;
 	attachments: (Attachment & { isCover: boolean })[];
-};
-export type ItemWithCoverAndAttachments = Item & {
+}
+export interface ItemWithCoverAndAttachments extends Item {
 	cover: Cover | null;
-	attachments: ItemFullPayload['attachments'];
-};
-export type ItemWithAttachments = Item & {
 	attachments: Attachment[];
-};
+}
+export interface ItemWithAttachments extends Item {
+	attachments: Attachment[];
+}
 export type ItemMutation = Required<
 	Omit<typeof item.$inferInsert, 'content' | 'createdAt' | 'updatedAt'>
 >;
 
-export type ColumnWithItems = Column & {
+export interface ColumnWithItems extends Column {
 	items: Item[];
-};
+}
 export type ColumnMutation = Omit<typeof column.$inferInsert, 'order' | 'createdAt' | 'updatedAt'>;
