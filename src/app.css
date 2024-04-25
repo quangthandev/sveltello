@@ -2,11 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+	height: 100%;
+}
+
+code {
+	@apply bg-gray-200 text-black p-1 rounded-md;
+}
+
+blockquote {
+	@apply border-l-4 border-gray-400 pl-4 my-2;
+}
+
 @layer base {
 	:root {
 		--app-header-height: 4rem;
 
-		--muted: 220 14.3% 95.9%;
+		--muted: 216 12% 84%;
 		--muted-foreground: 220 8.9% 46.1%;
 
 		--background: 0 0% 100%;
@@ -21,13 +34,13 @@
 		--border: 220 13% 91%;
 		--input: 220 13% 91%;
 
-		--primary: 220.9 39.3% 11%;
+		--primary: 221 83% 53%;
 		--primary-foreground: 210 20% 98%;
 
-		--secondary: 220 14.3% 95.9%;
+		--secondary: 216 12% 84%;
 		--secondary-foreground: 220.9 39.3% 11%;
 
-		--accent: 220 14.3% 95.9%;
+		--accent: 216 12% 84%;
 		--accent-foreground: 220.9 39.3% 11%;
 
 		--destructive: 0 72.2% 50.6%;
@@ -36,19 +49,6 @@
 		--ring: 224 71.4% 4.1%;
 
 		--radius: 0.5rem;
-
-		html,
-		body {
-			height: 100%;
-		}
-
-		code {
-			@apply bg-gray-200 text-black p-1 rounded-md;
-		}
-
-		blockquote {
-			@apply border-l-4 border-gray-400 pl-4 my-2;
-		}
 	}
 
 	.dark {
