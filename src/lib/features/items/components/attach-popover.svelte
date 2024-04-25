@@ -1,6 +1,6 @@
 <script lang="ts">
-	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
-	import IconClose from '$lib/components/icons/IconClose.svelte';
+	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
+	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import * as Popover from '$lib/components/popover';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
@@ -52,7 +52,7 @@
 			<label
 				for="item-attachment-file-picker"
 				class={cn(
-					'flex items-center justify-center w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer',
+					'flex items-center justify-center w-full p-2 rounded-md bg-gray-300 hover:bg-gray-300/80 cursor-pointer',
 					{ 'opacity-50 cursor-not-allowed': $uploadImageMutation.isPending }
 				)}
 			>

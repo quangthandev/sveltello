@@ -1,12 +1,12 @@
 <script lang="ts">
-	import IconArrowRight from '$lib/components/icons/IconArrowRight.svelte';
-	import IconDelete from '$lib/components/icons/IconDelete.svelte';
-	import IconCopy from '$lib/components/icons/IconCopy.svelte';
+	import IconArrowRight from '$lib/components/icons/icon-arrow-right.svelte';
+	import IconDelete from '$lib/components/icons/icon-delete.svelte';
+	import IconCopy from '$lib/components/icons/icon-copy.svelte';
 	import { cn } from '$lib/utils';
-	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
-	import AttachPopover from './AttachPopover.svelte';
+	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
+	import AttachPopover from './attach-popover.svelte';
 	import { goto } from '$app/navigation';
-	import CardPopover from '$lib/components/shared/CardPopover.svelte';
+	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
 	import { useDeleteItem } from '../query-client/mutations';
 	import Button from '$lib/components/ui/button/button.svelte';

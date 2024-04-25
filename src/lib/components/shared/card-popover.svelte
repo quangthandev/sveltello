@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Popover from '$lib/components/popover';
 	import { cn } from '$lib/utils';
-	import IconClose from '$lib/components/icons/IconClose.svelte';
+	import IconClose from '$lib/components/icons/icon-close.svelte';
 
 	export let title: string;
 </script>

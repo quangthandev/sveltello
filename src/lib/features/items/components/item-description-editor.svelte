@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import TextEditor from '$lib/components/text-editor/TextEditor.svelte';
+	import TextEditor from '$lib/components/text-editor/text-editor.svelte';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import TurndownService from 'turndown';
 	import markdownit from 'markdown-it';

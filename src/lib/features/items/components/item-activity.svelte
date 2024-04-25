@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Avatar from '$lib/components/ui/Avatar.svelte';
+	import Avatar from '$lib/components/ui/avatar.svelte';
 	import { formatTimestamp } from '$lib/utils';
 	import type { ItemFullPayload } from '$lib/types';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Board from '$lib/features/boards/components/Board.svelte';
-	import NewBoard from '$lib/features/boards/components/NewBoard.svelte';
+	import Board from '$lib/features/boards/components/board.svelte';
+	import NewBoard from '$lib/features/boards/components/new-board.svelte';
 	import { useBoards } from '$lib/features/boards/query-client/queries';
 	import Button from '$lib/components/ui/button/button.svelte';
 

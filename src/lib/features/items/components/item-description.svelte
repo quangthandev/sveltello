@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Skeleton from '$lib/components/ui/Skeleton.svelte';
-	import ItemDescriptionEditor from './ItemDescriptionEditor.svelte';
-	import ItemDescriptionContent from './ItemDescriptionContent.svelte';
+	import Skeleton from '$lib/components/ui/skeleton.svelte';
+	import ItemDescriptionEditor from './item-description-editor.svelte';
+	import ItemDescriptionContent from './item-description-content.svelte';
 	import type { ItemFullPayload } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
 

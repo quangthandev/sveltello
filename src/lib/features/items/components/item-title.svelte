@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import EditableText from '$lib/components/shared/EditableText.svelte';
-	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
+	import EditableText from '$lib/components/shared/editable-text.svelte';
+	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
 	import { useBoard } from '$lib/features/boards/query-client/queries';
 	import Button from '$lib/components/ui/button/button.svelte';

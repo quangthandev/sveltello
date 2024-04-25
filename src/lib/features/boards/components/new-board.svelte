@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import IconClose from '$lib/components/icons/IconClose.svelte';
+	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import * as Popover from '$lib/components/popover';
-	import ImagePicker from '$lib/components/shared/ImagePicker.svelte';
+	import ImagePicker from '$lib/features/unsplash/components/image-picker.svelte';
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';

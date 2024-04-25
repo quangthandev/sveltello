@@ -1,7 +1,7 @@
 <script>
 	import { enhance } from '$app/forms';
-	import IconLoading from '$lib/components/icons/IconLoading.svelte';
-	import IconLogin from '$lib/components/icons/IconLogin.svelte';
+	import IconLoading from '$lib/components/icons/icon-loading.svelte';
+	import IconLogin from '$lib/components/icons/icon-login.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';

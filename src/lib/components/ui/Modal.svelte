@@ -2,7 +2,7 @@
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
 	import { fade, fly } from 'svelte/transition';
-	import Portal from './Portal.svelte';
+	import Portal from './portal.svelte';
 	import { browser } from '$app/environment';
 	import { cn } from '$lib/utils';
 	import { trapFocus } from '$lib/actions/trap-focus';

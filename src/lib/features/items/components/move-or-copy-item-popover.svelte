@@ -1,12 +1,12 @@
 <script lang="ts">
-	import IconClose from '$lib/components/icons/IconClose.svelte';
+	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import * as Popover from '$lib/components/popover';
 	import { cn } from '$lib/utils';
-	import MoveItemSuggestion from './MoveItemSuggestion.svelte';
-	import MoveItemForm from './MoveItemForm.svelte';
+	import MoveItemSuggestion from './move-item-suggestion.svelte';
+	import MoveItemForm from './move-item-form.svelte';
 	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import CopyItemForm from './CopyItemForm.svelte';
+	import CopyItemForm from './copy-item-form.svelte';
 
 	type ActionType = 'move' | 'copy';
 	export let action: ActionType = 'move';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { useRandomPhotos } from '$lib/features/unsplash/query-client';
 	import { cn } from '$lib/utils';
-	import Skeleton from '$lib/components/ui/Skeleton.svelte';
+	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let visible = false;

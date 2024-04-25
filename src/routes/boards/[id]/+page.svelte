@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
 	import type { PageData } from './$types';
-	import List from '$lib/features/columns/components/List.svelte';
-	import EditableText from '$lib/components/shared/EditableText.svelte';
+	import List from '$lib/features/columns/components/list.svelte';
+	import EditableText from '$lib/components/shared/editable-text.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
 	import type { Board, Column, Item } from '$lib/types';
-	import NewList from '$lib/features/columns/components/NewList.svelte';
+	import NewList from '$lib/features/columns/components/new-list.svelte';
 	import { useBoard } from '$lib/features/boards/query-client/queries';
 	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/mutations';
 

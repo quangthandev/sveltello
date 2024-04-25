@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getRelativeTime } from '$lib/utils';
-	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
-	import CardPopover from '$lib/components/shared/CardPopover.svelte';
+	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
+	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import { enhance } from '$app/forms';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import { useQueryClient } from '@tanstack/svelte-query';

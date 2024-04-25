@@ -1,12 +1,12 @@
 <script lang="ts">
-	import ListItem from './ListItem.svelte';
-	import ListActionsMenu from './ListActionsMenu.svelte';
+	import ListItem from './list-item.svelte';
+	import ListActionsMenu from './list-actions-menu.svelte';
 	import { tick } from 'svelte';
 	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
-	import IconPlus from '$lib/components/icons/IconPlus.svelte';
+	import IconPlus from '$lib/components/icons/icon-plus.svelte';
 	import type { ItemWithCoverAndAttachments } from '$lib/types';
-	import EditableText from '$lib/components/shared/EditableText.svelte';
-	import NewItem from '$lib/features/items/components/NewItem.svelte';
+	import EditableText from '$lib/components/shared/editable-text.svelte';
+	import NewItem from '$lib/features/items/components/new-item.svelte';
 	import { useUpdateItem } from '$lib/features/items/query-client/mutations';
 	import Button from '$lib/components/ui/button/button.svelte';
 

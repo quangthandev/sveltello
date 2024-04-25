@@ -6,9 +6,9 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import * as Popover from '$lib/components/popover';
-	import IconMore from '$lib/components/icons/IconMore.svelte';
-	import IconChevronLeft from '$lib/components/icons/IconChevronLeft.svelte';
-	import IconClose from '$lib/components/icons/IconClose.svelte';
+	import IconMore from '$lib/components/icons/icon-more.svelte';
+	import IconChevronLeft from '$lib/components/icons/icon-chevron-left.svelte';
+	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import type { BoardWithColumns } from '$lib/types';
 	import type { ActionData } from '../../../../routes/boards/[id]/$types';
 	import Button from '$lib/components/ui/button/button.svelte';

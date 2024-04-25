@@ -2,7 +2,7 @@
 	import { clickOutside } from '$lib/actions/click-outside';
 	import { popover } from '$lib/actions/popover';
 	import type { FloatingConfig } from '$lib/actions/types';
-	import Portal from '$lib/components/ui/Portal.svelte';
+	import Portal from '$lib/components/ui/portal.svelte';
 	import { popoverCtx } from './context';
 
 	export let floatingConfig: FloatingConfig = {};

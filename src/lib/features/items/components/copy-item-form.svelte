@@ -1,29 +1,34 @@
 <script lang="ts">
-	import { useQueryClient } from '@tanstack/svelte-query';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import ItemDestinationSelection from './item-destination-selection.svelte';
 	import { enhance } from '$app/forms';
+	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
-	import { createEventDispatcher } from 'svelte';
 	import type { ItemWithColumn } from '$lib/types';
-	import ItemDestinationSelection from './ItemDestinationSelection.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemWithColumn;
 	export let initialPosIndex: number;
-	const { boardId } = item;
 
-	const queryClient = useQueryClient();
+	let textarea: HTMLTextAreaElement;
 
 	// Form states
 	let isValid = false;
 	let isSubmitting = false;
 
 	const dispatch = createEventDispatcher();
+
+	const queryClient = useQueryClient();
+
+	onMount(() => {
+		textarea.select();
+	});
 </script>
 
 <form
-	class="space-y-2"
 	method="post"
-	action="?/moveItemToDestination"
+	action="?/copyItem"
+	class="flex flex-col gap-2 px-4 py-2"
 	use:enhance={() => {
 		isSubmitting = true;
 
@@ -31,7 +36,7 @@
 			await update({ invalidateAll: false });
 
 			queryClient.invalidateQueries({
-				queryKey: ['boards', boardId]
+				queryKey: ['boards', item.boardId]
 			});
 			queryClient.invalidateQueries({
 				queryKey: ['items', item.id]
@@ -39,11 +44,22 @@
 
 			isSubmitting = false;
 			dispatch('close');
-			goto(`/boards/${boardId}`);
+			goto(`/boards/${item.boardId}`);
 		};
 	}}
 >
-	<input type="title" hidden name="title" value={item.title} />
+	<fieldset>
+		<label for="title">Title</label>
+		<textarea
+			name="title"
+			id="title"
+			rows="3"
+			class="w-full bg-gray-200 mt-2 px-4 py-2"
+			value={item.title}
+			bind:this={textarea}
+		></textarea>
+	</fieldset>
+	<h4>Copy to...</h4>
 	<ItemDestinationSelection
 		{item}
 		{initialPosIndex}
@@ -51,5 +67,5 @@
 			isValid = e.detail.isValid;
 		}}
 	/>
-	<Button type="submit" class="w-full" disabled={!isValid || isSubmitting}>Move</Button>
+	<Button type="submit" class="w-full" disabled={!isValid || isSubmitting}>Create card</Button>
 </form>

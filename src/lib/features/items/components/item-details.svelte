@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import ItemDescription from './ItemDescription.svelte';
-	import Skeleton from '$lib/components/ui/Skeleton.svelte';
-	import ItemTitle from './ItemTitle.svelte';
-	import ItemActivity from './ItemActivity.svelte';
-	import ItemActions from './ItemActions.svelte';
-	import ItemAttachments from './ItemAttachments.svelte';
-	import IconClose from '$lib/components/icons/IconClose.svelte';
+	import ItemDescription from './item-description.svelte';
+	import Skeleton from '$lib/components/ui/skeleton.svelte';
+	import ItemTitle from './item-title.svelte';
+	import ItemActivity from './item-activity.svelte';
+	import ItemActions from './item-actions.svelte';
+	import ItemAttachments from './item-attachments.svelte';
+	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { useItem } from '../query-client/queries';
 	import Button from '$lib/components/ui/button/button.svelte';

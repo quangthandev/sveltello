@@ -1,2 +1,2 @@
-export { default } from './TextEditor.svelte';
-export * from './TextEditor.svelte';
+export { default } from './text-editor.svelte';
+export * from './text-editor.svelte';

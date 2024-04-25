@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Skeleton from '$lib/components/ui/Skeleton.svelte';
+	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import { useBoards } from '$lib/features/boards/query-client/queries';
 	import type { BoardWithColumns, ColumnWithItems, ItemWithColumn } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';

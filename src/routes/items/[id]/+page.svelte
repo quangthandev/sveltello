@@ -2,8 +2,8 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
-	import ItemDetails from '$lib/features/items/components/ItemDetails.svelte';
-	import Modal from '$lib/components/ui/Modal.svelte';
+	import ItemDetails from '$lib/features/items/components/item-details.svelte';
+	import Modal from '$lib/components/ui/modal.svelte';
 	import { cn } from '$lib/utils';
 
 	let previousPage: string = base;

@@ -2,13 +2,13 @@
 	import { enhance } from '$app/forms';
 	import { browser } from '$app/environment';
 	import { navigating, page } from '$app/stores';
-	import NavigatingnIndicator from '$lib/components/ui/NavigatingnIndicator.svelte';
+	import NavigatingnIndicator from '$lib/components/shared/navigating-indicator.svelte';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
-	import IconLogin from '$lib/components/icons/IconLogin.svelte';
-	import IconLogout from '$lib/components/icons/IconLogout.svelte';
-	import IconPlus from '$lib/components/icons/IconPlus.svelte';
-	import NewBoard from '$lib/features/boards/components/NewBoard.svelte';
+	import IconLogin from '$lib/components/icons/icon-login.svelte';
+	import IconLogout from '$lib/components/icons/icon-logout.svelte';
+	import IconPlus from '$lib/components/icons/icon-plus.svelte';
+	import NewBoard from '$lib/features/boards/components/new-board.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import '../app.css';
 
