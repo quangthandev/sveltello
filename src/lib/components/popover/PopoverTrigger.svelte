@@ -5,7 +5,7 @@
 
 	export let asChild = false;
 
-	let trigger: HTMLButtonElement;
+	let trigger: HTMLElement;
 
 	const { triggerEl, open } = popoverCtx.get();
 
@@ -21,7 +21,7 @@
 
 	interface TriggerActionAttributes {}
 
-	function triggerAction(node: HTMLButtonElement): ActionReturn<unknown, TriggerActionAttributes> {
+	function triggerAction(node: HTMLElement): ActionReturn<unknown, TriggerActionAttributes> {
 		trigger = node;
 
 		node.addEventListener('click', handleClick);
