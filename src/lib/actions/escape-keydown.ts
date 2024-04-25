@@ -1,6 +1,6 @@
 // Reference: https://github.com/melt-ui/melt-ui/blob/develop/src/lib/internal/actions/escape-keydown/action.ts
 
-import { get, readable, type Readable } from 'svelte/store';
+import { get, readable, writable } from 'svelte/store';
 import type { EscapeKeydownConfig } from './types';
 import { isFunction, isHTMLElement, isReadable, noop } from '$lib/utils';
 
@@ -35,19 +35,38 @@ const documentEscapeKeyStore = readable<KeyboardEvent | undefined>(
 	}
 );
 
+// Store a collection of subscribed nodes
+const nodes = writable<HTMLElement[]>([]);
+
 export function escapeKeydown(node: HTMLElement, config: EscapeKeydownConfig = {}) {
 	let unsub = noop;
+	let enabled = isEnabled();
+
+	// This is a hack to ensure only the latest subcribed node is enabled
+	nodes.subscribe((value) => {
+		enabled = value[value.length - 1] === node;
+	});
+
+	// Create a stack of nodes to handle nested click outside events
+	nodes.update((prev) => {
+		if (prev.includes(node)) {
+			return prev;
+		}
+
+		return [...prev, node];
+	});
+
+	function isEnabled(): boolean {
+		return isReadable(config.enabled) ? get(config.enabled) : !!config.enabled;
+	}
 
 	function update(config: EscapeKeydownConfig = {}) {
 		unsub();
 
 		const options = { enabled: true, ...config };
-		const enabled = (
-			isReadable(options.enabled) ? options.enabled : readable(options.enabled)
-		) as Readable<boolean>;
 
 		unsub = documentEscapeKeyStore.subscribe((e) => {
-			if (!e || !get(enabled)) return;
+			if (!e || !enabled) return;
 			const target = e.target;
 
 			if (!isHTMLElement(target)) {
@@ -82,6 +101,9 @@ export function escapeKeydown(node: HTMLElement, config: EscapeKeydownConfig = {
 
 	return {
 		update,
-		destroy: unsub
+		destroy() {
+			unsub();
+			nodes.update((prev) => prev.filter((n) => n !== node));
+		}
 	};
 }
