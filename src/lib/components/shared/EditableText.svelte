@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { createEventDispatcher, tick } from 'svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
 
 	export let value: string;
 	export let fieldName: string;
@@ -11,8 +12,8 @@
 
 	let isEditing: boolean = false;
 
-	let inputEl: HTMLInputElement;
 	let buttonEl: HTMLButtonElement;
+	let input: Input;
 
 	const dispatch = createEventDispatcher<{ submitted: void }>();
 </script>
@@ -22,7 +23,6 @@
 		method="post"
 		{action}
 		use:enhance={() => {
-			value = inputEl.value;
 			isEditing = false;
 
 			return async ({ update }) => {
@@ -33,12 +33,12 @@
 		}}
 	>
 		<slot />
-		<input
-			bind:this={inputEl}
+		<Input
+			bind:this={input}
+			bind:value
 			type="text"
 			required
 			name={fieldName}
-			{value}
 			class={inputClassName}
 			on:blur={() => (isEditing = false)}
 			on:keydown={async (event) => {
@@ -57,7 +57,7 @@
 		on:click={async () => {
 			isEditing = true;
 			await tick();
-			inputEl?.select();
+			input.select();
 		}}
 	>
 		{value}

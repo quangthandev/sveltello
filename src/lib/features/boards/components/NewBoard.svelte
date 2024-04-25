@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import Input from '$lib/components/ui/Input.svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import * as Popover from '$lib/components/popover';
 	import ImagePicker from '$lib/components/shared/ImagePicker.svelte';
@@ -13,6 +12,8 @@
 	import type { ActionData } from '../../../../routes/boards/$types';
 	import { createBoardSchema } from '../schemas';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
 
 	let isSubmitting = false;
 
@@ -108,7 +109,8 @@
 				<input id="board-color" name="color" type="color" value="#cbd5e1" class="bg-transparent" />
 			</div>
 			<div>
-				<Input label="Board title" name="name" type="text" required />
+				<Label for="name">Board Title</Label>
+				<Input id="name" name="name" type="text" required />
 			</div>
 			<Button type="submit" class="w-full font-medium" disabled={isSubmitting}>Create</Button>
 		</form>

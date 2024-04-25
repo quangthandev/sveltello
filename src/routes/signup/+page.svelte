@@ -1,8 +1,9 @@
 <script>
 	import { enhance } from '$app/forms';
-	import Input from '$lib/components/ui/Input.svelte';
 	import IconLoading from '$lib/components/icons/IconLoading.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
 
 	export let form;
 
@@ -33,22 +34,16 @@
 				}}
 			>
 				<div>
-					<Input
-						label="Email address"
-						id="email"
-						name="email"
-						type="email"
-						autocomplete="email"
-						required
-					/>
+					<Label for="email">Email address</Label>
+					<Input id="email" name="email" type="email" autocomplete="email" required />
 					{#if error}
 						<p class="text-red-700 mt-4">{error}</p>
 					{/if}
 				</div>
 
 				<div>
+					<Label for="password">Password</Label>
 					<Input
-						label="Password"
 						id="password"
 						name="password"
 						type="password"
