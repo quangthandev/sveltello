@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
 	import Board from '$lib/features/boards/components/Board.svelte';
 	import NewBoard from '$lib/features/boards/components/NewBoard.svelte';
 	import { useBoards } from '$lib/features/boards/query-client/queries';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let data;
 
@@ -21,15 +21,10 @@
 				</li>
 			{/each}
 			<li>
-				<NewBoard let:trigger>
-					<button
-						class={cn(
-							'w-full h-40 font-medium text-lg bg-neutral-200 hover:bg-neutral-300 rounded-md'
-						)}
-						use:trigger
-					>
+				<NewBoard let:trigger={triggerPopover}>
+					<Button variant="secondary" class="w-full h-40" builders={[{ action: triggerPopover }]}>
 						Create new board
-					</button>
+					</Button>
 				</NewBoard>
 			</li>
 		</ul>

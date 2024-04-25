@@ -11,6 +11,7 @@
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import type { BoardWithColumns } from '$lib/types';
 	import type { ActionData } from '../../../../routes/boards/[id]/$types';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let id: string;
 	export let name: string;
@@ -18,7 +19,7 @@
 
 	let isCopying = false;
 	let columnToCopyName: HTMLTextAreaElement;
-	let submitBtn: HTMLButtonElement;
+	let formElm: HTMLFormElement;
 
 	const queryClient = useQueryClient();
 
@@ -54,8 +55,15 @@
 </script>
 
 <Popover.Root let:close>
-	<Popover.Trigger class="text-muted-foreground p-2 rounded-md hover:bg-gray-300" aria-label="more">
-		<IconMore />
+	<Popover.Trigger asChild let:triggerAction={triggerPopover}>
+		<Button
+			variant="ghost"
+			size="icon"
+			class="flex justify-center items-center text-muted-foreground"
+			builders={[{ action: triggerPopover }]}
+		>
+			<IconMore />
+		</Button>
 	</Popover.Trigger>
 	<Popover.Content
 		class={cn('absolute top-0 left-0 bg-white shadow-lg py-4 rounded-lg w-72')}
@@ -76,13 +84,15 @@
 	>
 		<header class="relative mb-4">
 			{#if isCopying}
-				<button
+				<Button
+					variant="ghost"
+					size="icon"
 					on:click={() => (isCopying = false)}
-					class="absolute -top-2 left-2 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
+					class="absolute -top-2 left-2 text-muted-foreground"
 					aria-label="back"
 				>
 					<IconChevronLeft />
-				</button>
+				</Button>
 			{/if}
 			<h6 class="font-bold text-center">
 				{isCopying ? 'Copy list' : 'List actions'}
@@ -96,6 +106,7 @@
 		</header>
 		{#if isCopying}
 			<form
+				bind:this={formElm}
 				method="post"
 				action="?/copyColumn"
 				class="px-4"
@@ -118,36 +129,32 @@
 							if (e.key === 'Enter') {
 								e.preventDefault();
 
-								submitBtn.click();
+								formElm.requestSubmit();
 								isCopying = false;
 							}
 						}}
 					/>
 				</label>
-				<button
-					bind:this={submitBtn}
-					type="submit"
-					class="bg-blue-600 text-white rounded-lg py-2 px-4 font-medium"
-				>
-					Create List
-				</button>
+				<Button type="submit" class="w-full">Create List</Button>
 			</form>
 		{:else}
 			<ul>
 				<li>
-					<button
+					<Button
+						variant="ghost"
 						on:click={() => {
 							onAddCard();
 							close();
 						}}
-						class="w-full text-left px-4 py-2 -mr-4 hover:bg-gray-200"
+						class="w-full flex justify-start rounded-none"
 					>
 						Add card
-					</button>
+					</Button>
 				</li>
 				<li>
-					<button
-						class="w-full text-left px-4 py-2 -mr-4 hover:bg-gray-200"
+					<Button
+						variant="ghost"
+						class="w-full flex justify-start rounded-none"
 						on:click={async () => {
 							isCopying = true;
 							await tick();
@@ -155,7 +162,7 @@
 						}}
 					>
 						Copy list
-					</button>
+					</Button>
 				</li>
 				<hr />
 				<li>
@@ -169,9 +176,9 @@
 						}}
 					>
 						<input hidden name="id" id="id" value={id} />
-						<button class="w-full text-left px-4 py-2 -mr-4 hover:bg-gray-200">
-							Delete this list
-						</button>
+						<Button type="submit" variant="ghost" class="w-full flex justify-start rounded-none"
+							>Delete this list</Button
+						>
 					</form>
 				</li>
 			</ul>

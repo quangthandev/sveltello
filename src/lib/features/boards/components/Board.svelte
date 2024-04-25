@@ -7,6 +7,7 @@
 	import IconDelete from '$lib/components/icons/IconDelete.svelte';
 	import type { ActionData } from '../../../../routes/boards/$types';
 	import { useQueryClient } from '@tanstack/svelte-query';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let board: Board;
 	let className = '';
@@ -53,24 +54,23 @@
 	style:background-image={imageThumbUrl ? `url(${imageThumbUrl})` : 'none'}
 >
 	<div class="font-bold">{name}</div>
-	<CardPopover title="Delete board" let:trigger>
-		<button
+	<CardPopover title="Delete board" let:trigger={triggerPopover}>
+		<Button
+			variant="destructive"
+			size="icon"
+			builders={[{ action: triggerPopover }]}
 			aria-label="Delete board"
-			class="absolute top-4 right-4 text-gray-400 hover:text-red-500"
-			use:trigger
+			class="absolute top-2 right-2"
 		>
 			<IconDelete />
-		</button>
+		</Button>
 		<div slot="content" class="px-4 space-y-4">
 			<p>Are you sure you want to delete this board?</p>
 			<form method="post" action="?/delete" use:enhance={handleSubmit}>
 				<input type="hidden" name="id" value={id} />
-				<button
-					class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-					disabled={isDeleting}
-				>
+				<Button type="submit" variant="destructive" class="w-full" disabled={isDeleting}>
 					Delete
-				</button>
+				</Button>
 			</form>
 		</div>
 	</CardPopover>

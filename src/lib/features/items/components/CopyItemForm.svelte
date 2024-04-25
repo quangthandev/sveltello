@@ -5,6 +5,7 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
 	import type { ItemWithColumn } from '$lib/types';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemWithColumn;
 	export let initialPosIndex: number;
@@ -66,10 +67,5 @@
 			isValid = e.detail.isValid;
 		}}
 	/>
-	<button
-		class="w-full bg-blue-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-		disabled={!isValid || isSubmitting}
-	>
-		Create card
-	</button>
+	<Button type="submit" class="w-full" disabled={!isValid || isSubmitting}>Create card</Button>
 </form>

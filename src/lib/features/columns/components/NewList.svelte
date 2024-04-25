@@ -5,6 +5,7 @@
 	import { generateId } from 'lucia';
 	import { useCreateColumn } from '../query-client/mutations';
 	import { insertColumnSchema } from '../schemas';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let boardId: number;
 
@@ -58,23 +59,15 @@
 			}}
 		/>
 		<div class="flex justify-between">
-			<button
-				class="rounded-md bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-			>
-				Add Column
-			</button>
-			<button
-				on:click={() => (editing = false)}
-				class="px-4 py-2 font-medium rounded-md hover:bg-gray-300"
-			>
-				Cancel
-			</button>
+			<Button type="submit">Add Column</Button>
+			<Button variant="ghost" on:click={() => (editing = false)}>Cancel</Button>
 		</div>
 	</form>
 {:else}
-	<button
+	<Button
+		size="lg"
 		aria-label="Add new column"
-		class="flex-shrink-0 flex justify-center gap-2 px-6 py-4 text-white bg-black bg-opacity-60 hover:bg-opacity-80 rounded-xl"
+		class="w-80 flex-shrink-0 justify-start gap-2 bg-black bg-opacity-60 hover:bg-black hover:bg-opacity-80 rounded-xl"
 		on:click={async () => {
 			editing = true;
 			await tick();
@@ -92,6 +85,6 @@
 				<title>add</title>
 				<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
 			</svg>
-		</span> Add new column
-	</button>
+		</span> Add new list
+	</Button>
 {/if}

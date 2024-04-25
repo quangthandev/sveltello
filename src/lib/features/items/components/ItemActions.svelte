@@ -9,6 +9,7 @@
 	import CardPopover from '$lib/components/shared/CardPopover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
 	import { useDeleteItem } from '../query-client/mutations';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemFullPayload;
 	export { className as class };
@@ -31,37 +32,41 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Actions</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<MoveOrCopyItemPopover {item} let:trigger>
-				<button
-					use:trigger
-					class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+			<MoveOrCopyItemPopover {item} let:trigger={triggerPopover}>
+				<Button
+					variant="secondary"
+					builders={[{ action: triggerPopover }]}
+					class="flex justify-start items-center gap-2 w-full"
 				>
 					<IconArrowRight />
 					Move
-				</button>
+				</Button>
 			</MoveOrCopyItemPopover>
-			<MoveOrCopyItemPopover {item} action="copy" let:trigger>
-				<button
-					use:trigger
-					class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+			<MoveOrCopyItemPopover {item} action="copy" let:trigger={triggerPopover}>
+				<Button
+					variant="secondary"
+					builders={[{ action: triggerPopover }]}
+					class="flex justify-start items-center gap-2 w-full"
 				>
 					<IconCopy />
 					Copy
-				</button>
+				</Button>
 			</MoveOrCopyItemPopover>
-			<CardPopover title="Delete Card" let:trigger>
-				<button
-					use:trigger
-					class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
+			<CardPopover title="Delete Card" let:trigger={triggerPopover}>
+				<Button
+					variant="secondary"
+					builders={[{ action: triggerPopover }]}
+					class="flex justify-start items-center gap-2 w-full"
 				>
 					<IconDelete />
 					Delete
-				</button>
+				</Button>
 				<div slot="content" class="px-4 space-y-4">
 					<p>Deleting a card is permanent.</p>
 					<p>There is no undo.</p>
-					<button
-						class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
+					<Button
+						variant="destructive"
+						class="w-full"
 						disabled={$deleteItemMutation.isPending}
 						on:click={async () => {
 							await $deleteItemMutation.mutateAsync(item.id);
@@ -70,7 +75,7 @@
 						}}
 					>
 						Delete
-					</button>
+					</Button>
 				</div>
 			</CardPopover>
 		</div>

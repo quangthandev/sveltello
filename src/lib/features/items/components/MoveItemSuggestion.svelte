@@ -5,6 +5,7 @@
 	import type { Column } from '$lib/types';
 	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
 	import { useMoveItem } from '../query-client/mutations';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemWithColumn;
 
@@ -49,10 +50,11 @@
 
 {#if suggestedColumn}
 	<h4>Suggested</h4>
-	<button
+	<Button
+		variant="secondary"
 		on:click={handleMove}
 		disabled={isMoving}
-		class="flex items-center gap-2 w-full min-h-[40px] p-2 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+		class="flex justify-start items-center gap-2 w-full min-h-[40px]"
 	>
 		{#if item.column.order < suggestedColumn.order}
 			<IconArrowRight />
@@ -60,5 +62,5 @@
 			<IconArrowLeft />
 		{/if}
 		{suggestedColumn.name}
-	</button>
+	</Button>
 {/if}

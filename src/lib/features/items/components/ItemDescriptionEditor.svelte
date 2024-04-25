@@ -10,6 +10,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { ActionData } from '../../../../routes/items/[id]/$types';
 	import { useUploadImage } from '../query-client/mutations';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let id: string;
 	export let boardId: number;
@@ -87,16 +88,11 @@
 	/>
 	<input type="hidden" name="id" value={id} />
 	<div class="flex items-center gap-x-2 mt-2">
-		<button
-			type="submit"
-			class="bg-blue-600 text-white rounded-md py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-			disabled={isSubmitting || $uploadImageMutation.isPending}
-		>
-			Save
-		</button>
-		<button
+		<Button type="submit" disabled={isSubmitting || $uploadImageMutation.isPending}>Save</Button>
+		<Button
+			variant="ghost"
 			on:click={() => dispatch('close')}
-			class="px-4 py-2 font-medium rounded-md hover:bg-gray-300">Cancel</button
+			class="px-4 py-2 font-medium rounded-md hover:bg-gray-300">Cancel</Button
 		>
 	</div>
 </form>

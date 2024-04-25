@@ -7,9 +7,10 @@
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 	import IconLogin from '$lib/components/icons/IconLogin.svelte';
 	import IconLogout from '$lib/components/icons/IconLogout.svelte';
-	import '../app.css';
 	import IconPlus from '$lib/components/icons/IconPlus.svelte';
 	import NewBoard from '$lib/features/boards/components/NewBoard.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import '../app.css';
 
 	export let data;
 
@@ -34,15 +35,15 @@
 		<div class="flex items-center gap-8">
 			<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Sveltello </a>
 			{#if data.user}
-				<NewBoard let:trigger>
-					<button
-						use:trigger
-						class="flex gap-2 p-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-500 rounded-md text-white"
+				<NewBoard let:trigger={triggerPopover}>
+					<Button
+						builders={[{ action: triggerPopover }]}
+						class="flex gap-2 p-2"
 						aria-label="create new board"
 					>
 						<IconPlus />
 						<span class="hidden sm:inline">Create</span>
-					</button>
+					</Button>
 				</NewBoard>
 			{/if}
 		</div>
@@ -65,13 +66,15 @@
 			</a>
 			{#if data.user}
 				<form method="post" action="/logout" use:enhance>
-					<button
-						class="text-center text-slate-500 text-xs uppercase font-bold flex flex-col items-center"
+					<Button
+						type="submit"
+						variant="ghost"
+						class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center py-0"
 						aria-label="log out"
 					>
 						<IconLogout />
 						<span class="hidden sm:inline">Log out</span>
-					</button>
+					</Button>
 				</form>
 			{:else}
 				<a

@@ -3,6 +3,7 @@
 	import ItemDescriptionEditor from './ItemDescriptionEditor.svelte';
 	import ItemDescriptionContent from './ItemDescriptionContent.svelte';
 	import type { ItemFullPayload } from '$lib/types';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemFullPayload | undefined;
 	export let isLoading = false;
@@ -55,12 +56,11 @@
 					<ItemDescriptionContent content={item.content} on:edit={() => (isEditing = true)} />
 
 					{#if item.content !== null && item.content.trim() !== ''}
-						<button
-							class="absolute top-0 right-0 px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
-							on:click={() => (isEditing = true)}
+						<Button
+							variant="secondary"
+							class="absolute top-0 right-0"
+							on:click={() => (isEditing = true)}>Edit</Button
 						>
-							Edit
-						</button>
 					{/if}
 				{/if}
 			{/if}

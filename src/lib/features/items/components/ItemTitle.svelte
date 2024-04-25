@@ -4,6 +4,7 @@
 	import MoveOrCopyItemPopover from './MoveOrCopyItemPopover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
 	import { useBoard } from '$lib/features/boards/query-client/queries';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemFullPayload;
 	const { id, boardId, title } = item;
@@ -57,10 +58,14 @@
 				{#if $boardQuery.isFetching}
 					<span class="underline">{item.column.name}</span>
 				{:else}
-					<MoveOrCopyItemPopover {item} let:trigger>
-						<button class="underline hover:text-blue-600" use:trigger>
+					<MoveOrCopyItemPopover {item} let:trigger={triggerPopover}>
+						<Button
+							variant="ghost"
+							builders={[{ action: triggerPopover }]}
+							class="p-0 underline hover:bg-transparent"
+						>
 							{item.column.name}
-						</button>
+						</Button>
 					</MoveOrCopyItemPopover>
 				{/if}
 			</p>

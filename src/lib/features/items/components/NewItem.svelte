@@ -6,6 +6,7 @@
 	import { useCreateItem } from '../query-client/mutations';
 	import { createItemSchema } from '../schemas';
 	import type { ZodError } from 'zod';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let boardId: number;
 	export let columnId: string;
@@ -14,7 +15,7 @@
 	const dispatch = createEventDispatcher();
 
 	let textareaEl: HTMLTextAreaElement;
-	let buttonEl: HTMLButtonElement;
+	let formElm: HTMLFormElement;
 
 	onMount(() => {
 		textareaEl.focus();
@@ -48,6 +49,7 @@
 </script>
 
 <form
+	bind:this={formElm}
 	class="px-2 py-1 border-t-2 border-b-2 border-transparent"
 	on:submit|preventDefault={handleSubmit}
 	use:clickOutside={{ handler: () => dispatch('complete') }}
@@ -65,9 +67,8 @@
 			if (event.key === 'Enter') {
 				event.preventDefault();
 
-				buttonEl.click();
-			}
-			if (event.key === 'Escape') {
+				formElm.requestSubmit();
+			} else if (event.key === 'Escape') {
 				dispatch('complete');
 			}
 		}}
@@ -77,18 +78,7 @@
 		}}
 	/>
 	<div class="flex justify-between">
-		<button
-			bind:this={buttonEl}
-			class="rounded-md bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-		>
-			Save Card
-		</button>
-		<button
-			type="button"
-			on:click={() => dispatch('complete')}
-			class="px-4 py-2 font-medium rounded-md hover:bg-gray-300"
-		>
-			Cancel
-		</button>
+		<Button type="submit">Save Card</Button>
+		<Button variant="ghost" on:click={() => dispatch('complete')}>Cancel</Button>
 	</div>
 </form>

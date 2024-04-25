@@ -8,6 +8,7 @@
 	import type { Attachment, ItemFullPayload } from '$lib/types';
 	import type { ActionData } from '../../../../routes/items/[id]/$types';
 	import { useDeleteAttachment } from '../query-client/mutations';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let itemId: string;
 	export let boardId: number;
@@ -72,23 +73,28 @@
 
 					<div class="flex flex-col gap-1 items-start">
 						<p class="font-bold attachment-name">{attachment.name}</p>
-						<p class="flex gap-2 text-sm text-muted-foreground">
+						<p class="flex items-baseline gap-2 text-sm text-muted-foreground">
 							<span>
 								Added {getRelativeTime(attachment.createdAt)}
 							</span>
 							<span>
-								<CardPopover title="Delete Attachment" let:trigger>
-									<button use:trigger class="underline"> Delete </button>
+								<CardPopover title="Delete Attachment" let:trigger={triggerPopover}>
+									<Button
+										variant="ghost"
+										builders={[{ action: triggerPopover }]}
+										class="underline hover:bg-transparent">Delete</Button
+									>
 									<div slot="content" class="px-4 space-y-4">
 										<p>Deleting an attachment is permanent.</p>
 										<p>There is no undo.</p>
-										<button
-											class="w-full bg-red-600 hover:opacity-90 text-white rounded-lg py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
+										<Button
+											variant="destructive"
+											class="w-full"
 											disabled={$deleteAttachmentMutation.isPending}
 											on:click={() => $deleteAttachmentMutation.mutate(attachment.id)}
 										>
 											Delete
-										</button>
+										</Button>
 									</div>
 								</CardPopover>
 							</span>
@@ -96,7 +102,11 @@
 						{#if !attachment.isCover && attachment.type.startsWith('image/')}
 							<form action="?/makeCover" method="post" use:enhance={handleMakeCover}>
 								<input type="hidden" name="attachmentId" value={attachment.id} />
-								<button class="underline text-sm text-muted-foreground">Make cover</button>
+								<Button
+									variant="ghost"
+									class="px-0 underline text-sm text-muted-foreground hover:bg-transparent"
+									>Make cover</Button
+								>
 							</form>
 						{/if}
 					</div>

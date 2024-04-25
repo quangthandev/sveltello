@@ -8,6 +8,7 @@
 	import EditableText from '$lib/components/shared/EditableText.svelte';
 	import NewItem from '$lib/features/items/components/NewItem.svelte';
 	import { useUpdateItem } from '$lib/features/items/query-client/mutations';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let name: string;
 	export let boardName: string;
@@ -101,7 +102,7 @@
 </script>
 
 <li
-	class="flex-shrink-0 flex flex-col gap-1 overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-slate-100"
+	class="flex-shrink-0 flex flex-col gap-1 overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-neutral-100"
 >
 	<div class="p-2 flex justify-between items-center">
 		<EditableText
@@ -148,19 +149,19 @@
 		/>
 	{:else}
 		<div class="p-2">
-			<button
-				type="button"
+			<Button
+				variant="ghost"
 				on:click={async () => {
 					editing = true;
 					await tick();
 					scrollList();
 				}}
 				aria-label="Add a card"
-				class="flex items-center gap-2 rounded-lg text-left w-full p-2 font-medium text-slate-500 hover:bg-slate-200 focus:bg-slate-200"
+				class="flex justify-start items-center gap-2 w-full text-muted-foreground"
 			>
 				<IconPlus />
 				Add a card
-			</button>
+			</Button>
 		</div>
 	{/if}
 </li>

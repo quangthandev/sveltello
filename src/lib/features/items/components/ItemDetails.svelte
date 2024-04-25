@@ -9,6 +9,7 @@
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { useItem } from '../query-client/queries';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let id: string;
 
@@ -21,15 +22,17 @@
 </script>
 
 <div class="relative">
-	<button
+	<Button
+		variant="ghost"
+		size="icon"
 		on:click={() => {
 			dispatch('close');
 		}}
-		class="absolute top-4 right-4 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
+		class="absolute top-4 right-4 text-muted-foreground"
 		aria-label="close"
 	>
 		<IconClose />
-	</button>
+	</Button>
 
 	<!-- Cover -->
 	{#if item?.cover}

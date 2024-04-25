@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import Input from '$lib/components/ui/Input.svelte';
 	import IconLoading from '$lib/components/icons/IconLoading.svelte';
-	import { cn } from '$lib/utils';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let form;
 
@@ -58,11 +58,9 @@
 					/>
 				</div>
 
-				<button
-					class={cn(
-						'flex items-center justify-center gap-2 w-full bg-blue-600 hover:opacity-90 text-white rounded-md py-2 px-4 font-medium',
-						'disabled:opacity-60 disabled:cursor-not-allowed'
-					)}
+				<Button
+					type="submit"
+					class="flex items-center justify-center gap-2 w-full"
 					disabled={isLoading}
 				>
 					{#if isLoading}
@@ -70,7 +68,7 @@
 					{:else}
 						<span>Sign up</span>
 					{/if}
-				</button>
+				</Button>
 
 				<div class="text-sm text-slate-500">
 					Already have an account?{' '}

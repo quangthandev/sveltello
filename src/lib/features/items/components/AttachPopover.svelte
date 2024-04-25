@@ -2,6 +2,7 @@
 	import IconAttachment from '$lib/components/icons/IconAttachment.svelte';
 	import IconClose from '$lib/components/icons/IconClose.svelte';
 	import * as Popover from '$lib/components/popover';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
 	import { useUploadImage } from '../query-client/mutations';
 
@@ -20,11 +21,15 @@
 </script>
 
 <Popover.Root>
-	<Popover.Trigger
-		class="flex items-center gap-2 w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300"
-	>
-		<IconAttachment />
-		<span> Attachment </span>
+	<Popover.Trigger asChild let:triggerAction={triggerPopover}>
+		<Button
+			variant="secondary"
+			class="flex justify-start gap-2"
+			builders={[{ action: triggerPopover }]}
+		>
+			<IconAttachment />
+			<span> Attachment </span>
+		</Button>
 	</Popover.Trigger>
 
 	<Popover.Content

@@ -12,6 +12,7 @@
 	import { page } from '$app/stores';
 	import type { ActionData } from '../../../../routes/boards/$types';
 	import { createBoardSchema } from '../schemas';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	let isSubmitting = false;
 
@@ -109,12 +110,7 @@
 			<div>
 				<Input label="Board title" name="name" type="text" required />
 			</div>
-			<button
-				class="w-full bg-blue-600 hover:opacity-90 text-white rounded-md py-2 px-4 font-medium disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed"
-				disabled={isSubmitting}
-			>
-				Create
-			</button>
+			<Button type="submit" class="w-full font-medium" disabled={isSubmitting}>Create</Button>
 		</form>
 	</Popover.Content>
 </Popover.Root>
