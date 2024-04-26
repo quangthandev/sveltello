@@ -1,7 +1,5 @@
 <script lang="ts">
 	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
-	import IconClose from '$lib/components/icons/icon-close.svelte';
-	import * as Popover from '$lib/components/popover';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';

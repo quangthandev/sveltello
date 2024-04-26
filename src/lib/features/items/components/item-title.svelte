@@ -62,7 +62,7 @@
 				{:else}
 					<MoveOrCopyItemPopover {item} let:trigger={triggerPopover}>
 						<Button
-							variant="ghost"
+							variant="link"
 							builders={[{ action: triggerPopover }]}
 							class="p-0 underline hover:bg-transparent"
 						>

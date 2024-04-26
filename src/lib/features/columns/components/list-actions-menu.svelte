@@ -5,7 +5,7 @@
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { TypedSubmitFunction } from '$lib/form';
-	import * as Popover from '$lib/components/popover';
+	import * as Popover from '$lib/components/ui/popover';
 	import IconMore from '$lib/components/icons/icon-more.svelte';
 	import IconChevronLeft from '$lib/components/icons/icon-chevron-left.svelte';
 	import IconClose from '$lib/components/icons/icon-close.svelte';

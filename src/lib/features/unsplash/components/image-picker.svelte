@@ -35,7 +35,10 @@
 		</Button>
 	</div>
 	{#if $query.isLoading || $query.isFetching}
-		<Skeleton class={cn('w-full h-28 bg-neutral-200')} />
+		<div class="flex flex-col gap-2">
+			<Skeleton class={cn('w-full h-14 bg-neutral-200')} />
+			<Skeleton class={cn('w-full h-14 bg-neutral-200')} />
+		</div>
 	{:else if $query.data}
 		<div class="grid grid-cols-3 gap-2">
 			{#each $query.data as photo (photo.id)}

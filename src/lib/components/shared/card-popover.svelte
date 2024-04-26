@@ -1,8 +1,8 @@
 <script lang="ts">
-	import * as Popover from '$lib/components/popover';
+	import * as Popover from '$lib/components/ui/popover';
 	import { cn } from '$lib/utils';
 	import IconClose from '$lib/components/icons/icon-close.svelte';
-	import * as Card from '$lib/components/ui/card/index.js';
+	import * as Card from '$lib/components/ui/card/index';
 
 	let className: string | undefined = '';
 	export { className as class };
@@ -19,7 +19,7 @@
 			<Card.Header>
 				<Card.Title class="font-bold text-center">{title}</Card.Title>
 				<Popover.Close
-					class="absolute top-2 right-6 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
+					class="absolute top-2 right-4 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
 					aria-label="close"
 				>
 					<IconClose />
