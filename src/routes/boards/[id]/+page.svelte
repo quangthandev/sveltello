@@ -17,6 +17,7 @@
 
 	const query = useBoard(Number($page.params.id), data.board);
 
+	$: board = $query.data;
 	$: columns = $query.data.columns;
 
 	let sourceIndex: number | null = null;
@@ -78,7 +79,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.board.name}</title>
+	<title>{board.name}</title>
 </svelte:head>
 
 <div
@@ -86,23 +87,35 @@
 		'max-w-full flex flex-col overflow-x-auto select-none bg-no-repeat bg-center bg-cover bg-fixed',
 		'container'
 	)}
-	style:background-color={data.board.color}
-	style:background-image={data.board.imageFullUrl ? `url(${data.board.imageFullUrl})` : 'none'}
+	style:background-color={board.color}
+	style:background-image={board.imageFullUrl ? `url(${board.imageFullUrl})` : 'none'}
 >
 	<h1>
 		<EditableText
 			action="?/updateBoardName"
-			value={data.board.name}
+			value={board.name}
 			fieldName="name"
-			inputClassName="mx-8 my-4 text-2xl font-medium border border-slate-400 rounded-lg py-1 px-2 text-black"
+			class="mx-8 my-4 w-fit"
+			inputClassName="text-2xl font-bold"
 			buttonClassName={cn(
-				'mx-8 my-4 text-2xl font-medium block rounded-lg text-left border border-transparent py-1 px-2',
-				data.board.color.toLowerCase() === '#ffffff'
+				'text-2xl font-bold text-left border border-transparent',
+				board.color.toLowerCase() === '#ffffff'
 					? 'text-black bg-neutral-300'
 					: 'text-white bg-black/50'
 			)}
+			on:submitting={(event) => {
+				queryClient.setQueryData(['boards', Number($page.params.id)], {
+					...board,
+					name: event.detail
+				});
+			}}
+			on:submitted={() => {
+				queryClient.invalidateQueries({
+					queryKey: ['boards', Number($page.params.id)]
+				});
+			}}
 		>
-			<input type="hidden" name="id" value={data.board.id} />
+			<input type="hidden" name="id" value={board.id} />
 		</EditableText>
 	</h1>
 	<div class="flex items-start gap-4 px-8 pb-4">
@@ -119,15 +132,15 @@
 			{#each columns as column (column.id)}
 				<List
 					name={column.name}
-					boardName={data.board.name}
-					boardId={data.board.id}
+					boardName={board.name}
+					boardId={board.id}
 					columnId={column.id}
 					items={column.items}
 				/>
 			{/each}
 		</div>
 
-		<NewList boardId={data.board.id} />
+		<NewList boardId={board.id} />
 	</div>
 </div>
 

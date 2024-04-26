@@ -84,7 +84,7 @@
 										builders={[{ action: triggerPopover }]}
 										class="underline hover:bg-transparent">Delete</Button
 									>
-									<div slot="content" class="px-4 space-y-4">
+									<div slot="content" class="space-y-4">
 										<p>Deleting an attachment is permanent.</p>
 										<p>There is no undo.</p>
 										<Button
@@ -103,6 +103,7 @@
 							<form action="?/makeCover" method="post" use:enhance={handleMakeCover}>
 								<input type="hidden" name="attachmentId" value={attachment.id} />
 								<Button
+									type="submit"
 									variant="ghost"
 									class="px-0 underline text-sm text-muted-foreground hover:bg-transparent"
 									>Make cover</Button

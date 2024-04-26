@@ -64,7 +64,7 @@
 		>
 			<IconDelete />
 		</Button>
-		<div slot="content" class="px-4 space-y-4">
+		<div slot="content" class="space-y-4">
 			<p>Are you sure you want to delete this board?</p>
 			<form method="post" action="?/delete" use:enhance={handleSubmit}>
 				<input type="hidden" name="id" value={id} />

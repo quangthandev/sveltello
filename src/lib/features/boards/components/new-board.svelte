@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import IconClose from '$lib/components/icons/icon-close.svelte';
-	import * as Popover from '$lib/components/popover';
 	import ImagePicker from '$lib/features/unsplash/components/image-picker.svelte';
-	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
@@ -14,6 +11,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
+	import CardPopover from '$lib/components/shared/card-popover.svelte';
 
 	let isSubmitting = false;
 
@@ -79,26 +77,12 @@
 
 <svelte:window bind:innerWidth />
 
-<Popover.Root let:open let:close>
-	<Popover.Trigger asChild let:triggerAction={trigger}>
-		<slot {trigger} />
-	</Popover.Trigger>
+<CardPopover title="Create Board" let:trigger class="w-96">
+	<slot {trigger} />
 
-	<Popover.Content
-		floatingConfig={{ placement }}
-		class={cn('absolute top-0 left-0 bg-white shadow-2xl py-4 rounded-lg w-80 z-50')}
-	>
-		<header class="relative mb-4">
-			<h3 class="font-bold text-center">Create Board</h3>
-			<Popover.Close
-				class="absolute -top-2 right-2 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
-				aria-label="close"
-			>
-				<IconClose />
-			</Popover.Close>
-		</header>
+	<div slot="content" let:open let:close>
 		<form
-			class="px-8 max-w-md space-y-4"
+			class="max-w-md space-y-4"
 			method="post"
 			action="/boards?/create"
 			use:enhance={(input) => handleSubmit(input, close)}
@@ -114,5 +98,5 @@
 			</div>
 			<Button type="submit" class="w-full font-medium" disabled={isSubmitting}>Create</Button>
 		</form>
-	</Popover.Content>
-</Popover.Root>
+	</div>
+</CardPopover>

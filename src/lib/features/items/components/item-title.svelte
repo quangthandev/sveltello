@@ -47,8 +47,8 @@
 					}}
 					fieldName="title"
 					value={title || ''}
-					inputClassName="text-xl border border-slate-400 w-full rounded-lg py-1 px-2 font-medium"
-					buttonClassName="text-xl block rounded-lg text-left w-full border border-transparent py-1 px-2 font-medium"
+					inputClassName="text-xl w-full font-medium"
+					buttonClassName="text-xl block text-left w-full font-medium"
 				>
 					<input type="hidden" name="id" value={id} />
 				</EditableText>
@@ -56,7 +56,9 @@
 			<p class="text-sm text-muted-foreground px-3">
 				in list
 				{#if $boardQuery.isFetching}
-					<span class="underline">{item.column.name}</span>
+					<Button variant="ghost" class="p-0 hover:bg-transparent" disabled
+						>{item.column.name}</Button
+					>
 				{:else}
 					<MoveOrCopyItemPopover {item} let:trigger={triggerPopover}>
 						<Button

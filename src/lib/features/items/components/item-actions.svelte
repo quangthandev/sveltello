@@ -52,7 +52,7 @@
 					Copy
 				</Button>
 			</MoveOrCopyItemPopover>
-			<CardPopover title="Delete Card" let:trigger={triggerPopover}>
+			<CardPopover title="Delete Card" let:trigger={triggerPopover} class="w-80">
 				<Button
 					variant="secondary"
 					builders={[{ action: triggerPopover }]}
@@ -61,7 +61,7 @@
 					<IconDelete />
 					Delete
 				</Button>
-				<div slot="content" class="px-4 space-y-4">
+				<div slot="content" class="space-y-4">
 					<p>Deleting a card is permanent.</p>
 					<p>There is no undo.</p>
 					<Button

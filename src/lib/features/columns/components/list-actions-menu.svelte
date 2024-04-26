@@ -74,7 +74,7 @@
 
 			close();
 		}}
-		keydownHandler={() => {
+		escapeKeydownHandler={() => {
 			if (isCopying) {
 				isCopying = false;
 			} else {

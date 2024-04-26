@@ -6,7 +6,7 @@
 	import { popoverCtx } from './context';
 
 	export let floatingConfig: FloatingConfig = {};
-	export let keydownHandler: ((e: KeyboardEvent) => void) | undefined = undefined;
+	export let escapeKeydownHandler: ((e: KeyboardEvent) => void) | undefined = undefined;
 	export let clickOutsideHandler: ((e: PointerEvent) => void) | undefined = undefined;
 
 	const { triggerEl, open } = popoverCtx.get();
@@ -24,8 +24,8 @@
 	};
 
 	const handleEscapeKeydown = (e: CustomEvent<KeyboardEvent>) => {
-		if (keydownHandler) {
-			return keydownHandler(e.detail);
+		if (escapeKeydownHandler) {
+			return escapeKeydownHandler(e.detail);
 		}
 
 		open.set(false);

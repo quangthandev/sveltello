@@ -28,7 +28,7 @@
 <form
 	method="post"
 	action="?/copyItem"
-	class="flex flex-col gap-2 px-4 py-2"
+	class="flex flex-col gap-2"
 	use:enhance={() => {
 		isSubmitting = true;
 
