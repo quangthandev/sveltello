@@ -17,7 +17,7 @@
 
 	let isDeleting = false;
 
-	const { id, name, color, imageThumbUrl } = board;
+	$: ({ id, name, color, imageThumbUrl } = board);
 
 	const handleSubmit: TypedSubmitFunction<ActionData> = () => {
 		isDeleting = true;
