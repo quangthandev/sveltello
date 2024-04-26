@@ -35,7 +35,7 @@
 		</Button>
 	</div>
 	{#if $query.isLoading || $query.isFetching}
-		<Skeleton class={cn('w-full h-20 bg-neutral-200')} />
+		<Skeleton class={cn('w-full h-28 bg-neutral-200')} />
 	{:else if $query.data}
 		<div class="grid grid-cols-3 gap-2">
 			{#each $query.data as photo (photo.id)}
@@ -43,7 +43,7 @@
 					<img
 						src={photo.urls.thumb}
 						alt={photo.alt_description}
-						class="object-cover aspect-video rounded-md"
+						class="object-cover aspect-video h-14 rounded-md"
 					/>
 					<label class="absolute inset-0 w-full h-full cursor-pointer">
 						<input
