@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	import ItemDestinationSelection from './item-destination-selection.svelte';
 	import { enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
 	import type { ItemWithColumn } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import ItemDestinationSelection from './item-destination-selection.svelte';
 
 	export let item: ItemWithColumn;
 	export let initialPosIndex: number;

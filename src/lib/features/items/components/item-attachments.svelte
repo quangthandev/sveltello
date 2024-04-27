@@ -6,9 +6,9 @@
 	import type { TypedSubmitFunction } from '$lib/form';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { Attachment, ItemFullPayload } from '$lib/types';
-	import type { ActionData } from '../../../../routes/items/[id]/$types';
-	import { useDeleteAttachment } from '../query-client/mutations';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { useDeleteAttachment } from '../query-client/mutations';
+	import type { ActionData } from '../../../../routes/items/[id]/$types';
 
 	export let itemId: string;
 	export let boardId: number;

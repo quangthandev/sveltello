@@ -3,10 +3,10 @@
 	import { page } from '$app/stores';
 	import { generateId } from 'lucia';
 	import { clickOutside } from '$lib/actions/click-outside';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import type { ZodError } from 'zod';
 	import { useCreateItem } from '../query-client/mutations';
 	import { createItemSchema } from '../schemas';
-	import type { ZodError } from 'zod';
-	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let boardId: number;
 	export let columnId: string;

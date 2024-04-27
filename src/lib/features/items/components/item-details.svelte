@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { page } from '$app/stores';
-	import ItemDescription from './item-description.svelte';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import ItemTitle from './item-title.svelte';
+	import ItemDescription from './item-description.svelte';
 	import ItemActivity from './item-activity.svelte';
 	import ItemActions from './item-actions.svelte';
 	import ItemAttachments from './item-attachments.svelte';
-	import IconClose from '$lib/components/icons/icon-close.svelte';
-	import { createEventDispatcher } from 'svelte';
 	import { useItem } from '../query-client/queries';
-	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let id: string;
 

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { cn } from '$lib/utils';
-	import type { TypedSubmitFunction } from '$lib/form';
-	import type { Board } from '$lib/types';
+	import { useQueryClient } from '@tanstack/svelte-query';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import IconDelete from '$lib/components/icons/icon-delete.svelte';
-	import type { ActionData } from '../../../../routes/boards/$types';
-	import { useQueryClient } from '@tanstack/svelte-query';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import type { Board } from '$lib/types';
+	import type { TypedSubmitFunction } from '$lib/form';
+	import type { ActionData } from '../../../../routes/boards/$types';
 
 	export let board: Board;
 	let className = '';

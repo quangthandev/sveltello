@@ -1,8 +1,8 @@
 <script lang="ts">
-	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
-	import type { ItemFullPayload } from '$lib/types';
 	import { useBoard } from '$lib/features/boards/query-client/queries';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import type { ItemFullPayload } from '$lib/types';
+	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
 
 	export let item: ItemFullPayload;
 

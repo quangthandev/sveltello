@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { enhance } from '$app/forms';
 	import TextEditor from '$lib/components/text-editor/text-editor.svelte';
 	import type { TypedSubmitFunction } from '$lib/form';
@@ -7,10 +8,9 @@
 	import { escapeKeydown } from '$lib/actions/escape-keydown';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { clickOutside } from '$lib/actions/click-outside';
-	import { createEventDispatcher } from 'svelte';
-	import type { ActionData } from '../../../../routes/items/[id]/$types';
-	import { useUploadImage } from '../query-client/mutations';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { useUploadImage } from '../query-client/mutations';
+	import type { ActionData } from '../../../../routes/items/[id]/$types';
 
 	export let id: string;
 	export let boardId: number;

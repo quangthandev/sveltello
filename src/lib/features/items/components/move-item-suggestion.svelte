@@ -2,9 +2,9 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import IconArrowLeft from '$lib/components/icons/icon-arrow-left.svelte';
 	import IconArrowRight from '$lib/components/icons/icon-arrow-right.svelte';
+	import { useMoveItem } from '../query-client/mutations';
 	import type { Column } from '$lib/types';
 	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
-	import { useMoveItem } from '../query-client/mutations';
 	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemWithColumn;

@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import IconArrowRight from '$lib/components/icons/icon-arrow-right.svelte';
 	import IconDelete from '$lib/components/icons/icon-delete.svelte';
 	import IconCopy from '$lib/components/icons/icon-copy.svelte';
 	import { cn } from '$lib/utils';
-	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
-	import AttachPopover from './attach-popover.svelte';
-	import { goto } from '$app/navigation';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
+	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
+	import AttachPopover from './attach-popover.svelte';
 	import { useDeleteItem } from '../query-client/mutations';
-	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemFullPayload;
 	export { className as class };

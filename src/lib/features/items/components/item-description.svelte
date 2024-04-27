@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import type { ItemFullPayload } from '$lib/types';
 	import ItemDescriptionEditor from './item-description-editor.svelte';
 	import ItemDescriptionContent from './item-description-content.svelte';
-	import type { ItemFullPayload } from '$lib/types';
-	import Button from '$lib/components/ui/button/button.svelte';
 
 	export let item: ItemFullPayload | undefined;
 	export let isLoading = false;

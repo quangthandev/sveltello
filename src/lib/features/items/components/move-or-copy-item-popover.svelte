@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { capitalize } from '$lib/utils';
+	import { useQueryClient } from '@tanstack/svelte-query';
+	import CardPopover from '$lib/components/shared/card-popover.svelte';
+	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
 	import MoveItemSuggestion from './move-item-suggestion.svelte';
 	import MoveItemForm from './move-item-form.svelte';
-	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
-	import { useQueryClient } from '@tanstack/svelte-query';
 	import CopyItemForm from './copy-item-form.svelte';
-	import CardPopover from '$lib/components/shared/card-popover.svelte';
 
 	type ActionType = 'move' | 'copy';
 	export let action: ActionType = 'move';

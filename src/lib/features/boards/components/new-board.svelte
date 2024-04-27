@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import ImagePicker from '$lib/features/unsplash/components/image-picker.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import type { Random } from 'unsplash-js/dist/methods/photos/types';
-	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import type { ActionData } from '../../../../routes/boards/$types';
-	import { createBoardSchema } from '../schemas';
+	import ImagePicker from '$lib/features/unsplash/components/image-picker.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
+	import type { Random } from 'unsplash-js/dist/methods/photos/types';
+	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
+	import { createBoardSchema } from '../schemas';
+	import type { ActionData } from '../../../../routes/boards/$types';
 
 	let isSubmitting = false;
 
