@@ -9,14 +9,14 @@
 
 	const queryClient = useQueryClient();
 
-	const handleSubmit = () => {
+	const handleSubmit = (event: CustomEvent<FormDataEntryValue | null>) => {
 		const prevBoardData = queryClient.getQueryData<BoardWithColumns>(['boards', boardId]);
 
-		if (prevBoardData) {
+		if (prevBoardData && event.detail) {
 			queryClient.setQueryData(['boards', boardId], {
 				...prevBoardData,
 				columns: prevBoardData.columns.map((column) =>
-					column.id === id ? { ...column, name } : column
+					column.id === id ? { ...column, name: event.detail } : column
 				)
 			});
 		}

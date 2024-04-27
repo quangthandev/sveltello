@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import EditableText from '$lib/components/shared/editable-text.svelte';
-	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
-	import { useBoard } from '$lib/features/boards/query-client/queries';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import ItemSubtitle from './item-subtitle.svelte';
 
 	export let item: ItemFullPayload;
-	const { id, boardId, title } = item;
+	$: ({ id, boardId, title } = item);
 
 	const queryClient = useQueryClient();
-
-	const boardQuery = useBoard(boardId);
 </script>
 
 <div class="flex items-start">
@@ -37,6 +33,20 @@
 				<EditableText
 					action="?/updateItemTitle"
 					invalidateAll={false}
+					fieldName="title"
+					value={title}
+					inputClassName="text-xl w-full font-medium"
+					buttonClassName="text-xl block text-left w-full font-medium"
+					on:submitting={(event) => {
+						const prevItemData = queryClient.getQueryData(['items', id]);
+
+						if (prevItemData) {
+							queryClient.setQueryData(['items', id], {
+								...prevItemData,
+								title: event.detail
+							});
+						}
+					}}
 					on:submitted={() => {
 						queryClient.invalidateQueries({
 							queryKey: ['items', id]
@@ -45,32 +55,11 @@
 							queryKey: ['boards', boardId]
 						});
 					}}
-					fieldName="title"
-					value={title || ''}
-					inputClassName="text-xl w-full font-medium"
-					buttonClassName="text-xl block text-left w-full font-medium"
 				>
 					<input type="hidden" name="id" value={id} />
 				</EditableText>
 			</h3>
-			<p class="text-sm text-muted-foreground px-3">
-				in list
-				{#if $boardQuery.isFetching}
-					<Button variant="ghost" class="p-0 hover:bg-transparent" disabled
-						>{item.column.name}</Button
-					>
-				{:else}
-					<MoveOrCopyItemPopover {item} let:trigger={triggerPopover}>
-						<Button
-							variant="link"
-							builders={[{ action: triggerPopover }]}
-							class="p-0 underline hover:bg-transparent"
-						>
-							{item.column.name}
-						</Button>
-					</MoveOrCopyItemPopover>
-				{/if}
-			</p>
+			<ItemSubtitle {item} />
 		</div>
 	</div>
 </div>
