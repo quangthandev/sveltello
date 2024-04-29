@@ -15,7 +15,7 @@
 
 	const queryClient = useQueryClient();
 
-	const query = useBoard(Number($page.params.id), data.board);
+	$: query = useBoard(Number($page.params.id), data.board);
 
 	$: board = $query.data;
 	$: columns = $query.data.columns;
@@ -84,8 +84,8 @@
 
 <div
 	class={cn(
-		'max-w-full flex flex-col overflow-x-auto select-none bg-no-repeat bg-center bg-cover bg-fixed',
-		'container'
+		'w-full flex flex-col overflow-x-auto select-none',
+		'bg-no-repeat bg-center bg-cover bg-fixed'
 	)}
 	style:background-color={board.color}
 	style:background-image={board.imageFullUrl ? `url(${board.imageFullUrl})` : 'none'}
@@ -137,11 +137,3 @@
 		<NewList boardId={board.id} />
 	</div>
 </div>
-
-<style>
-	.container {
-		min-height: calc(100vh - var(--app-header-height));
-		margin-top: calc(var(--app-header-height) * -1);
-		transform: translateY(var(--app-header-height));
-	}
-</style>

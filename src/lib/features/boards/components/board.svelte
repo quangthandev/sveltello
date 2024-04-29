@@ -7,7 +7,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { Board } from '$lib/types';
 	import type { TypedSubmitFunction } from '$lib/form';
-	import type { ActionData } from '../../../../routes/boards/$types';
+	import type { ActionData } from '../../../../routes/(user)/boards/$types';
 
 	export let board: Board;
 	let className = '';

@@ -11,7 +11,7 @@
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
 	import { createBoardSchema } from '../schemas';
-	import type { ActionData } from '../../../../routes/boards/$types';
+	import type { ActionData } from '../../../../routes/(user)/boards/$types';
 
 	let isSubmitting = false;
 
