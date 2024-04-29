@@ -58,7 +58,7 @@
 		"@lucia-auth/adapter-sqlite": "^3.0.1",
 		"@tanstack/svelte-query": "^5.18.1",
 		"@tanstack/svelte-query-devtools": "^5.18.1",
-		"bits-ui": "^0.21.4",
+		"bits-ui": "^0.21.5",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.30.7",
 		"drizzle-zod": "^0.5.1",
