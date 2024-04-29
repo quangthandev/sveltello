@@ -46,7 +46,7 @@
 			})}
 		></div>
 		<nav
-			class={cn('h-full p-4 mt-12 bg-slate-700 duration-200 will-change-transform', {
+			class={cn('p-4 mt-12 bg-slate-700 duration-200 will-change-transform', {
 				'translate-x-0': open,
 				'-translate-x-full': !open
 			})}
