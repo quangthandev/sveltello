@@ -3,6 +3,7 @@
 	import IconChevronLeft from '$lib/components/icons/icon-chevron-left.svelte';
 	import IconChevronRight from '$lib/components/icons/icon-chevron-right.svelte';
 	import IconPlus from '$lib/components/icons/icon-plus.svelte';
+	import NavLink from '$lib/components/nav/nav-link.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import NewBoard from '$lib/features/boards/components/new-board.svelte';
 	import { useBoards } from '$lib/features/boards/query-client/queries';
@@ -54,12 +55,10 @@
 		</div>
 		<nav class="relative z-10 p-2">
 			<ul class={cn('p-2 space-y-2')}>
-				<li>
-					<Button variant="ghost" href="/boards" class="flex justify-start items-center gap-2">
-						<IconBoards />
-						Boards
-					</Button>
-				</li>
+				<NavLink href="/boards">
+					<IconBoards />
+					Boards
+				</NavLink>
 				<li>
 					<h2 class="ml-2 mb-4 font-medium flex justify-between items-center">
 						<span>Your boards</span>
@@ -76,16 +75,10 @@
 					</h2>
 					<ul class="space-y-2">
 						{#each $boardsQuery.data ?? [] as board (board.id)}
-							<li>
-								<Button
-									variant="ghost"
-									href={`/boards/${board.id}`}
-									class="flex justify-start gap-2"
-								>
-									<img src={board.imageThumbUrl} alt={board.name} class="w-8 h-8 rounded-sm" />
-									{board.name}
-								</Button>
-							</li>
+							<NavLink href={`/boards/${board.id}`}>
+								<img src={board.imageThumbUrl} alt={board.name} class="w-8 h-8 rounded-sm" />
+								{board.name}
+							</NavLink>
 						{/each}
 					</ul>
 				</li>
