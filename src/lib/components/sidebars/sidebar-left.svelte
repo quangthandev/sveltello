@@ -3,13 +3,44 @@
 	import IconChevronRight from '$lib/components/icons/icon-chevron-right.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import SidebarLeftToggler from './sidebar-left-toggler.svelte';
 	import SidebarLeftNav from './sidebar-left-nav.svelte';
 
 	export let open = true;
+	let btnCollapse: Button;
 
 	const dispatch = createEventDispatcher<{ toggle: boolean }>();
+
+	// Toggle the sidebar when the "[" key is pressed...
+	// ..., ignoring the event if the user is typing in an input or textarea field...
+	// ... or the target's parent is content editable.
+	onMount(() => {
+		const handleKeydown = (event: KeyboardEvent) => {
+			if (
+				event.key === '[' &&
+				!['input', 'textarea'].includes((event.target as HTMLElement).tagName.toLowerCase()) &&
+				!(event.target as HTMLElement).isContentEditable &&
+				!(event.target as HTMLElement).parentElement?.isContentEditable
+			) {
+				if (!open) {
+					dispatch('toggle', true);
+					btnCollapse.focus();
+				} else {
+					dispatch('toggle', false);
+					if (document.activeElement instanceof HTMLElement) {
+						document.activeElement.blur();
+					}
+				}
+			}
+		};
+
+		window.addEventListener('keydown', handleKeydown);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeydown);
+		};
+	});
 </script>
 
 <SidebarLeftToggler content="Expand sidebar" let:builder>
@@ -41,6 +72,7 @@
 	<div class="flex justify-end px-2 py-4 border-b-2 border-b-slate-400">
 		<SidebarLeftToggler content="Collapse sidebar" let:builder>
 			<Button
+				bind:this={btnCollapse}
 				variant="ghost"
 				size="icon"
 				class="mr-2"
