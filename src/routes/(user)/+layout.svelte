@@ -106,7 +106,7 @@
 		></Button>
 	</aside>
 	<main
-		class={cn('w-full h-full bg-slate-500', {
+		class={cn('w-full h-full', {
 			'pl-[var(--app-sidebar-width)]': open,
 			'pl-4': !open
 		})}

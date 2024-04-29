@@ -78,10 +78,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{board.name}</title>
-</svelte:head>
-
 <div
 	class={cn(
 		'h-full flex flex-col overflow-x-auto select-none',
@@ -99,7 +95,7 @@
 			inputClassName="text-2xl font-bold"
 			buttonClassName={cn(
 				'text-2xl font-bold text-left border border-transparent',
-				board.color.toLowerCase() === '#ffffff'
+				board.color && board.color.toLowerCase() === '#ffffff'
 					? 'text-black bg-neutral-300'
 					: 'text-white bg-black/50'
 			)}

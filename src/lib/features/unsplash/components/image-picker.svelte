@@ -36,17 +36,17 @@
 	</div>
 	{#if $query.isLoading || $query.isFetching}
 		<div class="flex flex-col gap-2">
-			<Skeleton class={cn('w-full h-14 bg-neutral-200')} />
-			<Skeleton class={cn('w-full h-14 bg-neutral-200')} />
+			<Skeleton class={cn('w-full h-16 bg-neutral-200')} />
+			<Skeleton class={cn('w-full h-16 bg-neutral-200')} />
 		</div>
 	{:else if $query.data}
 		<div class="grid grid-cols-3 gap-2">
 			{#each $query.data as photo (photo.id)}
-				<div class="relative w-full group">
+				<div class="relative w-full h-16 group">
 					<img
 						src={photo.urls.thumb}
 						alt={photo.alt_description}
-						class="object-cover aspect-video h-14 rounded-md"
+						class="object-cover aspect-video rounded-md"
 					/>
 					<label class="absolute inset-0 w-full h-full cursor-pointer">
 						<input
