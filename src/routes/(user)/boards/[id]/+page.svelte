@@ -17,7 +17,7 @@
 
 	$: query = useBoard(Number($page.params.id), data.board);
 
-	$: board = $query.data;
+	$: board = $query.data || data.board;
 	$: columns = $query.data.columns;
 
 	let sourceIndex: number | null = null;
@@ -84,7 +84,7 @@
 
 <div
 	class={cn(
-		'w-full flex flex-col overflow-x-auto select-none',
+		'h-full flex flex-col overflow-x-auto select-none',
 		'bg-no-repeat bg-center bg-cover bg-fixed'
 	)}
 	style:background-color={board.color}

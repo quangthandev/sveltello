@@ -12,7 +12,7 @@
 	let inputEl: HTMLInputElement;
 	let editing: boolean;
 
-	const createColumnMutation = useCreateColumn(boardId);
+	$: createColumnMutation = useCreateColumn(boardId);
 
 	const handleSubmit = (e: SubmitEvent) => {
 		const formData = new FormData(e.target as HTMLFormElement);

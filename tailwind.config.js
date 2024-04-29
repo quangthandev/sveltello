@@ -61,6 +61,9 @@ const config = {
 					foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
 				}
 			},
+			width: {
+				appSidebar: 'var(--app-sidebar-width)'
+			},
 			height: {
 				appHeader: 'var(--app-header-height)'
 			},

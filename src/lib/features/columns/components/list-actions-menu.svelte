@@ -60,6 +60,7 @@
 			variant="ghost"
 			size="icon"
 			class="flex justify-center items-center text-muted-foreground"
+			aria-label="open list actions"
 			builders={[{ action: triggerPopover }]}
 		>
 			<IconMore />

@@ -18,6 +18,7 @@ blockquote {
 @layer base {
 	:root {
 		--app-header-height: 4rem;
+		--app-sidebar-width: 16rem;
 
 		--muted: 216 12% 84%;
 		--muted-foreground: 220 8.9% 46.1%;

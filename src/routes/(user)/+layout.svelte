@@ -14,57 +14,54 @@
 </script>
 
 <div class="flex flex-grow h-full">
-	<aside class="relative bg-slate-700 text-white z-10 h-full">
-		<Button
-			variant={open ? 'ghost' : 'secondary'}
-			size="icon"
-			class={cn('absolute top-4 z-10', {
-				'rounded-full': !open,
-				'right-4': open,
-				'left-2': !open
-			})}
-			aria-label={open ? 'close sidebar' : 'open sidebar'}
-			on:click={() => {
-				open = !open;
-			}}
-		>
-			<svelte:component this={open ? IconChevronLeft : IconChevronRight} />
-		</Button>
-		<Button
-			variant="secondary"
-			class={cn('absolute w-[8px] rounded-none bg-neutral-500', {
-				'opacity-0': open,
-				'h-full opacity-100': !open
-			})}
-			on:click={() => (open = true)}
-		></Button>
-		<!-- Spacer -->
-		<div
-			class={cn({
-				'w-64': open,
-				'w-2': !open
-			})}
-		></div>
-		<nav
-			class={cn('p-4 mt-12 bg-slate-700 duration-200 will-change-transform', {
+	<Button
+		variant="secondary"
+		size="icon"
+		class={cn(
+			'fixed z-30 rounded-full translate-y-4 bg-slate-700 hover:bg-slate-500 text-white shadow-md',
+			{
+				hidden: open
+			}
+		)}
+		aria-label="open sidebar"
+		on:click={() => {
+			open = true;
+		}}
+	>
+		<IconChevronRight />
+	</Button>
+	<aside
+		class={cn(
+			'fixed bg-slate-700 text-white z-10 w-appSidebar h-full duration-200 will-change-transform border-r-2 border-r-slate-600',
+			{
 				'translate-x-0': open,
 				'-translate-x-full': !open
-			})}
-		>
-			<ul
-				class={cn('space-y-2', {
-					hidden: !open
-				})}
+			}
+		)}
+	>
+		<div class="flex justify-end px-2 py-4 border-b-2 border-b-slate-400">
+			<Button
+				variant="ghost"
+				size="icon"
+				aria-label="open sidebar"
+				class="mr-2"
+				on:click={() => {
+					open = false;
+				}}
 			>
+				<IconChevronLeft />
+			</Button>
+		</div>
+		<nav class="relative z-10 p-2">
+			<ul class={cn('p-2 space-y-2')}>
 				<li>
 					<Button variant="ghost" href="/boards" class="flex justify-start items-center gap-2">
 						<IconBoards />
 						Boards
 					</Button>
 				</li>
-				<hr />
 				<li>
-					<h2 class="mb-4 font-medium flex justify-between items-center">
+					<h2 class="ml-2 mb-4 font-medium flex justify-between items-center">
 						<span>Your boards</span>
 						<NewBoard let:trigger={triggerPopover}>
 							<Button
@@ -94,6 +91,26 @@
 				</li>
 			</ul>
 		</nav>
+		<Button
+			variant="secondary"
+			size="sm"
+			class={cn(
+				'absolute inset-0 w-5 h-full p-0 rounded-none bg-slate-700 hover:bg-slate-500 duration-200 will-change-transform',
+				{
+					'opacity-0': open,
+					'opacity-100 translate-x-[var(--app-sidebar-width)]': !open
+				}
+			)}
+			aria-label="open sidebar"
+			on:click={() => (open = true)}
+		></Button>
 	</aside>
-	<slot />
+	<main
+		class={cn('w-full h-full bg-slate-500', {
+			'pl-[var(--app-sidebar-width)]': open,
+			'pl-4': !open
+		})}
+	>
+		<slot />
+	</main>
 </div>
