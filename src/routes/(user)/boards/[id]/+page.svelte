@@ -18,7 +18,7 @@
 	$: query = useBoard(Number($page.params.id), data.board);
 
 	$: board = $query.data || data.board;
-	$: columns = $query.data.columns;
+	$: columns = $query.data.columns ?? [];
 
 	let sourceIndex: number | null = null;
 
