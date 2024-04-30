@@ -7,7 +7,7 @@
 	import SidebarLeftToggler from './sidebar-left-toggler.svelte';
 	import SidebarLeftNav from './sidebar-left-nav.svelte';
 
-	export let open = true;
+	export let expanded: boolean;
 	let btnCollapse: Button;
 
 	const dispatch = createEventDispatcher<{ toggle: boolean }>();
@@ -23,7 +23,7 @@
 				!(event.target as HTMLElement).isContentEditable &&
 				!(event.target as HTMLElement).parentElement?.isContentEditable
 			) {
-				if (!open) {
+				if (!expanded) {
 					dispatch('toggle', true);
 					btnCollapse.focus();
 				} else {
@@ -50,10 +50,10 @@
 		class={cn(
 			'fixed z-30 rounded-full translate-y-4 bg-slate-700 hover:bg-slate-500 text-white shadow-md',
 			{
-				hidden: open
+				hidden: expanded
 			}
 		)}
-		aria-label="open sidebar"
+		aria-label="expand sidebar"
 		builders={[builder]}
 		on:click={() => dispatch('toggle', true)}
 	>
@@ -64,8 +64,8 @@
 	class={cn(
 		'fixed bg-slate-700 text-white z-10 w-appSidebar h-full duration-200 will-change-transform border-r-2 border-r-slate-600',
 		{
-			'translate-x-0': open,
-			'-translate-x-full': !open
+			'translate-x-0': expanded,
+			'-translate-x-full': !expanded
 		}
 	)}
 >
@@ -76,7 +76,7 @@
 				variant="ghost"
 				size="icon"
 				class="mr-2"
-				aria-label="close sidebar"
+				aria-label="collapse sidebar"
 				builders={[builder]}
 				on:click={() => dispatch('toggle', false)}
 			>
@@ -92,11 +92,11 @@
 			class={cn(
 				'absolute inset-0 w-5 h-full p-0 rounded-none bg-slate-700 hover:bg-slate-500 duration-200 will-change-transform',
 				{
-					'opacity-0': open,
-					'opacity-100 translate-x-[var(--app-sidebar-width)]': !open
+					'opacity-0': expanded,
+					'opacity-100 translate-x-[var(--app-sidebar-width)]': !expanded
 				}
 			)}
-			aria-label="open sidebar"
+			aria-label="expand sidebar"
 			builders={[builder]}
 			on:click={() => dispatch('toggle', true)}
 		></Button>

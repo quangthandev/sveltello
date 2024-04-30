@@ -1,21 +1,22 @@
 <script lang="ts">
 	import SidebarLeft from '$lib/components/sidebars/sidebar-left.svelte';
+	import { sidebarPreference } from '$lib/stores/sidebar-preference';
 	import { cn } from '$lib/utils';
 
-	let open = true;
+	$: expanded = $sidebarPreference.expanded;
 </script>
 
 <div class="flex flex-grow h-full">
 	<SidebarLeft
-		{open}
+		{expanded}
 		on:toggle={(event) => {
-			open = event.detail;
+			sidebarPreference.set({ expanded: event.detail });
 		}}
 	/>
 	<main
 		class={cn('w-full h-full', {
-			'pl-[var(--app-sidebar-width)]': open,
-			'pl-4': !open
+			'pl-[var(--app-sidebar-width)]': expanded,
+			'pl-4': !expanded
 		})}
 	>
 		<slot />
