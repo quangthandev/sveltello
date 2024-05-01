@@ -91,6 +91,7 @@ export const board = sqliteTable('Board', {
 	imageFullUrl: text('image_full_url'),
 	imageUsername: text('image_username'),
 	imageLinkHtml: text('image_link_HTML'),
+	imageAltDescription: text('image_alt_description'),
 	createdAt: text('created_at')
 		.$defaultFn(() => new Date().toISOString())
 		.notNull(),

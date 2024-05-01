@@ -8,6 +8,13 @@
       "when": 1712729222952,
       "tag": "0000_new_spectrum",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1714535437177,
+      "tag": "0001_careful_amphibian",
+      "breakpoints": true
     }
   ]
 }
