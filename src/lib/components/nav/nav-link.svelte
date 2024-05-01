@@ -9,7 +9,7 @@
 </script>
 
 <li
-	class={cn({
+	class={cn('rounded-md', {
 		'bg-slate-500': active
 	})}
 >

@@ -25,10 +25,10 @@
 </script>
 
 <li
-	class="flex-shrink-0 flex flex-col gap-1 overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-neutral-100"
+	class="flex-shrink-0 flex flex-col gap-1 overflow-hidden max-h-full w-80 border-slate-400 rounded-xl shadow-sm shadow-slate-400 bg-neutral-50"
 >
 	<header class="p-2 flex justify-between items-center">
-		<ListTitle {id} {name} {boardId} />
+		<h2><ListTitle {id} {name} {boardId} /></h2>
 		<ListActionsMenu {id} {name} onAddCard={() => (editing = true)} />
 	</header>
 

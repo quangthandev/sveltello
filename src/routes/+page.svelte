@@ -11,7 +11,7 @@
 		</p>
 		<p>If you want to play around, click sign up!</p>
 	</div>
-	<div class="flex w-full justify-evenly max-w-md mt-8 rounded-3xl p-10 bg-neutral-300">
+	<div class="flex w-full justify-evenly max-w-md mt-8 rounded-3xl p-10 bg-neutral-100">
 		<a
 			href="/signup"
 			class={cn(

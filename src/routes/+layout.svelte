@@ -70,7 +70,7 @@
 						<Button
 							type="submit"
 							variant="ghost"
-							class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center py-0"
+							class="text-slate-400 text-xs uppercase font-bold flex flex-col items-center py-0"
 							aria-label="log out"
 						>
 							<IconLogout />
@@ -80,7 +80,7 @@
 				{:else}
 					<a
 						href="/login"
-						class="text-slate-500 text-xs uppercase font-bold flex flex-col items-center"
+						class="text-slate-400 text-xs uppercase font-bold flex flex-col items-center"
 					>
 						<IconLogin />
 						<span class="hidden sm:inline">Log in</span>
