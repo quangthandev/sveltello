@@ -42,11 +42,13 @@
 	{:else if $query.data}
 		<div class="grid grid-cols-3 gap-2">
 			{#each $query.data as photo (photo.id)}
-				<div class="relative w-full h-16 group">
+				<div
+					class="relative w-full h-16 group rounded-md focus-within:outline focus-within:outline-primary"
+				>
 					<img
 						src={photo.urls.thumb}
 						alt={photo.alt_description}
-						class="object-cover aspect-video rounded-md"
+						class="object-cover aspect-video h-full rounded-md"
 					/>
 					<label class="absolute inset-0 w-full h-full cursor-pointer">
 						<input
@@ -61,7 +63,7 @@
 					<a
 						href={photo.links.html}
 						target="_blank"
-						class="opacity-0 group-hover:opacity-100 absolute bottom-0 w-full text-[10px] truncate text-white text-center hover:underline p-1 bg-black/50"
+						class="opacity-0 focus:opacity-100 group-hover:opacity-100 absolute bottom-0 w-full text-[10px] truncate text-white text-center hover:underline p-1 bg-black/50"
 					>
 						{photo.user.name}
 					</a>
@@ -85,7 +87,7 @@
 			{/each}
 		</div>
 	{:else if $query.error}
-		<div class={cn('flex items-center justify-center w-full h-32 text-red-600 bg-neutral-200')}>
+		<div class={cn('flex items-center justify-center w-full h-20 text-red-600 bg-neutral-200')}>
 			{$query.error.message}
 		</div>
 	{/if}
