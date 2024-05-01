@@ -29,7 +29,8 @@ export async function createBoard(
 	imageThumbUrl?: string | null,
 	imageFullUrl?: string | null,
 	imageUsername?: string | null,
-	imageLinkHtml?: string | null
+	imageLinkHtml?: string | null,
+	imageAltDescription?: string | null
 ) {
 	const result = await db
 		.insert(board)
@@ -41,7 +42,8 @@ export async function createBoard(
 			imageThumbUrl,
 			imageFullUrl,
 			imageUsername,
-			imageLinkHtml
+			imageLinkHtml,
+			imageAltDescription
 		})
 		.returning();
 

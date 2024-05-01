@@ -10,6 +10,7 @@ export const createBoardSchema = createInsertSchema(board, {
 	imageFullUrl: (schema) => schema.imageFullUrl.optional(),
 	imageUsername: (schema) => schema.imageUsername.optional(),
 	imageLinkHtml: (schema) => schema.imageLinkHtml.optional(),
+	imageAltDescription: (schema) => schema.imageAltDescription.optional(),
 	userId: (schema) => schema.userId.optional()
 });
 

@@ -33,7 +33,11 @@
 			<ul class="space-y-2">
 				{#each $boardsQuery.data ?? [] as board (board.id)}
 					<NavLink href={`/boards/${board.id}`}>
-						<img src={board.imageThumbUrl} alt={board.name} class="w-8 h-8 rounded-sm" />
+						<img
+							src={board.imageThumbUrl}
+							alt={board.imageAltDescription || `Photo by ${board.imageUsername} on Unsplash`}
+							class="object-cover aspect-[4/3] h-6 rounded-sm"
+						/>
 						{board.name}
 					</NavLink>
 				{/each}

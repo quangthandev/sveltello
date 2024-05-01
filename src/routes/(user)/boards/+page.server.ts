@@ -16,8 +16,16 @@ export const actions = {
 		checkAuthUser(locals, '/boards');
 
 		const data = await request.formData();
-		const { name, color, imageId, imageThumbUrl, imageFullUrl, imageUsername, imageLinkHtml } =
-			await createBoardSchema.parseAsync(Object.fromEntries(data));
+		const {
+			name,
+			color,
+			imageId,
+			imageThumbUrl,
+			imageFullUrl,
+			imageUsername,
+			imageLinkHtml,
+			imageAltDescription
+		} = await createBoardSchema.parseAsync(Object.fromEntries(data));
 
 		const newBoard = await createBoard(
 			locals.user.id,
@@ -27,7 +35,8 @@ export const actions = {
 			imageThumbUrl,
 			imageFullUrl,
 			imageUsername,
-			imageLinkHtml
+			imageLinkHtml,
+			imageAltDescription
 		);
 
 		redirect(303, `/boards/${newBoard.id}`);
