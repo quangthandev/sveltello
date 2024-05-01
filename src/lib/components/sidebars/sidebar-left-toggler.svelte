@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Tooltip from '$lib/components/ui/tooltip';
 
-	export let content: string;
+	export let tooltip: string;
 </script>
 
 <Tooltip.Root>
@@ -9,7 +9,7 @@
 		<slot {builder} />
 	</Tooltip.Trigger>
 	<Tooltip.Content class="p-2 flex gap-2 justify-center items-center bg-slate-400">
-		{content}
+		{tooltip}
 		<code class="w-6 h-6">[</code>
 	</Tooltip.Content>
 </Tooltip.Root>
