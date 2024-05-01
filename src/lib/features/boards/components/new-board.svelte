@@ -53,6 +53,8 @@
 		}
 
 		return async ({ result }) => {
+			await queryClient.invalidateQueries({ queryKey: ['boards'] });
+
 			if (result.type === 'redirect') {
 				const prevPageRoute = $page.route.id;
 
