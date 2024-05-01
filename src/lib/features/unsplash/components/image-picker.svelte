@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { useRandomPhotos } from '$lib/features/unsplash/query-client';
 	import { cn } from '$lib/utils';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
@@ -10,20 +9,6 @@
 	const query = useRandomPhotos({ enabled: visible });
 
 	let selectedImageId: string;
-
-	onMount(() => {
-		if (visible) {
-			const unsub = query.subscribe((result) => {
-				if (result && result.data && result.data.length > 0) {
-					selectedImageId = result.data[0].id;
-				}
-			});
-
-			return () => {
-				unsub();
-			};
-		}
-	});
 </script>
 
 <div>
