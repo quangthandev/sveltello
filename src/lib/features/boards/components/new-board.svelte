@@ -2,7 +2,6 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import ImagePicker from '$lib/features/unsplash/components/image-picker.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
@@ -56,19 +55,12 @@
 			await queryClient.invalidateQueries({ queryKey: ['boards'] });
 
 			if (result.type === 'redirect') {
-				const prevPageRoute = $page.route.id;
-
 				await goto(result.location, {
 					invalidateAll: true
 				});
 
 				isSubmitting = false;
 				onSuccess();
-
-				// Reload the page if current route is /boards/[id]
-				if (prevPageRoute === '/boards/[id]') {
-					location.reload();
-				}
 			} else {
 				applyAction(result);
 			}
