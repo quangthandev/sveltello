@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { popoverCtx } from './context';
 	import type { ActionReturn } from 'svelte/action';
 
@@ -9,6 +9,8 @@
 
 	const { triggerEl, open } = popoverCtx.get();
 
+	const dispatch = createEventDispatcher<{ open: void; close: void }>();
+
 	onMount(() => {
 		triggerEl.set(trigger);
 	});
@@ -16,7 +18,10 @@
 	const handleClick = (e: MouseEvent) => {
 		e.stopPropagation();
 		e.preventDefault();
-		open.update((s) => !s);
+		open.update((isCurrentlyOpen) => {
+			dispatch(isCurrentlyOpen ? 'close' : 'open');
+			return !isCurrentlyOpen;
+		});
 	};
 
 	interface TriggerActionAttributes {}

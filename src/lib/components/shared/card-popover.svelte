@@ -11,7 +11,7 @@
 </script>
 
 <Popover.Root let:open let:close>
-	<Popover.Trigger asChild let:triggerAction={trigger}>
+	<Popover.Trigger asChild let:triggerAction={trigger} on:open on:close>
 		<slot {trigger} />
 	</Popover.Trigger>
 	<Popover.Content class={cn('absolute top-0 left-0 z-50', className)}>

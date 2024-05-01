@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { applyAction, enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
@@ -13,12 +14,18 @@
 	import type { ActionData } from '../../../../routes/(user)/boards/$types';
 
 	let isSubmitting = false;
+	let inputInstance: Input | null = null;
 
 	const queryClient = useQueryClient();
 
+	const handleOpen = async () => {
+		await tick();
+		inputInstance?.focus();
+	};
+
 	const handleSubmit: TypedSubmitFunctionWithCallback<ActionData> = (
 		{ formData, cancel },
-		onSuccess
+		{ onSuccess: onSuccess }
 	) => {
 		isSubmitting = true;
 
@@ -60,7 +67,7 @@
 				});
 
 				isSubmitting = false;
-				onSuccess();
+				onSuccess?.();
 			} else {
 				applyAction(result);
 			}
@@ -75,7 +82,7 @@
 
 <svelte:window bind:innerWidth />
 
-<CardPopover title="Create Board" let:trigger class="w-96">
+<CardPopover title="Create Board" let:trigger class="w-96" on:open={handleOpen}>
 	<slot {trigger} />
 
 	<div slot="content" let:open let:close>
@@ -83,16 +90,22 @@
 			class="max-w-md space-y-4"
 			method="post"
 			action="/boards?/create"
-			use:enhance={(input) => handleSubmit(input, close)}
+			use:enhance={(input) => handleSubmit(input, { onSuccess: close })}
 		>
 			<ImagePicker visible={open} />
 			<div class="flex items-center gap-1">
-				<label for="board-color" class="text-sm font-medium"> Color </label>
-				<input id="board-color" name="color" type="color" value="#cbd5e1" class="bg-transparent" />
+				<label for="new-board-color" class="text-sm font-medium"> Color </label>
+				<input
+					id="new-board-color"
+					name="color"
+					type="color"
+					value="#cbd5e1"
+					class="bg-transparent"
+				/>
 			</div>
 			<div>
-				<Label for="name">Board Title</Label>
-				<Input id="name" name="name" type="text" required />
+				<Label for="new-board-name">Board Title</Label>
+				<Input id="new-board-name" name="name" type="text" required bind:this={inputInstance} />
 			</div>
 			<Button type="submit" class="w-full font-medium" disabled={isSubmitting}>Create</Button>
 		</form>

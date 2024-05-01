@@ -16,7 +16,15 @@ type AddParameters<TFunction extends (...args: any) => any, TParameters extends 
 type SubmitFunctionWithCallback<
 	Success extends Record<string, unknown> | undefined = Record<string, unknown>,
 	Failure extends Record<string, unknown> | undefined = Record<string, unknown>
-> = AddParameters<SubmitFunction<Success, Failure>, [() => void]>;
+> = AddParameters<
+	SubmitFunction<Success, Failure>,
+	[
+		{
+			onSuccess?: (data?: Success) => void;
+			onFailure?: (data?: Failure) => void;
+		}
+	]
+>;
 export type TypedSubmitFunctionWithCallback<T> = SubmitFunctionWithCallback<
 	SuccessData<T>,
 	InvalidData<T>
