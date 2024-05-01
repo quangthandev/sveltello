@@ -15,7 +15,7 @@
 		"test:unit": "vitest",
 		"db:generate-migrations": "drizzle-kit generate:sqlite --config=drizzle.config.ts",
 		"db:push": "drizzle-kit push:sqlite --config=drizzle.config.ts",
-		"db:migrate": "tsx src/lib/server/drizzle/migrate.ts"
+		"db:migrate": "tsx src/lib/drizzle/migrate.ts"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
