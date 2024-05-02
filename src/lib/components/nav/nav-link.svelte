@@ -4,6 +4,7 @@
 	import { cn } from '$lib/utils';
 
 	export let href: string;
+	export let title: string | undefined = undefined;
 
 	$: active = $page.url.pathname === href;
 </script>
@@ -13,7 +14,7 @@
 		'bg-slate-500': active
 	})}
 >
-	<Button variant="ghost" {href} class="flex justify-start gap-2">
+	<Button variant="ghost" {href} class="flex justify-start gap-2" {title}>
 		<slot />
 	</Button>
 </li>

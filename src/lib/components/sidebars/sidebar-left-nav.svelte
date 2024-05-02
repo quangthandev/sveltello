@@ -32,13 +32,13 @@
 			</h2>
 			<ul class="space-y-2">
 				{#each $boardsQuery.data ?? [] as board (board.id)}
-					<NavLink href={`/boards/${board.id}`}>
+					<NavLink href={`/boards/${board.id}`} title={board.name}>
 						<img
 							src={board.imageThumbUrl}
 							alt={board.imageAltDescription || `Photo by ${board.imageUsername} on Unsplash`}
 							class="object-cover aspect-[4/3] h-6 rounded-sm"
 						/>
-						{board.name}
+						<span class="overflow-hidden text-ellipsis">{board.name}</span>
 					</NavLink>
 				{/each}
 			</ul>
