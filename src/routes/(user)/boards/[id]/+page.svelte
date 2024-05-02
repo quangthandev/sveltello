@@ -109,6 +109,9 @@
 				queryClient.invalidateQueries({
 					queryKey: ['boards', Number($page.params.id)]
 				});
+				queryClient.invalidateQueries({
+					queryKey: ['boards']
+				});
 			}}
 		>
 			<input type="hidden" name="id" value={board.id} />
