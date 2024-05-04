@@ -76,7 +76,10 @@ export async function POST({ request, params, locals }) {
 		item.cover === null &&
 		fileType.startsWith('image/')
 	) {
-		await makeCover(params.id, item.attachments[0].id, locals.user.id);
+		await makeCover(params.id, locals.user.id, {
+			source: 'attachment',
+			attachmentId: item.attachments[0].id
+		});
 	}
 
 	return json({ url });

@@ -103,19 +103,17 @@ export async function getCover(itemId: string, userId: string) {
 	return await db.select().from(cover).where(eq(cover.itemId, existed.Item.id)).get();
 }
 
-export async function makeCover(itemId: string, attachmentId: string, userId: string) {
-	const existed = await db
-		.select()
-		.from(attachment)
-		.leftJoin(item, eq(attachment.itemId, item.id))
-		.leftJoin(board, eq(item.boardId, board.id))
-		.where(and(eq(attachment.id, attachmentId), eq(board.userId, userId)))
-		.get();
+type MakeCoverOptions =
+	| {
+			source: 'attachment';
+			attachmentId: string;
+	  }
+	| {
+			source: 'unsplash';
+			url: string;
+	  };
 
-	if (!existed?.Attachment) {
-		throw new Error('Attachment not found');
-	}
-
+export async function makeCover(itemId: string, userId: string, options: MakeCoverOptions) {
 	const existingItem = await db
 		.select()
 		.from(item)
@@ -124,22 +122,52 @@ export async function makeCover(itemId: string, attachmentId: string, userId: st
 		.where(and(eq(cover.itemId, itemId), eq(board.userId, userId)))
 		.get();
 
-	// Create a new cover if not existed
-	if (!existingItem) {
-		return await db
-			.insert(cover)
-			.values({
-				itemId,
-				attachmentId,
-				url: existed.Attachment.url
-			})
-			.returning();
-	}
+	if (options.source === 'attachment') {
+		const { attachmentId } = options;
+		const existed = await db
+			.select()
+			.from(attachment)
+			.leftJoin(item, eq(attachment.itemId, item.id))
+			.leftJoin(board, eq(item.boardId, board.id))
+			.where(and(eq(attachment.id, attachmentId), eq(board.userId, userId)))
+			.get();
 
-	return await db
-		.update(cover)
-		.set({ attachmentId, url: existed.Attachment.url })
-		.where(eq(cover.itemId, itemId));
+		if (!existed?.Attachment) {
+			throw new Error('Attachment not found');
+		}
+
+		// Create a new cover if not existed
+		if (!existingItem) {
+			return await db
+				.insert(cover)
+				.values({
+					itemId,
+					attachmentId,
+					url: existed.Attachment.url
+				})
+				.returning();
+		}
+
+		return await db
+			.update(cover)
+			.set({ attachmentId, url: existed.Attachment.url })
+			.where(eq(cover.itemId, itemId));
+	} else {
+		const { url } = options;
+
+		// Create a new cover if not existed
+		if (!existingItem) {
+			return await db
+				.insert(cover)
+				.values({
+					itemId,
+					url
+				})
+				.returning();
+		}
+
+		return await db.update(cover).set({ url, attachmentId: null }).where(eq(cover.itemId, itemId));
+	}
 }
 
 export async function removeCover(itemId: string, userId: string) {

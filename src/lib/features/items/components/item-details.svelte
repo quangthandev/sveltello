@@ -10,6 +10,7 @@
 	import ItemActions from './item-actions.svelte';
 	import ItemAttachments from './item-attachments.svelte';
 	import { useItem } from '../query-client/queries';
+	import ItemCover from './item-cover.svelte';
 
 	export let id: string;
 
@@ -35,9 +36,9 @@
 	</Button>
 
 	<!-- Cover -->
-	{#if item?.cover}
+	{#if item && item.cover}
 		<header class="bg-gray-200">
-			<img src={item?.cover.url} alt="item cover" class="w-full h-48 object-contain rounded-lg" />
+			<ItemCover cover={item.cover} />
 		</header>
 	{/if}
 	<div class="p-6 bg-gray-100">

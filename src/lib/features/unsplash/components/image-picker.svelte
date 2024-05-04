@@ -3,12 +3,16 @@
 	import { cn } from '$lib/utils';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { createEventDispatcher } from 'svelte';
+	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 
 	export let visible = false;
 
 	const query = useRandomPhotos({ enabled: visible });
 
 	let selectedImageId: string;
+
+	const dispatch = createEventDispatcher<{ select: Random }>();
 </script>
 
 <div>
@@ -58,6 +62,9 @@
 							class="opacity-0"
 							value={photo.id}
 							bind:group={selectedImageId}
+							on:change={() => {
+								dispatch('select', photo);
+							}}
 						/>
 					</label>
 					<a

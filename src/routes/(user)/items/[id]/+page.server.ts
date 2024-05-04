@@ -14,7 +14,8 @@ import {
 import { getColumn } from '$lib/features/columns/db-queries';
 import { upsertItem } from '$lib/features/boards/db-queries';
 import {
-	makeCoverSchema,
+	makeCoverFromUnsplashSchema,
+	makeCoverFromAttachmentSchema,
 	moveOrCopyItemToDestinationSchema,
 	updateItemContentSchema,
 	updateItemTitleSchema
@@ -187,7 +188,10 @@ export const actions = {
 				(attachment) => attachment.id === originalItemCover.attachmentId
 			);
 			if (index !== -1) {
-				await makeCover(createdItem[0].id, createdAttachments[index].id, locals.user.id);
+				await makeCover(createdItem[0].id, locals.user.id, {
+					source: 'attachment',
+					attachmentId: createdAttachments[index].id
+				});
 			}
 		}
 	},
@@ -202,13 +206,40 @@ export const actions = {
 
 		const data = await request.formData();
 
-		const { attachmentId } = await makeCoverSchema.parseAsync(Object.fromEntries(data));
+		const { attachmentId } = await makeCoverFromAttachmentSchema.parseAsync(
+			Object.fromEntries(data)
+		);
 
 		if (!attachmentId) {
 			throw error(422, 'Attachment ID is required');
 		}
 
-		await makeCover(id, attachmentId, locals.user.id);
+		await makeCover(id, locals.user.id, {
+			source: 'attachment',
+			attachmentId
+		});
+	},
+	makeCoverFromUnsplash: async ({ request, locals, params }) => {
+		const id = params.id;
+
+		if (!id) {
+			throw error(422, 'ID is required');
+		}
+
+		checkAuthUser(locals, `/items/${params.id}`);
+
+		const data = await request.formData();
+
+		const { url } = await makeCoverFromUnsplashSchema.parseAsync(Object.fromEntries(data));
+
+		if (!url) {
+			throw error(422, 'URL is required');
+		}
+
+		await makeCover(id, locals.user.id, {
+			source: 'unsplash',
+			url
+		});
 	},
 	removeCover: async ({ locals, params }) => {
 		const id = params.id;

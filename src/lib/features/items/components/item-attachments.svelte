@@ -9,6 +9,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { useDeleteAttachment } from '../query-client/mutations';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
+	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 
 	export let itemId: string;
 	export let boardId: number;
@@ -109,8 +110,9 @@
 								<Button
 									type="submit"
 									variant="ghost"
-									class="px-0 underline text-sm text-muted-foreground hover:bg-transparent"
+									class="flex gap-2 px-0 underline text-sm text-muted-foreground hover:bg-transparent"
 								>
+									<IconDockTop />
 									{attachment.isCover ? 'Remove' : 'Make'} cover
 								</Button>
 							</form>

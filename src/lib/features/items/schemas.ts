@@ -32,6 +32,10 @@ export const moveOrCopyItemToDestinationSchema = createInsertSchema(item, {
 	})
 	.pick({ boardId: true, columnId: true, title: true, posIndex: true });
 
-export const makeCoverSchema = createInsertSchema(cover, {
+export const makeCoverFromAttachmentSchema = createInsertSchema(cover, {
 	attachmentId: z.string()
 }).pick({ attachmentId: true });
+
+export const makeCoverFromUnsplashSchema = z.object({
+	url: z.string()
+});
