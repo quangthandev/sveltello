@@ -141,3 +141,13 @@ export async function makeCover(itemId: string, attachmentId: string, userId: st
 		.set({ attachmentId, url: existed.Attachment.url })
 		.where(eq(cover.itemId, itemId));
 }
+
+export async function removeCover(itemId: string, userId: string) {
+	const existed = await getItemByUserBoard(itemId, userId);
+
+	if (!existed?.Board) {
+		throw new Error('Item not found');
+	}
+
+	return await db.delete(cover).where(eq(cover.itemId, existed.Item.id));
+}

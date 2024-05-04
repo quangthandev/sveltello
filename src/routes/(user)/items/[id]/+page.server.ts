@@ -7,6 +7,7 @@ import {
 	getCover,
 	getItem,
 	makeCover,
+	removeCover,
 	updateItemContent,
 	updateItemTitle
 } from '$lib/features/items/db-queries';
@@ -208,5 +209,16 @@ export const actions = {
 		}
 
 		await makeCover(id, attachmentId, locals.user.id);
+	},
+	removeCover: async ({ locals, params }) => {
+		const id = params.id;
+
+		if (!id) {
+			throw error(422, 'ID is required');
+		}
+
+		checkAuthUser(locals, `/items/${params.id}`);
+
+		await removeCover(id, locals.user.id);
 	}
 };

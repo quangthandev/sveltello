@@ -99,15 +99,20 @@
 								</CardPopover>
 							</span>
 						</p>
-						{#if !attachment.isCover && attachment.type.startsWith('image/')}
-							<form action="?/makeCover" method="post" use:enhance={handleMakeCover}>
+						{#if attachment.type.startsWith('image/')}
+							<form
+								action={attachment.isCover ? '?/removeCover' : '?/makeCover'}
+								method="post"
+								use:enhance={handleMakeCover}
+							>
 								<input type="hidden" name="attachmentId" value={attachment.id} />
 								<Button
 									type="submit"
 									variant="ghost"
 									class="px-0 underline text-sm text-muted-foreground hover:bg-transparent"
-									>Make cover</Button
 								>
+									{attachment.isCover ? 'Remove' : 'Make'} cover
+								</Button>
 							</form>
 						{/if}
 					</div>
