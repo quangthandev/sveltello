@@ -10,7 +10,8 @@
 	import ItemActions from './item-actions.svelte';
 	import ItemAttachments from './item-attachments.svelte';
 	import { useItem } from '../query-client/queries';
-	import ItemCover from './item-cover.svelte';
+	import ItemCoverPopover from './item-cover-popover.svelte';
+	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 
 	export let id: string;
 
@@ -38,7 +39,18 @@
 	<!-- Cover -->
 	{#if item && item.cover}
 		<header class="bg-gray-200">
-			<ItemCover cover={item.cover} />
+			<img src={item.cover.url} alt="item cover" class="w-full h-48 object-contain rounded-lg" />
+			<ItemCoverPopover cover={item.cover} itemId={item.id} let:triggerPopover>
+				<Button
+					variant="ghost"
+					class="absolute top-36 right-4 flex gap-2"
+					builders={[{ action: triggerPopover }]}
+					aria-label="open cover settings"
+				>
+					<IconDockTop />
+					Cover
+				</Button>
+			</ItemCoverPopover>
 		</header>
 	{/if}
 	<div class="p-6 bg-gray-100">

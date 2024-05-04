@@ -10,6 +10,8 @@
 	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
 	import AttachPopover from './attach-popover.svelte';
 	import { useDeleteItem } from '../query-client/mutations';
+	import ItemCoverPopover from './item-cover-popover.svelte';
+	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 
 	export let item: ItemFullPayload;
 	export { className as class };
@@ -25,6 +27,16 @@
 		<h4>Add to card</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
 			<AttachPopover itemId={item.id} boardId={item.boardId} />
+			<ItemCoverPopover cover={item.cover} itemId={item.id} let:triggerPopover>
+				<Button
+					variant="secondary"
+					class="flex justify-start items-center gap-2 w-full"
+					builders={[{ action: triggerPopover }]}
+				>
+					<IconDockTop />
+					Cover
+				</Button>
+			</ItemCoverPopover>
 		</div>
 	</div>
 

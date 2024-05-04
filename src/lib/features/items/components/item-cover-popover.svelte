@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ImagePicker from '$lib/features/unsplash/components/image-picker.svelte';
@@ -10,7 +9,8 @@
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
 
-	export let cover: Cover;
+	export let itemId: string;
+	export let cover: Cover | null;
 
 	let makeCoverFormElm: HTMLFormElement;
 
@@ -35,12 +35,16 @@
 			await update({ invalidateAll: false });
 
 			queryClient.invalidateQueries({
-				queryKey: ['items', cover.itemId]
+				queryKey: ['items', itemId]
 			});
 		};
 	};
 
 	const handleRemoveCover: TypedSubmitFunction<ActionData> = () => {
+		if (!cover) {
+			return;
+		}
+
 		return async ({ update }) => {
 			await update({ invalidateAll: false });
 
@@ -51,21 +55,14 @@
 	};
 </script>
 
-<img src={cover.url} alt="item cover" class="w-full h-48 object-contain rounded-lg" />
 <CardPopover title="Cover" let:trigger={triggerPopover}>
-	<Button
-		variant="ghost"
-		class="absolute top-36 right-4 flex gap-2"
-		builders={[{ action: triggerPopover }]}
-		aria-label="open cover settings"
-	>
-		<IconDockTop />
-		Cover
-	</Button>
+	<slot {triggerPopover} />
 	<div slot="content" class="w-96" let:open>
-		<form method="post" action="?/removeCover" use:enhance={handleRemoveCover}>
-			<Button type="submit" variant="secondary" class="w-full">Remove cover</Button>
-		</form>
+		{#if cover}
+			<form method="post" action="?/removeCover" use:enhance={handleRemoveCover}>
+				<Button type="submit" variant="secondary" class="w-full">Remove cover</Button>
+			</form>
+		{/if}
 		<form
 			bind:this={makeCoverFormElm}
 			method="post"
