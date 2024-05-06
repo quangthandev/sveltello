@@ -121,6 +121,7 @@ export const cover = sqliteTable(
 			onDelete: 'cascade',
 			onUpdate: 'cascade'
 		}),
+		unsplashPhotoId: text('unsplash_photo_id'),
 		createdAt: text('created_at')
 			.$defaultFn(() => new Date().toISOString())
 			.notNull(),

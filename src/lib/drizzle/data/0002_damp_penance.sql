@@ -1,0 +1,1 @@
+ALTER TABLE Cover ADD `unsplash_photo_id` text;

@@ -15,6 +15,13 @@
       "when": 1714535437177,
       "tag": "0001_careful_amphibian",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714965040518,
+      "tag": "0002_damp_penance",
+      "breakpoints": true
     }
   ]
 }
