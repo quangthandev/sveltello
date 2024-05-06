@@ -39,7 +39,7 @@
 		{:else if item}
 			<h3 class="text-xl font-medium mb-3">Description</h3>
 		{/if}
-		<div class="min-h-[60px] font-medium rounded-md item-description">
+		<div class="min-h-[60px] font-medium rounded-md item-description py-2">
 			{#if isLoading && !item}
 				<div class="w-full">
 					<Skeleton class="w-full h-[78px] bg-neutral-200" />
@@ -58,7 +58,7 @@
 					{#if item.content?.trim() !== ''}
 						<Button
 							variant="secondary"
-							class="absolute top-0 right-0"
+							class="absolute top-0 right-2"
 							on:click={() => (isEditing = true)}>Edit</Button
 						>
 					{/if}

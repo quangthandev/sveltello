@@ -12,7 +12,6 @@
 	import { useItem } from '../query-client/queries';
 	import ItemCoverPopover from './item-cover-popover.svelte';
 	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
-	import { attachment } from '$lib/drizzle/schema';
 
 	export let id: string;
 
