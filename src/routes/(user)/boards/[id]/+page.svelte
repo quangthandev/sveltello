@@ -16,7 +16,7 @@
 
 	const queryClient = useQueryClient();
 
-	$: query = useBoard(Number($page.params.id), data?.board);
+	$: query = useBoard(Number($page.params.id), data.board);
 
 	$: board = $query.data;
 	$: columns = $query.data?.columns ?? [];

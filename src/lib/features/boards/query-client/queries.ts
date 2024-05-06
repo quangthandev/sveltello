@@ -19,6 +19,6 @@ export const useBoard = (id: number, initialData?: BoardWithColumns) => {
 	return createQuery<BoardWithColumns>({
 		queryKey: ['boards', id],
 		queryFn: async () => (await fetch(`/boards/${id}`)).json(),
-		initialData: initialData!
+		initialData
 	});
 };
