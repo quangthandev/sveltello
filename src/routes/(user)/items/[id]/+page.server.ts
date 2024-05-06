@@ -230,15 +230,18 @@ export const actions = {
 
 		const data = await request.formData();
 
-		const { url } = await makeCoverFromUnsplashSchema.parseAsync(Object.fromEntries(data));
+		const result = await makeCoverFromUnsplashSchema.safeParseAsync(Object.fromEntries(data));
 
-		if (!url) {
-			throw error(422, 'URL is required');
+		if (!result.success) {
+			throw error(422, result.error.message);
 		}
+
+		const { url, unsplashPhotoId } = result.data;
 
 		await makeCover(id, locals.user.id, {
 			source: 'unsplash',
-			url
+			url,
+			unsplashPhotoId
 		});
 	},
 	removeCover: async ({ locals, params }) => {

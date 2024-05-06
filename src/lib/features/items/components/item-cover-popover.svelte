@@ -3,11 +3,11 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import PhotosPicker from '$lib/components/shared/photos-picker.svelte';
 	import UnsplashPhotosPicker from '$lib/features/unsplash/components/unsplash-photos-picker.svelte';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { Attachment, Cover } from '$lib/types';
 	import type { Random } from 'unsplash-js/dist/methods/photos/types';
-	import PhotosPicker from '$lib/components/shared/photos-picker.svelte';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
 
 	export let itemId: string;
@@ -43,16 +43,17 @@
 	};
 
 	const handleMakeCoverFromUnsplash: TypedSubmitFunction<ActionData> = ({ formData }) => {
-		const images = queryClient.getQueryData<Random[]>(['unsplash-random']);
+		const photos = queryClient.getQueryData<Random[]>(['unsplash-random']);
 
-		if (!images) {
+		if (!photos) {
 			return;
 		}
 
-		const selectedImage = images.find((photo) => photo.id === formData.get('photo'));
+		const selectedPhoto = photos.find((photo) => photo.id === formData.get('photo'));
 
-		if (selectedImage) {
-			formData.set('url', selectedImage.urls.regular);
+		if (selectedPhoto) {
+			formData.set('url', selectedPhoto.urls.regular);
+			formData.set('unsplashPhotoId', selectedPhoto.id);
 		}
 
 		formData.delete('photo');
@@ -106,6 +107,7 @@
 						thumbUrl: attachment.url,
 						alt: attachment.name
 					}))}
+					defaultSelectedId={cover?.attachmentId}
 					on:select={() => makeCoverFromAttachmentFormElm.requestSubmit()}
 				/>
 			</form>
@@ -120,6 +122,7 @@
 				bind:this={unsplashPhotosPicker}
 				title="Photos from Unsplash"
 				visible={open}
+				defaultSelectedId={cover?.unsplashPhotoId}
 				on:select={() => makeCoverFromUnsplashFormElm.requestSubmit()}
 			/>
 		</form>

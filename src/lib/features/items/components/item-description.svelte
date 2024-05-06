@@ -55,7 +55,7 @@
 				{:else}
 					<ItemDescriptionContent content={item.content} on:edit={() => (isEditing = true)} />
 
-					{#if item.content !== null && item.content.trim() !== ''}
+					{#if item.content?.trim() !== ''}
 						<Button
 							variant="secondary"
 							class="absolute top-0 right-0"

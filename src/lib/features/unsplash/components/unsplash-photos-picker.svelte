@@ -7,6 +7,7 @@
 
 	export let title: string;
 	export let visible = false;
+	export let defaultSelectedId: string | null | undefined = undefined;
 
 	let photosPicker: PhotosPicker;
 
@@ -56,6 +57,7 @@
 				alt: photo.alt_description,
 				username: photo.user.name
 			}))}
+			{defaultSelectedId}
 			on:select
 		/>
 	{:else if $query.error}

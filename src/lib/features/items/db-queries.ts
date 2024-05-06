@@ -111,6 +111,7 @@ type MakeCoverOptions =
 	| {
 			source: 'unsplash';
 			url: string;
+			unsplashPhotoId: string;
 	  };
 
 export async function makeCover(itemId: string, userId: string, options: MakeCoverOptions) {
@@ -148,12 +149,13 @@ export async function makeCover(itemId: string, userId: string, options: MakeCov
 				.returning();
 		}
 
+		// Update
 		return await db
 			.update(cover)
 			.set({ attachmentId, url: existed.Attachment.url })
 			.where(eq(cover.itemId, itemId));
 	} else {
-		const { url } = options;
+		const { url, unsplashPhotoId } = options;
 
 		// Create a new cover if not existed
 		if (!existingItem) {
@@ -161,12 +163,17 @@ export async function makeCover(itemId: string, userId: string, options: MakeCov
 				.insert(cover)
 				.values({
 					itemId,
-					url
+					url,
+					unsplashPhotoId
 				})
 				.returning();
 		}
 
-		return await db.update(cover).set({ url, attachmentId: null }).where(eq(cover.itemId, itemId));
+		// Update
+		return await db
+			.update(cover)
+			.set({ url, unsplashPhotoId, attachmentId: null })
+			.where(eq(cover.itemId, itemId));
 	}
 }
 

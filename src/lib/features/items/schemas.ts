@@ -37,5 +37,6 @@ export const makeCoverFromAttachmentSchema = createInsertSchema(cover, {
 }).pick({ attachmentId: true });
 
 export const makeCoverFromUnsplashSchema = z.object({
-	url: z.string()
+	url: z.string(),
+	unsplashPhotoId: z.string()
 });

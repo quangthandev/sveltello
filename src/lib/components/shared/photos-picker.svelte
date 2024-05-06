@@ -11,8 +11,9 @@
 	export let photos: Photo[];
 	let className: string | undefined = undefined;
 	export { className as class };
+	export let defaultSelectedId: string | null | undefined = undefined;
 
-	let selectedImageId: string;
+	let selectedImageId = defaultSelectedId ?? '';
 
 	const dispatch = createEventDispatcher<{ select: Photo }>();
 
