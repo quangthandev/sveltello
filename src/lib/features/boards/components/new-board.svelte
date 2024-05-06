@@ -3,7 +3,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
-	import ImagePicker from '$lib/features/unsplash/components/image-picker.svelte';
+	import UnsplashPhotosPicker from '$lib/features/unsplash/components/unsplash-photos-picker.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
@@ -92,7 +92,7 @@
 			action="/boards?/create"
 			use:enhance={(input) => handleSubmit(input, { onSuccess: close })}
 		>
-			<ImagePicker visible={open} />
+			<UnsplashPhotosPicker title="Background" visible={open} />
 			<div class="flex items-center gap-1">
 				<label for="new-board-color" class="text-sm font-medium"> Color </label>
 				<input

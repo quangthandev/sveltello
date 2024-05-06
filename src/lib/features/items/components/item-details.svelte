@@ -12,6 +12,7 @@
 	import { useItem } from '../query-client/queries';
 	import ItemCoverPopover from './item-cover-popover.svelte';
 	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
+	import { attachment } from '$lib/drizzle/schema';
 
 	export let id: string;
 
@@ -40,7 +41,12 @@
 	{#if item && item.cover}
 		<header class="bg-gray-200">
 			<img src={item.cover.url} alt="item cover" class="w-full h-48 object-contain rounded-lg" />
-			<ItemCoverPopover cover={item.cover} itemId={item.id} let:triggerPopover>
+			<ItemCoverPopover
+				cover={item.cover}
+				attachments={item.attachments.filter((attachment) => attachment.type.startsWith('image/'))}
+				itemId={item.id}
+				let:triggerPopover
+			>
 				<Button
 					variant="ghost"
 					class="absolute top-36 right-4 flex gap-2"

@@ -27,7 +27,12 @@
 		<h4>Add to card</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
 			<AttachPopover itemId={item.id} boardId={item.boardId} />
-			<ItemCoverPopover cover={item.cover} itemId={item.id} let:triggerPopover>
+			<ItemCoverPopover
+				cover={item.cover}
+				attachments={item.attachments.filter((attachment) => attachment.type.startsWith('image/'))}
+				itemId={item.id}
+				let:triggerPopover
+			>
 				<Button
 					variant="secondary"
 					class="flex justify-start items-center gap-2 w-full"
