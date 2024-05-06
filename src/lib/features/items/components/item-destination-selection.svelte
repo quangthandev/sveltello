@@ -51,7 +51,7 @@
 {#if $query.isLoading}
 	<Skeleton class="h-16 rounded-md bg-gray-200" />
 {:else}
-	<div class="relative min-h-[48px] px-4 py-2 rounded-md bg-gray-200">
+	<div class="relative min-h-[48px] px-4 py-2 rounded-md bg-secondary">
 		<div>Board</div>
 		<div>{board?.name}</div>
 		<label for="boardId" class="hidden"> Board </label>
@@ -75,10 +75,10 @@
 	</div>
 {/if}
 {#if $query.isLoading}
-	<Skeleton class="h-16 rounded-md bg-gray-200" />
+	<Skeleton class="h-16 rounded-md bg-secondary" />
 {:else}
 	<div class="flex justify-between gap-2">
-		<div class="relative flex-grow min-h-[48px] px-4 py-2 rounded-md bg-gray-200">
+		<div class="relative flex-grow min-h-[48px] px-4 py-2 rounded-md bg-secondary">
 			<div>List</div>
 			<div>{column?.name || 'No Lists'}</div>
 			{#if column}
@@ -97,7 +97,7 @@
 				</select>
 			{/if}
 		</div>
-		<div class="relative min-h-[48px] px-4 py-2 rounded-md bg-gray-200">
+		<div class="relative min-h-[48px] px-4 py-2 rounded-md bg-secondary">
 			<div>Position</div>
 			<div>{column ? selectedPosIndex : 'N/A'}</div>
 			{#if column}

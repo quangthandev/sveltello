@@ -3,6 +3,7 @@
 	import { useUpdateItem } from '$lib/features/items/query-client/mutations';
 	import type { ItemWithCoverAndAttachments } from '$lib/types';
 	import ListItem from './list-item.svelte';
+	import { cn } from '$lib/utils';
 
 	export let id: string;
 	export let boardName: string;
@@ -88,7 +89,9 @@
 
 <ol
 	bind:this={listEl}
-	class="flex-grow overflow-auto min-h-4"
+	class={cn('flex-grow overflow-auto', {
+		'min-h-8': items.length === 0
+	})}
 	use:dndzone={{
 		items: localItems,
 		flipDurationMs: 300,

@@ -42,9 +42,10 @@
 		</Button>
 	</div>
 	{#if $query.isLoading || $query.isFetching}
-		<div class="flex flex-col gap-2">
-			<Skeleton class={cn('w-full h-16 bg-neutral-200')} />
-			<Skeleton class={cn('w-full h-16 bg-neutral-200')} />
+		<div class="grid grid-cols-3 gap-2">
+			{#each Array.from({ length: 6 }) as _}
+				<Skeleton class={cn('w-full h-16 rounded-md bg-secondary')} />
+			{/each}
 		</div>
 	{:else if $query.data}
 		<PhotosPicker
@@ -61,7 +62,7 @@
 			on:select
 		/>
 	{:else if $query.error}
-		<div class={cn('flex items-center justify-center w-full h-20 text-red-600 bg-neutral-200')}>
+		<div class={cn('flex items-center justify-center w-full h-20 text-red-600 bg-secondary')}>
 			{$query.error.message}
 		</div>
 	{/if}
