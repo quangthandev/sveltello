@@ -104,7 +104,7 @@
 				/>
 			</div>
 			<div>
-				<Label for="new-board-name">Board Title</Label>
+				<Label for="new-board-name" class="block mb-2">Board Title</Label>
 				<Input id="new-board-name" name="name" type="text" required bind:this={inputInstance} />
 			</div>
 			<Button type="submit" class="w-full font-medium" disabled={isSubmitting}>Create</Button>

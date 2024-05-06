@@ -20,7 +20,7 @@
 	let pageState: App.PageState & { id?: string };
 	$: pageState = $page.state;
 
-	function handleClick(e: MouseEvent) {
+	function handleNavigate(e: MouseEvent) {
 		e.preventDefault();
 
 		const { href } = e.currentTarget as HTMLAnchorElement;
@@ -49,7 +49,7 @@
 		'hover:before:border-2 hover:before:border-cyan-500',
 		className
 	)}
-	on:click={handleClick}
+	on:click={handleNavigate}
 >
 	{#if cover}
 		<div class="h-48 bg-cover rounded-t-lg" style:background-image={`url(${cover.url})`}></div>

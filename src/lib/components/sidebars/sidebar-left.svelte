@@ -98,6 +98,7 @@
 					'translate-x-[var(--app-sidebar-width)]': !expanded
 				}
 			)}
+			tabindex={-1}
 			aria-label="expand sidebar"
 			builders={[builder]}
 			on:click={() => dispatch('toggle', true)}

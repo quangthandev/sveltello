@@ -12,7 +12,7 @@
 	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/mutations';
 	import Button from '$lib/components/ui/button/button.svelte';
 
-	export let data: PageData | undefined = undefined;
+	export let data: PageData;
 
 	const queryClient = useQueryClient();
 

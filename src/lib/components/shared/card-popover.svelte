@@ -25,7 +25,7 @@
 					<IconClose />
 				</Popover.Close>
 			</Card.Header>
-			<Card.Content class="p-4">
+			<Card.Content class="px-4">
 				<slot name="content" {open} {close} />
 			</Card.Content>
 		</Card.Root>
