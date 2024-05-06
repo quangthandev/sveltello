@@ -16,8 +16,8 @@
 
 	let makeCoverFromUnsplashFormElm: HTMLFormElement;
 	let makeCoverFromAttachmentFormElm: HTMLFormElement;
-	let attachmentsPicker: PhotosPicker;
-	let unsplashPhotosPicker: UnsplashPhotosPicker;
+	let attachmentsPicker: PhotosPicker | null;
+	let unsplashPhotosPicker: UnsplashPhotosPicker | null;
 
 	const queryClient = useQueryClient();
 
@@ -35,7 +35,7 @@
 		return async ({ update }) => {
 			await update({ invalidateAll: false });
 
-			unsplashPhotosPicker.resetSelection();
+			unsplashPhotosPicker?.resetSelection();
 			queryClient.invalidateQueries({
 				queryKey: ['items', itemId]
 			});
@@ -61,7 +61,7 @@
 		return async ({ update }) => {
 			await update({ invalidateAll: false });
 
-			attachmentsPicker.resetSelection();
+			attachmentsPicker?.resetSelection();
 			queryClient.invalidateQueries({
 				queryKey: ['items', itemId]
 			});

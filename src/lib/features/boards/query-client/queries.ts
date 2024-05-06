@@ -8,9 +8,17 @@ export const useBoards = (initialData: Board[] = []) =>
 		initialData: initialData.map((board) => ({ ...board, columns: [] }))
 	});
 
-export const useBoard = (id: number, initialData?: BoardWithColumns) =>
-	createQuery<BoardWithColumns>({
+export const useBoard = (id: number, initialData?: BoardWithColumns) => {
+	if (!initialData) {
+		return createQuery<BoardWithColumns>({
+			queryKey: ['boards', id],
+			queryFn: async () => (await fetch(`/boards/${id}`)).json()
+		});
+	}
+
+	return createQuery<BoardWithColumns>({
 		queryKey: ['boards', id],
 		queryFn: async () => (await fetch(`/boards/${id}`)).json(),
 		initialData: initialData!
 	});
+};

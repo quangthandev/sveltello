@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { page } from '$app/stores';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import IconClose from '$lib/components/icons/icon-close.svelte';
+	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 	import ItemTitle from './item-title.svelte';
 	import ItemDescription from './item-description.svelte';
 	import ItemActivity from './item-activity.svelte';
@@ -11,11 +11,12 @@
 	import ItemAttachments from './item-attachments.svelte';
 	import { useItem } from '../query-client/queries';
 	import ItemCoverPopover from './item-cover-popover.svelte';
-	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
+	import type { PageData } from '../../../../routes/(user)/items/[id]/$types';
 
 	export let id: string;
+	export let data: PageData | undefined = undefined;
 
-	const query = useItem(id, $page.data.item);
+	const query = useItem(id, data?.item);
 
 	$: item = $query.data;
 	$: isLoading = $query.isLoading || $query.isFetching;

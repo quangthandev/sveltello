@@ -10,15 +10,16 @@
 	import NewList from '$lib/features/columns/components/new-list.svelte';
 	import { useBoard } from '$lib/features/boards/query-client/queries';
 	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/mutations';
+	import Button from '$lib/components/ui/button/button.svelte';
 
-	export let data: PageData;
+	export let data: PageData | undefined = undefined;
 
 	const queryClient = useQueryClient();
 
-	$: query = useBoard(Number($page.params.id), data.board);
+	$: query = useBoard(Number($page.params.id), data?.board);
 
-	$: board = $query.data || data.board;
-	$: columns = $query.data.columns ?? [];
+	$: board = $query.data;
+	$: columns = $query.data?.columns ?? [];
 
 	let sourceIndex: number | null = null;
 
@@ -78,61 +79,66 @@
 	}
 </script>
 
-<div
-	class={cn(
-		'h-full flex flex-col overflow-x-auto select-none',
-		'bg-no-repeat bg-center bg-cover bg-fixed'
-	)}
-	style:background-color={board.color}
-	style:background-image={board.imageFullUrl ? `url(${board.imageFullUrl})` : 'none'}
->
-	<h1>
-		<EditableText
-			action="?/updateBoardName"
-			value={board.name}
-			fieldName="name"
-			class="mx-8 my-4 w-fit"
-			inputClassName="text-2xl font-bold"
-			buttonClassName={cn(
-				'text-2xl font-bold text-left border border-transparent',
-				board.color && board.color.toLowerCase() === '#ffffff'
-					? 'text-black bg-neutral-300'
-					: 'text-white bg-black/50'
-			)}
-			on:submitting={(event) => {
-				queryClient.setQueryData(['boards', Number($page.params.id)], {
-					...board,
-					name: event.detail
-				});
-			}}
-			on:submitted={() => {
-				queryClient.invalidateQueries({
-					queryKey: ['boards', Number($page.params.id)]
-				});
-				queryClient.invalidateQueries({
-					queryKey: ['boards']
-				});
-			}}
-		>
-			<input type="hidden" name="id" value={board.id} />
-		</EditableText>
-	</h1>
-	<div class="flex items-start gap-4 px-8 pb-4">
-		<div
-			use:dndzone={{
-				items: columns,
-				flipDurationMs: 300,
-				type: 'columns'
-			}}
-			on:consider={handleDndConsider}
-			on:finalize={handleDndFinalize}
-			class="flex min-h-0 h-full items-start gap-4"
-		>
-			{#each columns as column (column.id)}
-				<List {column} boardName={board.name} boardId={board.id} />
-			{/each}
-		</div>
+{#if board}
+	<div
+		class={cn(
+			'h-full flex flex-col overflow-x-auto select-none',
+			'bg-no-repeat bg-center bg-cover bg-fixed'
+		)}
+		style:background-color={board.color}
+		style:background-image={board.imageFullUrl ? `url(${board.imageFullUrl})` : 'none'}
+	>
+		<h1>
+			<EditableText
+				action="?/updateBoardName"
+				value={board.name}
+				fieldName="name"
+				class="mx-8 my-4 w-fit"
+				inputClassName="text-2xl font-bold"
+				buttonClassName={cn(
+					'text-2xl font-bold text-left border border-transparent',
+					board.color && board.color.toLowerCase() === '#ffffff'
+						? 'text-black bg-neutral-300'
+						: 'text-white bg-black/50'
+				)}
+				on:submitting={(event) => {
+					queryClient.setQueryData(['boards', Number($page.params.id)], {
+						...board,
+						name: event.detail
+					});
+				}}
+				on:submitted={() => {
+					queryClient.invalidateQueries({
+						queryKey: ['boards', Number($page.params.id)]
+					});
+					queryClient.invalidateQueries({
+						queryKey: ['boards']
+					});
+				}}
+			>
+				<input type="hidden" name="id" value={board.id} />
+			</EditableText>
+		</h1>
+		<div class="flex items-start gap-4 px-8 pb-4">
+			<div
+				use:dndzone={{
+					items: columns,
+					flipDurationMs: 300,
+					type: 'columns'
+				}}
+				on:consider={handleDndConsider}
+				on:finalize={handleDndFinalize}
+				class="flex min-h-0 h-full items-start gap-4"
+			>
+				{#each columns as column (column.id)}
+					<List {column} boardName={board.name} boardId={board.id} />
+				{/each}
+			</div>
 
-		<NewList boardId={board.id} />
+			<NewList boardId={board.id} />
+		</div>
 	</div>
-</div>
+{:else}
+	<p class="text-center mb-4">Something went wrong</p>
+	<Button variant="secondary" on:click={() => $query.refetch()}>Reload</Button>
+{/if}
