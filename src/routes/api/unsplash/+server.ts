@@ -1,12 +1,12 @@
 import { unsplash } from '$lib/server/unsplash';
 import { error, json } from '@sveltejs/kit';
-import { RANDOM_PHOTOS_COUNT } from '$lib/features/unsplash/constants.js';
+import { COLLECTION_IDS, RANDOM_PHOTOS_COUNT } from '$lib/features/unsplash/constants';
 
 export async function GET({ url }) {
 	const count = Number(url.searchParams.get('count'));
 
 	const result = await unsplash.photos.getRandom({
-		collectionIds: ['317099'],
+		collectionIds: COLLECTION_IDS,
 		count: Number.isNaN(count) ? RANDOM_PHOTOS_COUNT : count
 	});
 
