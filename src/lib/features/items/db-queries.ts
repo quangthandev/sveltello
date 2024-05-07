@@ -152,7 +152,7 @@ export async function makeCover(itemId: string, userId: string, options: MakeCov
 		// Update
 		return await db
 			.update(cover)
-			.set({ attachmentId, url: existed.Attachment.url })
+			.set({ attachmentId, url: existed.Attachment.url, unsplashPhotoId: null })
 			.where(eq(cover.itemId, itemId));
 	} else {
 		const { url, unsplashPhotoId } = options;
