@@ -1,13 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import type { Photo } from './types';
 
-	interface Photo {
-		id: string;
-		thumbUrl: string;
-		htmlLink?: string;
-		alt: string | null;
-		username?: string;
-	}
 	export let photos: Photo[];
 	let className: string | undefined = undefined;
 	export { className as class };

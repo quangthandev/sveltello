@@ -3,11 +3,11 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import PhotosPicker from '$lib/components/shared/photos-picker.svelte';
+	import PhotosPicker from '$lib/components/shared/photos-picker/photos-picker.svelte';
 	import UnsplashPhotosPicker from '$lib/features/unsplash/components/unsplash-photos-picker.svelte';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { Attachment, Cover } from '$lib/types';
-	import type { Random } from 'unsplash-js/dist/methods/photos/types';
+	import type { Photo } from '$lib/components/shared/photos-picker/types';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
 
 	export let itemId: string;
@@ -18,6 +18,9 @@
 	let makeCoverFromAttachmentFormElm: HTMLFormElement;
 	let attachmentsPicker: PhotosPicker | null;
 	let unsplashPhotosPicker: UnsplashPhotosPicker | null;
+
+	let photosCount = 6;
+	let selectedUnsplashPhoto: Photo;
 
 	const queryClient = useQueryClient();
 
@@ -42,19 +45,14 @@
 		};
 	};
 
-	const handleMakeCoverFromUnsplash: TypedSubmitFunction<ActionData> = ({ formData }) => {
-		const photos = queryClient.getQueryData<Random[]>(['unsplash-random']);
-
-		if (!photos) {
+	const handleMakeCoverFromUnsplash: TypedSubmitFunction<ActionData> = ({ formData, cancel }) => {
+		if (!selectedUnsplashPhoto) {
+			cancel();
 			return;
 		}
 
-		const selectedPhoto = photos.find((photo) => photo.id === formData.get('photo'));
-
-		if (selectedPhoto) {
-			formData.set('url', selectedPhoto.urls.regular);
-			formData.set('unsplashPhotoId', selectedPhoto.id);
-		}
+		formData.set('url', selectedUnsplashPhoto.thumbUrl);
+		formData.set('unsplashPhotoId', selectedUnsplashPhoto.id);
 
 		formData.delete('photo');
 
@@ -123,7 +121,11 @@
 				title="Photos from Unsplash"
 				visible={open}
 				defaultSelectedId={cover?.unsplashPhotoId}
-				on:select={() => makeCoverFromUnsplashFormElm.requestSubmit()}
+				count={photosCount}
+				on:select={(event) => {
+					selectedUnsplashPhoto = event.detail;
+					makeCoverFromUnsplashFormElm.requestSubmit();
+				}}
 			/>
 		</form>
 	</div>

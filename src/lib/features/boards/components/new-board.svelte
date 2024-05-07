@@ -29,18 +29,18 @@
 	) => {
 		isSubmitting = true;
 
-		const images = queryClient.getQueryData<Random[]>(['unsplash-random']);
-		const selectedImage = images?.find((photo) => photo.id === formData.get('photo'));
+		const photos = queryClient.getQueryData<Random[]>(['unsplash-random-photos']);
+		const selectedPhoto = photos?.find((photo) => photo.id === formData.get('photo'));
 
-		if (selectedImage) {
-			formData.set('imageId', selectedImage.id);
-			formData.set('imageThumbUrl', selectedImage.urls.thumb);
-			formData.set('imageFullUrl', selectedImage.urls.full);
-			formData.set('imageUsername', selectedImage.user.username);
-			formData.set('imageLinkHtml', selectedImage.links.html);
+		if (selectedPhoto) {
+			formData.set('imageId', selectedPhoto.id);
+			formData.set('imageThumbUrl', selectedPhoto.urls.thumb);
+			formData.set('imageFullUrl', selectedPhoto.urls.full);
+			formData.set('imageUsername', selectedPhoto.user.username);
+			formData.set('imageLinkHtml', selectedPhoto.links.html);
 			formData.set(
 				'imageAltDescription',
-				selectedImage.alt_description || `Photo by ${selectedImage.user.name} on Unsplash`
+				selectedPhoto.alt_description || `Photo by ${selectedPhoto.user.name} on Unsplash`
 			);
 		}
 
