@@ -11,7 +11,7 @@
 	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import type { BoardWithColumns } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { ActionData } from '../../../../routes/(user)/boards/[id]/$types';
+	import type { ActionData } from '../../../../routes/(user)/boards/[id=integer]/$types';
 
 	export let id: string;
 	export let name: string;

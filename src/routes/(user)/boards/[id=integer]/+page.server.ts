@@ -16,15 +16,7 @@ import {
 } from '$lib/features/columns/schemas';
 
 export async function load({ locals, params }) {
-	if (!params.id) {
-		throw error(404, 'Board not found');
-	}
-
 	checkAuthUser(locals, `/boards/${params.id}`);
-
-	if (isNaN(Number(params.id))) {
-		throw error(404, 'Board not found');
-	}
 
 	const board = await getBoard(parseInt(params.id), locals.user.id);
 
