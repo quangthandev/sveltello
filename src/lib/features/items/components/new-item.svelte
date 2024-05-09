@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { page } from '$app/stores';
 	import { generateId } from 'lucia';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -29,7 +28,7 @@
 
 		const data: Record<string, unknown> = {
 			id,
-			boardId: parseInt($page.params.id)
+			boardId
 		};
 
 		for (let field of formData) {

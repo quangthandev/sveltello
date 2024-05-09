@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
-	import { tick } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { TypedSubmitFunction } from '$lib/form';
@@ -15,7 +14,7 @@
 
 	export let id: string;
 	export let name: string;
-	export let onAddCard: () => void;
+	export let boardId: number;
 
 	let isCopying = false;
 	let columnToCopyName: HTMLTextAreaElement;
@@ -23,7 +22,7 @@
 
 	const queryClient = useQueryClient();
 
-	$: boardId = Number($page.params.id);
+	const dispatch = createEventDispatcher<{ addCard: void }>();
 
 	const handleCopyList: TypedSubmitFunction<ActionData> = () => {
 		return async ({ update }) => {
@@ -144,7 +143,7 @@
 					<Button
 						variant="ghost"
 						on:click={() => {
-							onAddCard();
+							dispatch('addCard');
 							close();
 						}}
 						class="w-full flex justify-start rounded-none"

@@ -29,7 +29,7 @@
 >
 	<header class="p-2 flex justify-between items-center">
 		<h2 class="w-full"><ListTitle {id} {name} {boardId} /></h2>
-		<ListActionsMenu {id} {name} onAddCard={() => (editing = true)} />
+		<ListActionsMenu {id} {name} {boardId} on:addCard={() => (editing = true)} />
 	</header>
 
 	<ListDropzone {id} {boardName} {boardId} {items} />

@@ -3,6 +3,7 @@
 	import IconArrowRight from '$lib/components/icons/icon-arrow-right.svelte';
 	import IconDelete from '$lib/components/icons/icon-delete.svelte';
 	import IconCopy from '$lib/components/icons/icon-copy.svelte';
+	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 	import { cn } from '$lib/utils';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
@@ -11,12 +12,10 @@
 	import AttachPopover from './attach-popover.svelte';
 	import { useDeleteItem } from '../query-client/mutations';
 	import ItemCoverPopover from './item-cover-popover.svelte';
-	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 
 	export let item: ItemFullPayload;
-	export { className as class };
-
 	let className: string | undefined = '';
+	export { className as class };
 
 	const deleteItemMutation = useDeleteItem(item.boardId);
 </script>

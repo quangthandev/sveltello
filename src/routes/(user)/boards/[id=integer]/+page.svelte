@@ -11,6 +11,7 @@
 	import { useBoard } from '$lib/features/boards/query-client/queries';
 	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/mutations';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { afterNavigate } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -77,6 +78,17 @@
 		// Reset source index
 		sourceIndex = null;
 	}
+
+	// Handle the case it programatically navigates back to this page when user deleted a card
+	afterNavigate(() => {
+		let title = board?.name;
+
+		if (!title) {
+			title = data.title;
+		}
+
+		document.title = `${title} | Sveltello`;
+	});
 </script>
 
 {#if board}
