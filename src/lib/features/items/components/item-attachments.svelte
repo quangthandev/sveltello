@@ -18,7 +18,7 @@
 
 	const deleteAttachmentMutation = useDeleteAttachment($itemDetails.id, $itemDetails.boardId);
 
-	const handleMakeCover: TypedSubmitFunction<ActionData> = ({ formData }) => {
+	const handleMakeOrRemoveCover: TypedSubmitFunction<ActionData> = ({ formData }) => {
 		const attachmentId = formData.get('attachmentId');
 
 		const item = queryClient.getQueryData<ItemFullPayload>(['items', $itemDetails.id]);
@@ -102,9 +102,9 @@
 							</p>
 							{#if attachment.type.startsWith('image/')}
 								<form
-									action={attachment.isCover ? '?/removeCover' : '?/makeCover'}
+									action={attachment.isCover ? '?/removeCover' : '?/makeCoverFromAttachment'}
 									method="post"
-									use:enhance={handleMakeCover}
+									use:enhance={handleMakeOrRemoveCover}
 								>
 									<input type="hidden" name="attachmentId" value={attachment.id} />
 									<Button

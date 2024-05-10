@@ -9,11 +9,15 @@ export async function GET({ params, locals }) {
 
 	checkAuthUser(locals, `/boards/${params.id}`);
 
-	const board = await getBoard(parseInt(params.id), locals.user.id);
+	try {
+		const board = await getBoard(Number(params.id), locals.user.id);
 
-	if (!board) {
-		throw error(404, 'Board not found');
+		if (!board) {
+			throw error(404, 'Board not found');
+		}
+
+		return json(board);
+	} catch (err) {
+		throw error(500, { message: 'Failed to fetch board' });
 	}
-
-	return json(board);
 }

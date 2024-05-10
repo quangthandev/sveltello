@@ -93,7 +93,7 @@
 			<form
 				bind:this={makeCoverFromAttachmentFormElm}
 				method="post"
-				action="?/makeCover"
+				action="?/makeCoverFromAttachment"
 				use:enhance={handleMakeCoverFromAttachment}
 			>
 				<h6 class="text-sm font-medium leading-6 text-gray-900 mb-2">Attachments</h6>

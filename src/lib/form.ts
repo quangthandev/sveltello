@@ -1,5 +1,6 @@
 // Reference: https://github.com/sveltejs/kit/issues/7161
 import type { SubmitFunction } from '@sveltejs/kit';
+import type { ZodRawShape, z } from 'zod';
 
 type SuccessData<T> =
 	T extends Record<string, unknown> ? (T extends { invalid: boolean } ? never : T) : never;
@@ -29,3 +30,10 @@ export type TypedSubmitFunctionWithCallback<T> = SubmitFunctionWithCallback<
 	SuccessData<T>,
 	InvalidData<T>
 >;
+
+export async function safeParseAsyncFormData<T extends ZodRawShape>(
+	formData: FormData,
+	schema: z.ZodObject<T>
+) {
+	return await schema.safeParseAsync(Object.fromEntries(formData));
+}

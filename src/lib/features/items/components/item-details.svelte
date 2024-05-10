@@ -4,15 +4,15 @@
 	import ItemActivity from './item-activity.svelte';
 	import ItemActions from './item-actions.svelte';
 	import ItemAttachments from './item-attachments.svelte';
-	import type { PageData } from '../../../../routes/(user)/items/[id]/$types';
 	import ItemDetailsProvider from './item-details-provider.svelte';
 	import ItemCover from './item-cover.svelte';
+	import type { ItemFullPayload } from '$lib/types';
 
 	export let id: string;
-	export let data: PageData | undefined = undefined;
+	export let initialData: ItemFullPayload | undefined = undefined;
 </script>
 
-<ItemDetailsProvider {id} initialData={data?.item} on:close>
+<ItemDetailsProvider {id} {initialData} on:close>
 	<ItemCover />
 	<div class="p-6 bg-gray-100">
 		<ItemTitle />

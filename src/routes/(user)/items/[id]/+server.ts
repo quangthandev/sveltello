@@ -11,19 +11,23 @@ export async function GET({ locals, params }) {
 
 	checkAuthUser(locals, `/items/${params.id}`);
 
-	const item = await getItem(params.id, locals.user.id);
+	try {
+		const item = await getItem(params.id, locals.user.id);
 
-	if (!item) {
-		throw error(404, 'Board not found');
+		if (!item) {
+			throw error(404, 'Board not found');
+		}
+
+		return json({
+			...item,
+			attachments: (item.attachments ?? []).map((attachment) => ({
+				...attachment,
+				isCover: item.cover?.attachmentId === attachment.id
+			}))
+		});
+	} catch (err) {
+		throw error(500, { message: 'Failed to fetch item' });
 	}
-
-	return json({
-		...item,
-		attachments: (item.attachments ?? []).map((attachment) => ({
-			...attachment,
-			isCover: item.cover?.attachmentId === attachment.id
-		}))
-	});
 }
 
 export async function DELETE({ locals, params }) {

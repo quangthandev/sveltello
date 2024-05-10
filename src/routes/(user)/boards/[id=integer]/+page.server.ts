@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import {
 	copyColumn,
 	deleteColumn,
@@ -14,71 +14,111 @@ import {
 	deleteColumnSchema,
 	updateColumnNameSchema
 } from '$lib/features/columns/schemas';
+import { safeParseAsyncFormData } from '$lib/form.js';
 
 export async function load({ locals, params }) {
 	checkAuthUser(locals, `/boards/${params.id}`);
 
-	const board = await getBoard(parseInt(params.id), locals.user.id);
+	try {
+		const board = await getBoard(Number(params.id), locals.user.id);
 
-	if (!board) {
-		throw error(404, 'Board not found');
+		if (!board) {
+			throw error(404, 'Board not found');
+		}
+
+		const boards = await getBoardsWithColumns(locals.user.id);
+
+		return { title: board.name, board, boards };
+	} catch (err) {
+		throw error(500, { message: 'Failed to fetch board' });
 	}
-
-	const boards = await getBoardsWithColumns(locals.user.id);
-
-	return { title: board.name, board, boards };
 }
 
 export const actions = {
 	updateBoardName: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
 
-		const data = await request.formData();
-		const { name, id } = await updateBoardNameSchema.parseAsync(Object.fromEntries(data));
+		const formData = await request.formData();
+		const result = await safeParseAsyncFormData(formData, updateBoardNameSchema);
 
-		if (!id) {
-			throw error(400, 'Invalid board id');
+		if (!result.success) {
+			return fail(422, { message: result.error.errors[0].message });
 		}
 
-		await updateBoardName(id, name, locals.user.id);
+		const { id, name } = result.data;
+
+		if (!id) {
+			return fail(422, { message: 'Invalid board ID' });
+		}
+
+		try {
+			await updateBoardName(id, name, locals.user.id);
+		} catch (err) {
+			return fail(500, { message: 'Failed to update board name' });
+		}
 	},
 	updateColumnName: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
 
-		const data = await request.formData();
-		const { id, name } = await updateColumnNameSchema.parseAsync(Object.fromEntries(data));
+		const formData = await request.formData();
+		const result = await safeParseAsyncFormData(formData, updateColumnNameSchema);
 
-		if (!id) {
-			throw error(400, 'Invalid column id');
+		if (!result.success) {
+			return fail(422, { message: result.error.errors[0].message });
 		}
 
-		await updateColumnName(id, name, locals.user.id);
+		const { id, name } = result.data;
+
+		if (!id) {
+			return fail(422, { message: 'Invalid column ID' });
+		}
+
+		try {
+			await updateColumnName(id, name, locals.user.id);
+		} catch (err) {
+			return fail(500, { message: 'Failed to update column name' });
+		}
 	},
 	deleteColumn: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
 
-		const data = await request.formData();
+		const formData = await request.formData();
+		const result = await safeParseAsyncFormData(formData, deleteColumnSchema);
 
-		const { id } = await deleteColumnSchema.parseAsync(Object.fromEntries(data));
-
-		if (!id) {
-			throw error(400, 'Invalid column id');
+		if (!result.success) {
+			return fail(422, { message: result.error.errors[0].message });
 		}
 
-		await deleteColumn(id, locals.user.id);
+		const { id } = result.data;
+
+		if (!id) {
+			return fail(422, { message: 'Invalid column ID' });
+		}
+
+		try {
+			await deleteColumn(id, locals.user.id);
+		} catch (err) {
+			return fail(500, { message: 'Failed to update column name' });
+		}
 	},
 	copyColumn: async ({ request, locals, params }) => {
 		checkAuthUser(locals, `/boards/${params.id}`);
 
-		const data = await request.formData();
-		const { id, name } = await copyColumnSchema.parseAsync(Object.fromEntries(data));
+		const formData = await request.formData();
+		const result = await safeParseAsyncFormData(formData, copyColumnSchema);
+
+		if (!result.success) {
+			return fail(422, { message: result.error.errors[0].message });
+		}
+
+		const { id, name } = result.data;
 
 		if (!id) {
-			throw error(400, 'Invalid column id');
+			return fail(422, { message: 'Invalid column ID' });
 		}
 
 		// Check if the board exists
-		const board = await getBoard(parseInt(params.id), locals.user.id);
+		const board = await getBoard(Number(params.id), locals.user.id);
 
 		if (!board) {
 			throw error(404, 'Board not found');
@@ -87,10 +127,7 @@ export const actions = {
 		try {
 			await copyColumn(id, name, board.id, locals.user.id);
 		} catch (err) {
-			if (err instanceof Error) {
-				throw error(400, err.message);
-			}
-			throw error(500, 'Something went wrong. Please try again.');
+			return fail(500, { message: 'Failed to copy column' });
 		}
 	}
 };

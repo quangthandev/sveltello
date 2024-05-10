@@ -20,5 +20,5 @@
 	containerClass={cn('items-start mt-16')}
 	class={cn('w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar')}
 >
-	<ItemDetails id={$page.params.id} on:close={() => goto(previousPage)} />
+	<ItemDetails id={$page.params.id} initialData={data.item} on:close={() => goto(previousPage)} />
 </Modal>
