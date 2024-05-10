@@ -4,9 +4,10 @@
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import PhotosPicker from '$lib/components/shared/photos-picker/photos-picker.svelte';
-	import { RANDOM_PHOTOS_COUNT } from '../constants';
-	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import IconReload from '$lib/components/icons/icon-reload.svelte';
+	import type { Random } from 'unsplash-js/dist/methods/photos/types';
+	import type { Photo } from '$lib/components/shared/photos-picker/types';
+	import { RANDOM_PHOTOS_COUNT } from '../constants';
 
 	export let title: string;
 	export let visible = false;
@@ -46,8 +47,10 @@
 		}
 	}
 
+	let photos: Photo[] | undefined;
 	$: photos = randomPhotos?.slice(0, count).map((photo) => ({
 		id: photo.id,
+		fullUrl: photo.urls.full,
 		thumbUrl: photo.urls.regular,
 		htmlLink: photo.links.html,
 		alt: photo.alt_description,
