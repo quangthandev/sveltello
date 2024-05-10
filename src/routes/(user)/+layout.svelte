@@ -3,8 +3,17 @@
 	import SidebarLeft from '$lib/components/sidebars/sidebar-left.svelte';
 	import { sidebarPreference } from '$lib/stores/sidebar-preference';
 	import { cn } from '$lib/utils';
+	import { Toaster } from '$lib/components/ui/sonner';
+	import { page } from '$app/stores';
+	import { toast } from 'svelte-sonner';
 
 	$: expanded = $sidebarPreference.expanded;
+
+	$: if ($page.form) {
+		if ($page.status >= 400) {
+			toast.error($page.form.message);
+		}
+	}
 </script>
 
 {#if browser}
@@ -25,3 +34,5 @@
 		</main>
 	</div>
 {/if}
+
+<Toaster richColors />
