@@ -8,13 +8,14 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
-	import type { Random } from 'unsplash-js/dist/methods/photos/types';
 	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
+	import type { Photo } from '$lib/components/shared/photos-picker/types';
 	import { createBoardSchema } from '../schemas';
 	import type { ActionData } from '../../../../routes/(user)/boards/$types';
 
 	let isSubmitting = false;
 	let inputInstance: Input | null = null;
+	let selectedPhoto: Photo | null = null;
 
 	const queryClient = useQueryClient();
 
@@ -29,18 +30,15 @@
 	) => {
 		isSubmitting = true;
 
-		const photos = queryClient.getQueryData<Random[]>(['unsplash-random-photos']);
-		const selectedPhoto = photos?.find((photo) => photo.id === formData.get('photo'));
-
 		if (selectedPhoto) {
 			formData.set('imageId', selectedPhoto.id);
-			formData.set('imageThumbUrl', selectedPhoto.urls.thumb);
-			formData.set('imageFullUrl', selectedPhoto.urls.full);
-			formData.set('imageUsername', selectedPhoto.user.username);
-			formData.set('imageLinkHtml', selectedPhoto.links.html);
+			formData.set('imageThumbUrl', selectedPhoto.thumbUrl);
+			formData.set('imageFullUrl', selectedPhoto.fullUrl!);
+			formData.set('imageUsername', selectedPhoto.username!);
+			formData.set('imageLinkHtml', selectedPhoto.htmlLink!);
 			formData.set(
 				'imageAltDescription',
-				selectedPhoto.alt_description || `Photo by ${selectedPhoto.user.name} on Unsplash`
+				selectedPhoto.alt || `Photo by ${selectedPhoto.username} on Unsplash`
 			);
 		}
 
@@ -92,7 +90,11 @@
 			action="/boards?/create"
 			use:enhance={(input) => handleSubmit(input, { onSuccess: close })}
 		>
-			<UnsplashPhotosPicker title="Background" visible={open} />
+			<UnsplashPhotosPicker
+				title="Background"
+				visible={open}
+				on:select={(event) => (selectedPhoto = event.detail)}
+			/>
 			<div class="flex items-center gap-1">
 				<label for="new-board-color" class="text-sm font-medium"> Color </label>
 				<input
