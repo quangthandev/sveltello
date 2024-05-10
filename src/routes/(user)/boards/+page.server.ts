@@ -38,8 +38,10 @@ export const actions = {
 			imageAltDescription
 		} = result.data;
 
+		let newBoard;
+
 		try {
-			const newBoard = await createBoard(
+			newBoard = await createBoard(
 				locals.user.id,
 				name,
 				color,
@@ -50,10 +52,12 @@ export const actions = {
 				imageLinkHtml,
 				imageAltDescription
 			);
-
-			redirect(303, `/boards/${newBoard.id}`);
 		} catch (err) {
 			return fail(500, { message: 'Failed to create board' });
+		}
+
+		if (newBoard) {
+			redirect(303, `/boards/${newBoard.id}`);
 		}
 	},
 	delete: async ({ locals, request }) => {
