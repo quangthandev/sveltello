@@ -12,3 +12,6 @@ vite.config.ts.timestamp-*
 dev.db
 dev.db-journal
 /.VSCodeCounter
+
+# Sentry Config File
+.sentryclirc
