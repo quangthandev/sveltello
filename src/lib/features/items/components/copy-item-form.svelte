@@ -3,12 +3,13 @@
 	import { enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
-	import type { ItemWithColumn } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ItemDestinationSelection from './item-destination-selection.svelte';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let item: ItemWithColumn;
 	export let initialPosIndex: number;
+
+	const itemDetails = getItemDetailsContext();
 
 	let textarea: HTMLTextAreaElement;
 
@@ -36,15 +37,15 @@
 			await update({ invalidateAll: false });
 
 			queryClient.invalidateQueries({
-				queryKey: ['boards', item.boardId]
+				queryKey: ['boards', $itemDetails.boardId]
 			});
 			queryClient.invalidateQueries({
-				queryKey: ['items', item.id]
+				queryKey: ['items', $itemDetails.id]
 			});
 
 			isSubmitting = false;
 			dispatch('close');
-			goto(`/boards/${item.boardId}`);
+			goto(`/boards/${$itemDetails.boardId}`);
 		};
 	}}
 >
@@ -55,13 +56,12 @@
 			id="title"
 			rows="3"
 			class="w-full bg-gray-200 mt-2 px-4 py-2"
-			value={item.title}
+			value={$itemDetails.title}
 			bind:this={textarea}
 		></textarea>
 	</fieldset>
 	<h4>Copy to...</h4>
 	<ItemDestinationSelection
-		{item}
 		{initialPosIndex}
 		on:validate={(e) => {
 			isValid = e.detail.isValid;

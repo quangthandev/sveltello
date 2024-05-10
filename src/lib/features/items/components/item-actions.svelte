@@ -7,17 +7,17 @@
 	import { cn } from '$lib/utils';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
-	import type { ItemFullPayload } from '$lib/types';
 	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
 	import AttachPopover from './attach-popover.svelte';
 	import { useDeleteItem } from '../query-client/mutations';
 	import ItemCoverPopover from './item-cover-popover.svelte';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let item: ItemFullPayload;
+	const itemDetails = getItemDetailsContext();
 	let className: string | undefined = '';
 	export { className as class };
 
-	const deleteItemMutation = useDeleteItem(item.boardId);
+	const deleteItemMutation = useDeleteItem($itemDetails.boardId);
 </script>
 
 <div class="flex flex-col gap-8">
@@ -25,11 +25,13 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Add to card</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<AttachPopover itemId={item.id} boardId={item.boardId} />
+			<AttachPopover itemId={$itemDetails.id} boardId={$itemDetails.boardId} />
 			<ItemCoverPopover
-				cover={item.cover}
-				attachments={item.attachments.filter((attachment) => attachment.type.startsWith('image/'))}
-				itemId={item.id}
+				cover={$itemDetails.cover}
+				attachments={$itemDetails.attachments.filter((attachment) =>
+					attachment.type.startsWith('image/')
+				)}
+				itemId={$itemDetails.id}
 				let:triggerPopover
 			>
 				<Button
@@ -48,7 +50,7 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Actions</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<MoveOrCopyItemPopover {item} let:trigger={triggerPopover}>
+			<MoveOrCopyItemPopover let:trigger={triggerPopover}>
 				<Button
 					variant="secondary"
 					builders={[{ action: triggerPopover }]}
@@ -58,7 +60,7 @@
 					Move
 				</Button>
 			</MoveOrCopyItemPopover>
-			<MoveOrCopyItemPopover {item} action="copy" let:trigger={triggerPopover}>
+			<MoveOrCopyItemPopover action="copy" let:trigger={triggerPopover}>
 				<Button
 					variant="secondary"
 					builders={[{ action: triggerPopover }]}
@@ -85,9 +87,9 @@
 						class="w-full"
 						disabled={$deleteItemMutation.isPending}
 						on:click={async () => {
-							await $deleteItemMutation.mutateAsync(item.id);
+							await $deleteItemMutation.mutateAsync($itemDetails.id);
 
-							goto(`/boards/${item.boardId}`);
+							goto(`/boards/${$itemDetails.boardId}`);
 						}}
 					>
 						Delete

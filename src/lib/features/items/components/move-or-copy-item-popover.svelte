@@ -1,44 +1,43 @@
 <script lang="ts">
-	import { capitalize } from '$lib/utils';
-	import { useQueryClient } from '@tanstack/svelte-query';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
-	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
+	import { useBoard } from '$lib/features/boards/query-client/queries';
 	import MoveItemSuggestion from './move-item-suggestion.svelte';
 	import MoveItemForm from './move-item-form.svelte';
 	import CopyItemForm from './copy-item-form.svelte';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	type ActionType = 'move' | 'copy';
-	export let action: ActionType = 'move';
-	export let item: ItemWithColumn;
+	export let action: 'move' | 'copy' = 'move';
 
-	const queryClient = useQueryClient();
+	const itemDetails = getItemDetailsContext();
 
-	const board = queryClient.getQueryData<BoardWithColumns>(['boards', item.boardId]);
-	const column = (board?.columns ?? []).find((column) => column.id === item.columnId);
+	const boardQuery = useBoard($itemDetails.boardId);
+	$: column = ($boardQuery.data?.columns ?? []).find(
+		(column) => column.id === $itemDetails.columnId
+	);
 
 	let initialPosIndex = 0;
 	$: {
 		if (column) {
-			initialPosIndex = column.items.findIndex((i) => i.id === item.id) + 1;
+			initialPosIndex = column.items.findIndex((i) => i.id === $itemDetails.id) + 1;
 		}
 	}
 </script>
 
-<CardPopover title={`${capitalize(action)} card`} let:trigger class="w-96 z-50">
+<CardPopover title={`${action} card`} let:trigger class="capitalize w-96 z-50">
 	<slot {trigger} />
 	<div slot="content">
 		{#if action === 'move'}
 			<section class="flex flex-col gap-2 px-4 py-2">
-				<MoveItemSuggestion {item} />
+				<MoveItemSuggestion />
 			</section>
 			<section class="flex flex-col gap-2 px-4 py-2">
 				<h4>Select destination</h4>
 
-				<MoveItemForm {item} {initialPosIndex} on:close={close} />
+				<MoveItemForm {initialPosIndex} on:close={close} />
 			</section>
 		{:else}
 			<section class="flex flex-col gap-2 px-4 py-2">
-				<CopyItemForm {item} {initialPosIndex} />
+				<CopyItemForm {initialPosIndex} />
 			</section>
 		{/if}
 	</div>

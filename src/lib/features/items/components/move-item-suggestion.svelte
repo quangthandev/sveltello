@@ -2,23 +2,24 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import IconArrowLeft from '$lib/components/icons/icon-arrow-left.svelte';
 	import IconArrowRight from '$lib/components/icons/icon-arrow-right.svelte';
-	import { useMoveItem } from '../query-client/mutations';
-	import type { Column } from '$lib/types';
-	import type { BoardWithColumns, ItemWithColumn } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import type { Column } from '$lib/types';
+	import type { BoardWithColumns } from '$lib/types';
+	import { useMoveItem } from '../query-client/mutations';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let item: ItemWithColumn;
+	const itemDetails = getItemDetailsContext();
 
 	const queryClient = useQueryClient();
 
-	const board = queryClient.getQueryData<BoardWithColumns>(['boards', item.boardId]);
+	const board = queryClient.getQueryData<BoardWithColumns>(['boards', $itemDetails.boardId]);
 	const columns = board?.columns ?? [];
 
 	let suggestedColumn: Column | undefined;
 	let isMoving = false;
 
 	if (columns.length > 1) {
-		const columnIndex = columns.findIndex((column) => column.id === item.columnId) ?? -1;
+		const columnIndex = columns.findIndex((column) => column.id === $itemDetails.columnId) ?? -1;
 
 		if (columnIndex > -1) {
 			const nextColumn = columns[columnIndex + 1];
@@ -31,8 +32,8 @@
 	}
 
 	const moveItemMutation = useMoveItem({
-		id: item.id,
-		boardId: item.boardId,
+		id: $itemDetails.id,
+		boardId: $itemDetails.boardId,
 		onMutate: () => {
 			isMoving = true;
 		},
@@ -56,7 +57,7 @@
 		disabled={isMoving}
 		class="flex justify-start items-center gap-2 w-full min-h-[40px]"
 	>
-		{#if item.column.order < suggestedColumn.order}
+		{#if $itemDetails.column.order < suggestedColumn.order}
 			<IconArrowRight />
 		{:else}
 			<IconArrowLeft />

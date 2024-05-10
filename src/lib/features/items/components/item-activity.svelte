@@ -2,9 +2,9 @@
 	import { page } from '$app/stores';
 	import Avatar from '$lib/components/ui/avatar.svelte';
 	import { formatTimestamp } from '$lib/utils';
-	import type { ItemFullPayload } from '$lib/types';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let item: ItemFullPayload;
+	const itemDetails = getItemDetailsContext();
 </script>
 
 <section class="grid grid-cols-item-section items-start w-full">
@@ -30,10 +30,10 @@
 				<div>
 					<p class="hyphens-auto">
 						<span class="font-bold">{$page.data.user.email}</span> added this card to
-						<span class="font-medium">{item.column.name}</span>
+						<span class="font-medium">{$itemDetails.column.name}</span>
 					</p>
 					<p class="text-sm text-muted-foreground">
-						{formatTimestamp(item.createdAt)}
+						{formatTimestamp($itemDetails.createdAt)}
 					</p>
 				</div>
 			</li>

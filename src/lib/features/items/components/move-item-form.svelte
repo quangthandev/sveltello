@@ -4,12 +4,14 @@
 	import { goto } from '$app/navigation';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { ItemWithColumn } from '$lib/types';
 	import ItemDestinationSelection from './item-destination-selection.svelte';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let item: ItemWithColumn;
 	export let initialPosIndex: number;
-	const { boardId } = item;
+
+	const itemDetails = getItemDetailsContext();
+
+	const { boardId } = $itemDetails;
 
 	const queryClient = useQueryClient();
 
@@ -34,7 +36,7 @@
 				queryKey: ['boards', boardId]
 			});
 			queryClient.invalidateQueries({
-				queryKey: ['items', item.id]
+				queryKey: ['items', $itemDetails.id]
 			});
 
 			isSubmitting = false;
@@ -43,9 +45,8 @@
 		};
 	}}
 >
-	<input type="title" hidden name="title" value={item.title} />
+	<input type="title" hidden name="title" value={$itemDetails.title} />
 	<ItemDestinationSelection
-		{item}
 		{initialPosIndex}
 		on:validate={(e) => {
 			isValid = e.detail.isValid;

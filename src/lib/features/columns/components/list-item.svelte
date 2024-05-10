@@ -3,9 +3,8 @@
 	import { page } from '$app/stores';
 	import Modal from '$lib/components/ui/modal.svelte';
 	import { cn } from '$lib/utils';
-	import { useQueryClient } from '@tanstack/svelte-query';
 	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
-	import type { ItemWithColumn, ItemWithCoverAndAttachments } from '$lib/types';
+	import type { ItemWithCoverAndAttachments } from '$lib/types';
 	import ItemDetails from '$lib/features/items/components/item-details.svelte';
 
 	export let item: ItemWithCoverAndAttachments;
@@ -15,8 +14,6 @@
 
 	$: ({ id, title, content, attachments, cover } = item);
 
-	const queryClient = useQueryClient();
-
 	let pageState: App.PageState & { id?: string };
 	$: pageState = $page.state;
 
@@ -24,14 +21,6 @@
 		e.preventDefault();
 
 		const { href } = e.currentTarget as HTMLAnchorElement;
-
-		queryClient.prefetchQuery<ItemWithColumn>({
-			queryKey: ['items', id],
-			queryFn: async () => {
-				const res = await fetch(`/items/${id}`);
-				return res.json();
-			}
-		});
 
 		// Shallow routing
 		pushState(href, { id });

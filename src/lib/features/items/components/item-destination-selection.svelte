@@ -3,11 +3,14 @@
 	import { page } from '$app/stores';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import { useBoards } from '$lib/features/boards/query-client/queries';
-	import type { BoardWithColumns, ColumnWithItems, ItemWithColumn } from '$lib/types';
+	import type { BoardWithColumns, ColumnWithItems } from '$lib/types';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let item: ItemWithColumn;
 	export let initialPosIndex: number;
-	const { boardId, columnId } = item;
+
+	const itemDetails = getItemDetailsContext();
+
+	const { boardId, columnId } = $itemDetails;
 
 	const query = useBoards($page.data.boards);
 

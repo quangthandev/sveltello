@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import EditableText from '$lib/components/shared/editable-text.svelte';
-	import type { ItemFullPayload } from '$lib/types';
 	import ItemSubtitle from './item-subtitle.svelte';
+	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let item: ItemFullPayload;
-	$: ({ id, boardId, title } = item);
+	const itemDetails = getItemDetailsContext();
 
 	const queryClient = useQueryClient();
 </script>
@@ -34,14 +33,14 @@
 					action="?/updateItemTitle"
 					invalidateAll={false}
 					fieldName="title"
-					value={title}
+					value={$itemDetails.title}
 					inputClassName="text-xl w-full font-medium"
 					buttonClassName="text-xl block text-left w-full font-medium"
 					on:submitting={(event) => {
-						const prevItemData = queryClient.getQueryData(['items', id]);
+						const prevItemData = queryClient.getQueryData(['items', $itemDetails.id]);
 
 						if (prevItemData) {
-							queryClient.setQueryData(['items', id], {
+							queryClient.setQueryData(['items', $itemDetails.id], {
 								...prevItemData,
 								title: event.detail
 							});
@@ -49,17 +48,17 @@
 					}}
 					on:submitted={() => {
 						queryClient.invalidateQueries({
-							queryKey: ['items', id]
+							queryKey: ['items', $itemDetails.id]
 						});
 						queryClient.invalidateQueries({
-							queryKey: ['boards', boardId]
+							queryKey: ['boards', $itemDetails.boardId]
 						});
 					}}
 				>
-					<input type="hidden" name="id" value={id} />
+					<input type="hidden" name="id" value={$itemDetails.id} />
 				</EditableText>
 			</h3>
-			<ItemSubtitle {item} />
+			<ItemSubtitle />
 		</div>
 	</div>
 </div>
