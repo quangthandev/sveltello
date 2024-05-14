@@ -4,6 +4,7 @@ import type { Config } from 'drizzle-kit';
 dotenv.config();
 
 export default {
+	dialect: 'sqlite',
 	schema: './src/lib/drizzle/schema.ts',
 	driver: 'turso',
 	out: './src/lib/drizzle/data',
