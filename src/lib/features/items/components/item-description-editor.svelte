@@ -21,7 +21,13 @@
 
 	const dispatch = createEventDispatcher();
 
-	const turndownService = new TurndownService();
+	const turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
+	turndownService.addRule('codeblock', {
+		filter: ['pre'],
+		replacement: function (content) {
+			return '```\n' + content.trim() + '\n```';
+		}
+	});
 	const md = markdownit();
 
 	const queryClient = useQueryClient();
@@ -31,7 +37,8 @@
 	const handleSubmit: TypedSubmitFunction<ActionData> = async ({ formData }) => {
 		isSubmitting = true;
 
-		const html = textEditor.getHTML();
+		let html = textEditor.getHTML();
+
 		const markdown = turndownService.turndown(html);
 
 		formData.append('content', markdown);
