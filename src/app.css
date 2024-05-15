@@ -15,6 +15,14 @@ blockquote {
 	@apply border-l-4 border-gray-400 pl-4 my-2;
 }
 
+pre {
+	@apply bg-black text-white overflow-visible my-1 px-2 py-1 rounded-sm;
+}
+
+pre > code {
+	@apply bg-transparent text-white p-0;
+}
+
 @layer base {
 	:root {
 		--app-header-height: 4rem;
