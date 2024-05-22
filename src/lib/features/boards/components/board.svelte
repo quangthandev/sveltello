@@ -48,7 +48,7 @@
 	class={cn(
 		'block relative p-4 border-b-8 shadow rounded aspect-video',
 		'bg-no-repeat bg-center bg-cover',
-		'hover:shadow-lg hover:-translate-y-1 focus-within:-translate-y-1 hover:outline hover:outline-primary duration-200 will-change-transform',
+		'hover:shadow-lg hover:outline hover:outline-primary duration-200 will-change-transform',
 		imageThumbUrl ? 'text-white' : 'bg-white text-black',
 		className
 	)}

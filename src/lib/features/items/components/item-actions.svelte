@@ -26,23 +26,25 @@
 		<h4>Add to card</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
 			<AttachPopover itemId={$itemDetails.id} boardId={$itemDetails.boardId} />
-			<ItemCoverPopover
-				cover={$itemDetails.cover}
-				attachments={$itemDetails.attachments.filter((attachment) =>
-					attachment.type.startsWith('image/')
-				)}
-				itemId={$itemDetails.id}
-				let:triggerPopover
-			>
-				<Button
-					variant="secondary"
-					class="flex justify-start items-center gap-2 w-full"
-					builders={[{ action: triggerPopover }]}
+			{#if !$itemDetails.cover}
+				<ItemCoverPopover
+					cover={$itemDetails.cover}
+					attachments={$itemDetails.attachments.filter((attachment) =>
+						attachment.type.startsWith('image/')
+					)}
+					itemId={$itemDetails.id}
+					let:triggerPopover
 				>
-					<IconDockTop />
-					Cover
-				</Button>
-			</ItemCoverPopover>
+					<Button
+						variant="secondary"
+						class="flex justify-start items-center gap-2 w-full"
+						builders={[{ action: triggerPopover }]}
+					>
+						<IconDockTop />
+						Cover
+					</Button>
+				</ItemCoverPopover>
+			{/if}
 		</div>
 	</div>
 

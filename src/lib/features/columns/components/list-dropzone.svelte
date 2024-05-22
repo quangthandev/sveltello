@@ -11,7 +11,6 @@
 	export let items: ItemWithCoverAndAttachments[];
 
 	let localItems: ItemWithCoverAndAttachments[] = items;
-	let listEl: HTMLOListElement;
 	let sourceIndex: number | null = null;
 
 	$: if (items) {
@@ -88,7 +87,6 @@
 </script>
 
 <ol
-	bind:this={listEl}
 	class={cn('flex-grow overflow-auto', {
 		'min-h-8': items.length === 0
 	})}
