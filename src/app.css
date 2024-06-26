@@ -122,6 +122,22 @@ pre > code {
 		@apply absolute top-1/2 left-1/2 w-[30px] h-[30px] mt-[-15px] ml-[-15px] border-2 border-solid border-gray-300 border-t-[#1e986c] rounded-full animate-spin;
 		content: '';
 	}
+
+	.sidebar-left {
+		transform: var(--sidebar-left-transform);
+	}
+
+	.main-content {
+		padding-left: var(--main-content-padding-left);
+	}
+
+	.sidebar-left-toggler-btn {
+		visibility: var(--sidebar-left-toggler-btn-visibility);
+	}
+
+	.sidebar-left-toggler-bar {
+		transform: var(--sidebar-left-toggler-bar-transform);
+	}
 }
 
 @layer utilities {

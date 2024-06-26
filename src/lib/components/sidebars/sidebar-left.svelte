@@ -51,9 +51,7 @@
 		size="icon"
 		class={cn(
 			'fixed z-30 rounded-full translate-y-4 bg-slate-700 hover:bg-slate-500 text-white shadow-md',
-			{
-				hidden: expanded
-			}
+			'sidebar-left-toggler-btn'
 		)}
 		aria-label="expand sidebar"
 		builders={[builder]}
@@ -65,10 +63,7 @@
 <aside
 	class={cn(
 		'fixed bg-slate-700 text-white z-10 w-appSidebar h-full duration-200 will-change-transform border-r-2 border-r-slate-600',
-		{
-			'translate-x-0': expanded,
-			'-translate-x-full': !expanded
-		}
+		'sidebar-left'
 	)}
 >
 	<div class="flex justify-end px-2 py-4 border-b-2 border-b-slate-400">
@@ -93,10 +88,7 @@
 			size="sm"
 			class={cn(
 				'absolute inset-0 w-5 h-full p-0 rounded-none bg-slate-700 hover:bg-slate-500 duration-200 will-change-transform',
-				{
-					'-translate-x-full': expanded,
-					'translate-x-[var(--app-sidebar-width)]': !expanded
-				}
+				'sidebar-left-toggler-bar'
 			)}
 			tabindex={-1}
 			aria-label="expand sidebar"

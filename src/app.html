@@ -5,6 +5,30 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		%sveltekit.head%
+		<script>
+			// Get user's sidebar preference from local storage and set relevant CSS variables
+			// This is to prevent FOUC on page load
+			try {
+				const sidebar = JSON.parse(localStorage.getItem('sidebar-preference'));
+
+				const root = document.documentElement;
+
+				if (sidebar.expanded) {
+					root.style.setProperty('--sidebar-left-transform', 'translateX(0)');
+					root.style.setProperty('--main-content-padding-left', 'var(--app-sidebar-width)');
+					root.style.setProperty('--sidebar-left-toggler-btn-visibility', 'hidden');
+					root.style.setProperty('--sidebar-left-toggler-bar-transform', 'translateX(-100%)');
+				} else {
+					root.style.setProperty('--sidebar-left-transform', 'translateX(-100%)');
+					root.style.setProperty('--main-content-padding-left', '1rem');
+					root.style.setProperty('--sidebar-left-toggler-btn-visibility', 'visible');
+					root.style.setProperty(
+						'--sidebar-left-toggler-bar-transform',
+						'translateX(var(--app-sidebar-width))'
+					);
+				}
+			} catch (e) {}
+		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover" class="bg-slate-100 text-slate-900">
 		<div style="display: contents" class="h-full flex flex-col min-h-0">%sveltekit.body%</div>
