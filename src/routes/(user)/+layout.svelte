@@ -6,6 +6,9 @@
 	import { page } from '$app/stores';
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
+	import type { LayoutData } from './$types';
+
+	export let data: LayoutData;
 
 	$: expanded = !!$sidebarPreference?.expanded;
 
@@ -40,6 +43,7 @@
 <div class="flex flex-grow h-full">
 	<SidebarLeft
 		{expanded}
+		initialBoards={data.boards}
 		on:toggle={(event) => {
 			sidebarPreference.set({ expanded: event.detail });
 		}}

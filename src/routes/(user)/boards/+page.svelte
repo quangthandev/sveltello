@@ -4,10 +4,11 @@
 	import { useBoards } from '$lib/features/boards/query-client/queries';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { toast } from 'svelte-sonner';
+	import type { LayoutData } from '../$types';
 
-	export let data;
+	export let data: LayoutData;
 
-	const query = useBoards(data.boards);
+	$: query = useBoards(data.boards);
 
 	$: if ($query.isError) {
 		toast.error($query.error.message);

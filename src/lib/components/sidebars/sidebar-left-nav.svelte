@@ -6,8 +6,11 @@
 	import NewBoard from '$lib/features/boards/components/new-board.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import IconPlus from '$lib/components/icons/icon-plus.svelte';
+	import type { Board } from '$lib/types';
 
-	const boardsQuery = useBoards();
+	export let initialBoards: Board[];
+
+	const boardsQuery = useBoards(initialBoards);
 </script>
 
 <nav class="relative z-10 p-2">

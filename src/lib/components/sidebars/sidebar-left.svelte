@@ -6,8 +6,11 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import SidebarLeftToggler from './sidebar-left-toggler.svelte';
 	import SidebarLeftNav from './sidebar-left-nav.svelte';
+	import type { Board } from '$lib/types';
 
 	export let expanded: boolean;
+	export let initialBoards: Board[];
+
 	let btnCollapse: Button;
 
 	const dispatch = createEventDispatcher<{ toggle: boolean }>();
@@ -81,7 +84,7 @@
 			</Button>
 		</SidebarLeftToggler>
 	</div>
-	<SidebarLeftNav />
+	<SidebarLeftNav {initialBoards} />
 	<SidebarLeftToggler tooltip="Expand sidebar" let:builder>
 		<Button
 			variant="secondary"
