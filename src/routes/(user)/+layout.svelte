@@ -7,7 +7,7 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 
-	$: expanded = $sidebarPreference.expanded;
+	$: expanded = !!$sidebarPreference?.expanded;
 
 	$: if ($page.form) {
 		if ($page.status >= 400) {
