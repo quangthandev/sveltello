@@ -4,8 +4,10 @@
 	import Modal from '$lib/components/ui/modal.svelte';
 	import { cn } from '$lib/utils';
 	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
-	import type { ItemWithCoverAndAttachments } from '$lib/types';
+	import { type ItemFullPayload, type ItemWithCoverAndAttachments } from '$lib/types';
 	import ItemDetails from '$lib/features/items/components/item-details.svelte';
+	import { useQueryClient } from '@tanstack/svelte-query';
+	import { useItemQueryOptions } from '$lib/features/items/query-client/queries';
 
 	export let item: ItemWithCoverAndAttachments;
 	export let boardName: string;
@@ -16,6 +18,16 @@
 
 	let pageState: App.PageState & { id?: string };
 	$: pageState = $page.state;
+
+	const queryClient = useQueryClient();
+
+	function handleMouseEnter() {
+		const data = queryClient.getQueryData(useItemQueryOptions(id).queryKey);
+
+		if (!data) {
+			queryClient.prefetchQuery<ItemFullPayload>(useItemQueryOptions(id));
+		}
+	}
 
 	function handleNavigate(e: MouseEvent) {
 		e.preventDefault();
@@ -30,7 +42,12 @@
 	}
 </script>
 
+<!-- Since shallow routing is being used, we turn off data preload -->
+<!-- and manually prefetch client-side on hover instead -->
 <a
+	data-sveltekit-preload-data="off"
+	on:mouseenter={handleMouseEnter}
+	on:touchstart={handleMouseEnter}
 	href="/items/{id}"
 	class={cn(
 		'relative border-t-2 border-b-2 -mb-[2px] last:mb-0 px-2 py-1 border-t-transparent border-b-transparent',
