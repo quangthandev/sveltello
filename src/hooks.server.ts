@@ -6,7 +6,8 @@ import { PUBLIC_SENTRY_DSN } from '$env/static/public';
 
 Sentry.init({
 	dsn: PUBLIC_SENTRY_DSN,
-	tracesSampleRate: 1
+	tracesSampleRate: 1,
+	enabled: process.env.NODE_ENV === 'production'
 });
 
 const PUBLIC_ROUTES = ['/', '/login', '/signup'];
