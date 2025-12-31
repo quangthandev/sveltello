@@ -58,6 +58,14 @@
 	title={isCopying ? 'Copy List' : 'List actions'}
 	targetId={popoverTargetId}
 	let:targetId
+	on:toggle={(event) => {
+		const open = event.detail;
+
+		// Reset copying state on close
+		if (!open) {
+			isCopying = false;
+		}
+	}}
 	class={cn('relative', {
 		'px-0': !isCopying
 	})}
