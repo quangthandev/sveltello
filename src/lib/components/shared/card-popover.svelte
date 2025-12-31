@@ -2,18 +2,24 @@
 	import PopoverNative from '../ui/popover-native.svelte';
 	import { cn } from '$lib/utils';
 	import IconClose from '$lib/components/icons/icon-close.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	export let targetId: string;
 	let className: string | undefined = '';
 	export { className as class };
 
 	export let title: string;
+
+	const dispatch = createEventDispatcher<{
+		toggle: boolean;
+	}>();
 </script>
 
 <PopoverNative
 	asChild
 	{targetId}
 	let:targetId
+	on:toggle={(event) => dispatch('toggle', event.detail)}
 	class={cn('space-y-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm', className)}
 >
 	<slot {targetId} />

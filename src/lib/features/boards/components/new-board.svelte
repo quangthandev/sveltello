@@ -21,11 +21,6 @@
 
 	const queryClient = useQueryClient();
 
-	const handleOpen = async () => {
-		await tick();
-		inputInstance?.focus();
-	};
-
 	const handleSubmit: TypedSubmitFunctionWithCallback<ActionData> = (
 		{ formData, cancel },
 		{ onSuccess: onSuccess }
@@ -75,9 +70,19 @@
 	};
 </script>
 
-<CardPopover title="Create Board" {targetId} let:targetId class="w-96">
+<CardPopover
+	title="Create Board"
+	{targetId}
+	let:targetId
+	class="w-96"
+	on:toggle={async (event) => {
+		if (event.detail) {
+			await tick();
+			inputInstance?.focus();
+		}
+	}}
+>
 	<slot {targetId} />
-
 	<svelte:fragment slot="content" let:open>
 		<form
 			class="max-w-md space-y-4"

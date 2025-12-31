@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let asChild = false;
 	export let targetId = Math.random().toString(36).substring(2);
@@ -10,6 +10,10 @@
 
 	let open = false;
 
+	const dispatch = createEventDispatcher<{
+		toggle: boolean;
+	}>();
+
 	onMount(() => {
 		const targetElement = document.getElementById(targetId);
 
@@ -17,6 +21,7 @@
 
 		function handleToggle(event: ToggleEvent) {
 			open = event.newState === 'open';
+			dispatch('toggle', open);
 		}
 
 		targetElement.addEventListener('toggle', handleToggle);
