@@ -79,10 +79,14 @@
 									Added {getRelativeTime(attachment.createdAt)}
 								</span>
 								<span>
-									<CardPopover title="Delete Attachment" let:trigger={triggerPopover}>
+									<CardPopover
+										title="Delete Attachment"
+										targetId={`${$itemDetails.id}_attachment`}
+										let:targetId
+									>
 										<Button
 											variant="ghost"
-											builders={[{ action: triggerPopover }]}
+											popovertarget={targetId}
 											class="underline hover:bg-transparent">Delete</Button
 										>
 										<div slot="content" class="space-y-4">

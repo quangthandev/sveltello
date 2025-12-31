@@ -43,8 +43,7 @@
 	};
 </script>
 
-<a
-	href={`/boards/${id}`}
+<div
 	class={cn(
 		'block relative p-4 border-b-8 shadow rounded aspect-video',
 		'bg-no-repeat bg-center bg-cover',
@@ -55,12 +54,12 @@
 	style:border-color={color}
 	style:background-image={imageThumbUrl ? `url(${imageThumbUrl})` : 'none'}
 >
-	<div class="font-bold">{name}</div>
-	<CardPopover title="Delete board" let:trigger={triggerPopover}>
+	<a href={`/boards/${id}`} class="font-bold after:absolute after:inset-0">{name}</a>
+	<CardPopover title="Delete board" targetId={`board_${board.id}`} let:targetId>
 		<Button
 			variant="ghost"
 			size="icon"
-			builders={[{ action: triggerPopover }]}
+			popovertarget={targetId}
 			aria-label="Delete board"
 			class="absolute top-2 right-2 text-muted-foreground"
 		>
@@ -76,4 +75,4 @@
 			</form>
 		</div>
 	</CardPopover>
-</a>
+</div>

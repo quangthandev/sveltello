@@ -33,12 +33,12 @@
 						attachment.type.startsWith('image/')
 					)}
 					itemId={$itemDetails.id}
-					let:triggerPopover
+					let:targetId
 				>
 					<Button
 						variant="secondary"
 						class="flex justify-start items-center gap-2 w-full"
-						builders={[{ action: triggerPopover }]}
+						popovertarget={targetId}
 					>
 						<IconDockTop />
 						Cover
@@ -52,30 +52,35 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Actions</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<MoveOrCopyItemPopover let:trigger={triggerPopover}>
+			<MoveOrCopyItemPopover let:targetId>
 				<Button
 					variant="secondary"
-					builders={[{ action: triggerPopover }]}
+					popovertarget={targetId}
 					class="flex justify-start items-center gap-2 w-full"
 				>
 					<IconArrowRight />
 					Move
 				</Button>
 			</MoveOrCopyItemPopover>
-			<MoveOrCopyItemPopover action="copy" let:trigger={triggerPopover}>
+			<MoveOrCopyItemPopover action="copy" let:targetId>
 				<Button
 					variant="secondary"
-					builders={[{ action: triggerPopover }]}
+					popovertarget={targetId}
 					class="flex justify-start items-center gap-2 w-full"
 				>
 					<IconCopy />
 					Copy
 				</Button>
 			</MoveOrCopyItemPopover>
-			<CardPopover title="Delete Card" let:trigger={triggerPopover} class="w-80">
+			<CardPopover
+				title="Delete Card"
+				targetId={`delete_${$itemDetails.id}`}
+				let:targetId
+				class="w-80"
+			>
 				<Button
 					variant="secondary"
-					builders={[{ action: triggerPopover }]}
+					popovertarget={targetId}
 					class="flex justify-start items-center gap-2 w-full"
 				>
 					<IconDelete />

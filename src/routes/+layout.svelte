@@ -36,12 +36,8 @@
 			<div class="flex items-center gap-8">
 				<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Sveltello </a>
 				{#if data.user}
-					<NewBoard let:trigger={triggerPopover}>
-						<Button
-							builders={[{ action: triggerPopover }]}
-							class="flex gap-2 p-2"
-							aria-label="create new board"
-						>
+					<NewBoard let:targetId>
+						<Button class="flex gap-2 p-2" aria-label="create new board" popovertarget={targetId}>
 							<IconPlus />
 							<span class="hidden sm:inline">Create</span>
 						</Button>

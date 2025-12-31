@@ -69,7 +69,7 @@
 	{#if isLoading}
 		<div class="grid grid-cols-3 gap-2">
 			{#each Array.from({ length: count }) as _}
-				<Skeleton class={cn('w-full h-16 rounded-md bg-secondary')} />
+				<Skeleton class={cn('w-full aspect-video h-16 rounded-md bg-secondary')} />
 			{/each}
 		</div>
 	{:else if photos}

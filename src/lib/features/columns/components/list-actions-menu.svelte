@@ -1,16 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { createEventDispatcher, tick } from 'svelte';
-	import { cn } from '$lib/utils';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { TypedSubmitFunction } from '$lib/form';
-	import * as Popover from '$lib/components/ui/popover';
+	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import IconMore from '$lib/components/icons/icon-more.svelte';
 	import IconChevronLeft from '$lib/components/icons/icon-chevron-left.svelte';
-	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import type { BoardWithColumns } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { ActionData } from '../../../../routes/(user)/boards/[id=integer]/$types';
+	import { cn } from '$lib/utils';
 
 	export let id: string;
 	export let name: string;
@@ -19,6 +18,8 @@
 	let isCopying = false;
 	let columnToCopyName: HTMLTextAreaElement;
 	let formElm: HTMLFormElement;
+
+	const popoverTargetId = `list_actions_menu_${id}`;
 
 	const queryClient = useQueryClient();
 
@@ -53,63 +54,38 @@
 	};
 </script>
 
-<Popover.Root let:close>
-	<Popover.Trigger asChild let:triggerAction={triggerPopover}>
-		<Button
-			variant="ghost"
-			size="icon"
-			class="flex justify-center items-center text-muted-foreground"
-			aria-label="open list actions"
-			builders={[{ action: triggerPopover }]}
-		>
-			<IconMore />
-		</Button>
-	</Popover.Trigger>
-	<Popover.Content
-		class={cn('absolute top-0 left-0 bg-white shadow-lg py-4 rounded-lg w-72')}
-		clickOutsideHandler={() => {
-			if (isCopying) {
-				isCopying = false;
-			}
-
-			close();
-		}}
-		escapeKeydownHandler={() => {
-			if (isCopying) {
-				isCopying = false;
-			} else {
-				close();
-			}
-		}}
+<CardPopover
+	title={isCopying ? 'Copy List' : 'List actions'}
+	targetId={popoverTargetId}
+	let:targetId
+	class={cn('relative', {
+		'px-0': !isCopying
+	})}
+>
+	<Button
+		variant="ghost"
+		size="icon"
+		class="flex justify-center items-center text-muted-foreground"
+		aria-label="open list actions"
+		popovertarget={targetId}
 	>
-		<header class="relative mb-4">
-			{#if isCopying}
-				<Button
-					variant="ghost"
-					size="icon"
-					on:click={() => (isCopying = false)}
-					class="absolute -top-2 left-2 text-muted-foreground"
-					aria-label="back"
-				>
-					<IconChevronLeft />
-				</Button>
-			{/if}
-			<h6 class="font-bold text-center">
-				{isCopying ? 'Copy list' : 'List actions'}
-			</h6>
-			<Popover.Close
-				class="absolute -top-2 right-2 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
-				aria-label="close"
-			>
-				<IconClose />
-			</Popover.Close>
-		</header>
+		<IconMore />
+	</Button>
+	<svelte:fragment slot="content">
 		{#if isCopying}
+			<Button
+				variant="ghost"
+				size="icon"
+				on:click={() => (isCopying = false)}
+				class="absolute -top-2 left-2 text-muted-foreground"
+				aria-label="back"
+			>
+				<IconChevronLeft />
+			</Button>
 			<form
 				bind:this={formElm}
 				method="post"
 				action="?/copyColumn"
-				class="px-4"
 				use:enhance={(data) => {
 					close();
 
@@ -138,7 +114,7 @@
 				<Button type="submit" class="w-full">Create List</Button>
 			</form>
 		{:else}
-			<ul>
+			<ul class="min-w-72">
 				<li>
 					<Button
 						variant="ghost"
@@ -183,5 +159,5 @@
 				</li>
 			</ul>
 		{/if}
-	</Popover.Content>
-</Popover.Root>
+	</svelte:fragment>
+</CardPopover>

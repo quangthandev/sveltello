@@ -23,8 +23,13 @@
 	}
 </script>
 
-<CardPopover title={`${action} card`} let:trigger class="capitalize w-96 z-50">
-	<slot {trigger} />
+<CardPopover
+	title={`${action} card`}
+	targetId={`${$itemDetails.id}_move_or_copy`}
+	class="capitalize w-96 z-50"
+	let:targetId
+>
+	<slot {targetId} />
 	<div slot="content">
 		{#if action === 'move'}
 			<section class="flex flex-col gap-2 px-4 py-2">
