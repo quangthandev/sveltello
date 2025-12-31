@@ -22,12 +22,11 @@
 		<li>
 			<h2 class="ml-2 mb-4 font-medium flex justify-between items-center">
 				<span>Your boards</span>
-				<NewBoard let:targetId let:defaultAction>
+				<NewBoard let:targetId>
 					<Button
 						variant="ghost"
 						size="icon"
 						popovertarget={targetId}
-						popovertargetaction={defaultAction}
 						aria-label="create new board"
 					>
 						<IconPlus />

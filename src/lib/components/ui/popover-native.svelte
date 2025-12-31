@@ -19,8 +19,9 @@
 
 		if (!targetElement) return;
 
-		function handleToggle(event: ToggleEvent) {
-			open = event.newState === 'open';
+		// TODO: research on this type error
+		function handleToggle(event: unknown) {
+			open = (event as ToggleEvent).newState === 'open';
 			dispatch('toggle', open);
 		}
 
