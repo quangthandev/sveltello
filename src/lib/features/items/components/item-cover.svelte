@@ -20,12 +20,12 @@
 				attachment.type.startsWith('image/')
 			)}
 			itemId={$itemDetails.id}
-			let:triggerPopover
+			let:targetId
 		>
 			<Button
 				variant="ghost"
 				class="absolute top-36 right-4 flex gap-2"
-				builders={[{ action: triggerPopover }]}
+				popovertarget={targetId}
 				aria-label="open cover settings"
 			>
 				<IconDockTop />

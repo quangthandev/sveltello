@@ -19,12 +19,8 @@
 	}
 </script>
 
-<CardPopover title="Attach" let:trigger={triggerPopover} class="w-80 z-50">
-	<Button
-		variant="secondary"
-		class="flex justify-start gap-2"
-		builders={[{ action: triggerPopover }]}
-	>
+<CardPopover title="Attach" targetId={`${itemId}_attachment`} let:targetId class="w-80 z-50">
+	<Button variant="secondary" class="flex justify-start gap-2" popovertarget={targetId}>
 		<IconAttachment />
 		<span> Attachment </span>
 	</Button>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { tick } from 'svelte';
 	import { applyAction, enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
@@ -7,13 +6,12 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
-	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
 	import type { Photo } from '$lib/components/shared/photos-picker/types';
 	import { createBoardSchema } from '../schemas';
 	import type { ActionData } from '../../../../routes/(user)/boards/$types';
 
-	export let targetId = 'newboard';
+	export let onSuccess: () => void;
 
 	let isSubmitting = false;
 	let inputInstance: Input | null = null;
@@ -70,46 +68,24 @@
 	};
 </script>
 
-<CardPopover
-	title="Create Board"
-	{targetId}
-	let:targetId
-	class="w-96"
-	on:toggle={async (event) => {
-		if (event.detail) {
-			await tick();
-			inputInstance?.focus();
-		}
-	}}
+<form
+	class="max-w-md space-y-4"
+	method="post"
+	action="/boards?/create"
+	use:enhance={(input) => handleSubmit(input, { onSuccess })}
 >
-	<slot {targetId} />
-	<svelte:fragment slot="content" let:open>
-		<form
-			class="max-w-md space-y-4"
-			method="post"
-			action="/boards?/create"
-			use:enhance={(input) => handleSubmit(input, { onSuccess: close })}
-		>
-			<UnsplashPhotosPicker
-				title="Background"
-				visible={true}
-				on:select={(event) => (selectedPhoto = event.detail)}
-			/>
-			<div class="flex items-center gap-1">
-				<label for="new-board-color" class="text-sm font-medium"> Color </label>
-				<input
-					id="new-board-color"
-					name="color"
-					type="color"
-					value="#cbd5e1"
-					class="bg-transparent"
-				/>
-			</div>
-			<div>
-				<Label for="new-board-name" class="block mb-2">Board Title</Label>
-				<Input id="new-board-name" name="name" type="text" required bind:this={inputInstance} />
-			</div>
-			<Button type="submit" class="w-full font-medium" disabled={isSubmitting}>Create</Button>
-		</form>
-	</svelte:fragment>
-</CardPopover>
+	<UnsplashPhotosPicker
+		title="Background"
+		visible={true}
+		on:select={(event) => (selectedPhoto = event.detail)}
+	/>
+	<div class="flex items-center gap-1">
+		<label for="new-board-color" class="text-sm font-medium"> Color </label>
+		<input id="new-board-color" name="color" type="color" value="#cbd5e1" class="bg-transparent" />
+	</div>
+	<div>
+		<Label for="new-board-name" class="block mb-2">Board Title</Label>
+		<Input id="new-board-name" name="name" type="text" required bind:this={inputInstance} />
+	</div>
+	<Button type="submit" class="w-full font-medium" disabled={isSubmitting}>Create</Button>
+</form>

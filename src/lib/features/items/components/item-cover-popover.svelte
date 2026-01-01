@@ -81,8 +81,8 @@
 	};
 </script>
 
-<CardPopover title="Cover" let:trigger={triggerPopover}>
-	<slot {triggerPopover} />
+<CardPopover title="Cover" targetId={`${itemId}_cover`} let:targetId>
+	<slot {targetId} />
 	<div slot="content" class="w-80 space-y-4" let:open>
 		{#if cover}
 			<form method="post" action="?/removeCover" use:enhance={handleRemoveCover}>

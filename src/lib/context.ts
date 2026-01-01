@@ -11,7 +11,8 @@ export interface Context<T> {
 }
 
 function randomContextName() {
-	return `$$context_${crypto.randomUUID()}`;
+	const randomName = Math.random().toString(36).substring(2);
+	return `$$context_${randomName}`;
 }
 
 /**

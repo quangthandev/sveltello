@@ -25,8 +25,8 @@
 				</li>
 			{/each}
 			<li>
-				<NewBoard let:trigger={triggerPopover}>
-					<Button variant="secondary" class="w-full h-40" builders={[{ action: triggerPopover }]}>
+				<NewBoard let:targetId>
+					<Button variant="secondary" class="w-full h-40" popovertarget={targetId}>
 						Create new board
 					</Button>
 				</NewBoard>

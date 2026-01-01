@@ -99,6 +99,14 @@ pre > code {
 	body {
 		@apply bg-background text-foreground;
 	}
+	[popover] {
+		position-area: block-end span-inline-end;
+		margin: 4px 0;
+		position-try-fallbacks:
+			flip-inline,
+			flip-block,
+			flip-inline flip-block;
+	}
 }
 
 @layer components {
