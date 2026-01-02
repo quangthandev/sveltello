@@ -124,7 +124,8 @@ pre > code {
 			transform 300ms ease;
 
 		/* Exit Stage To */
-		opacity: 0;
+		/* TODO: disabled for now since it's not working in Safari */
+		/* opacity: 0; */
 	}
 
 	dialog:open {
