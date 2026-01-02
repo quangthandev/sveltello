@@ -8,6 +8,7 @@
 	import ItemDetails from '$lib/features/items/components/item-details.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { useItemQueryOptions } from '$lib/features/items/query-client/queries';
+	import { tick } from 'svelte';
 
 	export let item: ItemWithCoverAndAttachments;
 	export let boardName: string;
@@ -19,6 +20,8 @@
 	let pageState: App.PageState & { id?: string };
 	$: pageState = $page.state;
 
+	const itemModalId = `item_modal_${id}`;
+
 	const queryClient = useQueryClient();
 
 	function handleMouseEnter() {
@@ -29,7 +32,7 @@
 		}
 	}
 
-	function handleNavigate(e: MouseEvent) {
+	async function handleNavigate(e: MouseEvent) {
 		e.preventDefault();
 
 		const { href } = e.currentTarget as HTMLAnchorElement;
@@ -39,6 +42,14 @@
 
 		// Change page title
 		document.title = `${title} on ${boardName} | Sveltello`;
+
+		await tick();
+
+		const modal = document.getElementById(itemModalId) as HTMLDialogElement | null;
+		if (!modal) {
+			return;
+		}
+		modal.showModal();
 	}
 </script>
 
@@ -96,9 +107,9 @@
 
 {#if pageState.id && pageState.id === id}
 	<Modal
+		id={itemModalId}
 		on:close={() => history.back()}
-		containerClass={cn('items-start mt-16')}
-		class={cn('w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar')}
+		class={cn('w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar rounded-2xl')}
 	>
 		<ItemDetails {id} on:close={() => history.back()} />
 	</Modal>
