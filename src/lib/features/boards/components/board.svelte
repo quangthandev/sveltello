@@ -54,7 +54,11 @@
 	style:border-color={color}
 	style:background-image={imageThumbUrl ? `url(${imageThumbUrl})` : 'none'}
 >
-	<a href={`/boards/${id}`} class="font-bold after:absolute after:inset-0">{name}</a>
+	<a
+		href={`/boards/${id}`}
+		class="board-link font-bold after:absolute after:inset-0"
+		style:--view-transition-name={`board_${id}_name`}>{name}</a
+	>
 	<CardPopover title="Delete board" targetId={`board_${board.id}`} let:targetId>
 		<Button
 			variant="ghost"
@@ -76,3 +80,9 @@
 		</div>
 	</CardPopover>
 </div>
+
+<style>
+	.board-link {
+		view-transition-name: var(--view-transition-name);
+	}
+</style>

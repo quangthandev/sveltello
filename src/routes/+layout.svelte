@@ -11,6 +11,8 @@
 	import NewBoard from '$lib/features/boards/components/new-board.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import '../app.css';
+	import { onNavigate } from '$app/navigation';
+	import { transitionHelper } from '$lib/helpers';
 
 	export let data;
 
@@ -20,6 +22,19 @@
 				enabled: browser
 			}
 		}
+	});
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			transitionHelper({
+				update: async function () {
+					resolve();
+					await navigation.complete;
+				}
+			});
+		});
 	});
 </script>
 

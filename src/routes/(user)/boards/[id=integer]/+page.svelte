@@ -129,6 +129,9 @@
 				}}
 			>
 				<input type="hidden" name="id" value={board.id} />
+				<span slot="text" class="board-name" style:--view-transition-name={`board_${board.id}_name`}
+					>{board.name}</span
+				>
 			</EditableText>
 		</h1>
 		<div class="flex items-start gap-4 px-8 pb-4">
@@ -154,3 +157,9 @@
 	<p class="text-center mb-4">Something went wrong</p>
 	<Button variant="secondary" on:click={() => $query.refetch()}>Reload</Button>
 {/if}
+
+<style>
+	.board-name {
+		view-transition-name: var(--view-transition-name);
+	}
+</style>
