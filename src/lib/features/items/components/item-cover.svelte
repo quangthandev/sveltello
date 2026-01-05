@@ -12,6 +12,7 @@
 		<img
 			src={$itemDetails.cover.url}
 			alt="item cover"
+			style:view-transition-name={`item_${$itemDetails.id}_cover`}
 			class="w-full h-48 object-contain rounded-lg"
 		/>
 		<ItemCoverPopover

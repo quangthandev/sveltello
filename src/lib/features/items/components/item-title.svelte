@@ -56,6 +56,9 @@
 					}}
 				>
 					<input type="hidden" name="id" value={$itemDetails.id} />
+					<span style:view-transition-name={`item_${$itemDetails.id}_title`} slot="text">
+						{$itemDetails.title}
+					</span>
 				</EditableText>
 			</h3>
 			<ItemSubtitle />

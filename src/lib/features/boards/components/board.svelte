@@ -56,9 +56,11 @@
 >
 	<a
 		href={`/boards/${id}`}
-		class="board-link font-bold after:absolute after:inset-0"
-		style:--view-transition-name={`board_${id}_name`}>{name}</a
+		class="font-bold after:absolute after:inset-0"
+		style:view-transition-name={`board_${id}_name`}
 	>
+		{name}
+	</a>
 	<CardPopover title="Delete board" targetId={`board_${board.id}`} let:targetId>
 		<Button
 			variant="ghost"
@@ -80,9 +82,3 @@
 		</div>
 	</CardPopover>
 </div>
-
-<style>
-	.board-link {
-		view-transition-name: var(--view-transition-name);
-	}
-</style>

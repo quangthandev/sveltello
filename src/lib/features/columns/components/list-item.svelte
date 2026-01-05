@@ -4,11 +4,12 @@
 	import Modal from '$lib/components/ui/modal.svelte';
 	import { cn } from '$lib/utils';
 	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
-	import { type ItemFullPayload, type ItemWithCoverAndAttachments } from '$lib/types';
+	import type { ItemFullPayload, ItemWithCoverAndAttachments } from '$lib/types';
 	import ItemDetails from '$lib/features/items/components/item-details.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { useItemQueryOptions } from '$lib/features/items/query-client/queries';
 	import { tick } from 'svelte';
+	import { transitionHelper } from '$lib/helpers';
 
 	export let item: ItemWithCoverAndAttachments;
 	export let boardName: string;
@@ -20,7 +21,9 @@
 	let pageState: App.PageState & { id?: string };
 	$: pageState = $page.state;
 
-	const itemModalId = `item_modal_${id}`;
+	let titleEl: HTMLHeadingElement;
+	let coverEl: HTMLDivElement | null;
+	let modal: HTMLDialogElement;
 
 	const queryClient = useQueryClient();
 
@@ -35,21 +38,44 @@
 	async function handleNavigate(e: MouseEvent) {
 		e.preventDefault();
 
-		const { href } = e.currentTarget as HTMLAnchorElement;
-
 		// Shallow routing
+		const { href } = e.currentTarget as HTMLAnchorElement;
 		pushState(href, { id });
-
-		// Change page title
-		document.title = `${title} on ${boardName} | Sveltello`;
 
 		await tick();
 
-		const modal = document.getElementById(itemModalId) as HTMLDialogElement | null;
-		if (!modal) {
-			return;
-		}
-		modal.showModal();
+		document.title = `${title} on ${boardName} | Sveltello`;
+
+		transitionHelper({
+			update() {
+				modal.showModal();
+
+				titleEl.style.viewTransitionName = '';
+				if (coverEl) {
+					coverEl.style.viewTransitionName = '';
+				}
+			}
+		});
+	}
+
+	function handleRequestModalClose() {
+		transitionHelper({
+			update() {
+				modal.requestClose();
+
+				const titleViewTransitionName = `item_${id}_title`;
+				const coverViewTransitionName = `item_${id}_cover`;
+				titleEl.style.viewTransitionName = titleViewTransitionName;
+				if (coverEl) {
+					coverEl.style.viewTransitionName = coverViewTransitionName;
+				}
+			}
+		});
+	}
+
+	function handleModalClose() {
+		history.back();
+		setTimeout(() => (document.title = `${boardName} | Sveltello`), 100);
 	}
 </script>
 
@@ -69,7 +95,12 @@
 	on:click={handleNavigate}
 >
 	{#if cover}
-		<div class="h-48 bg-cover rounded-t-lg" style:background-image={`url(${cover.url})`}></div>
+		<div
+			bind:this={coverEl}
+			class="h-48 bg-cover rounded-t-lg"
+			style:background-image={`url(${cover.url})`}
+			style:view-transition-name={`item_${id}_cover`}
+		></div>
 	{/if}
 	<div
 		class={cn(
@@ -77,7 +108,9 @@
 			cover ? 'rounded-b-lg' : 'rounded-lg'
 		)}
 	>
-		<h3>{title}</h3>
+		<h3 bind:this={titleEl} style:view-transition-name={`item_${id}_title`}>
+			{title}
+		</h3>
 		{#if content || attachments?.length > 0}
 			<div class="flex items-center gap-2">
 				{#if content}
@@ -107,10 +140,11 @@
 
 {#if pageState.id && pageState.id === id}
 	<Modal
-		id={itemModalId}
-		on:close={() => history.back()}
+		bind:node={modal}
+		on:dismiss={handleRequestModalClose}
+		on:close={handleModalClose}
 		class={cn('w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar rounded-2xl')}
 	>
-		<ItemDetails {id} on:close={() => history.back()} />
+		<ItemDetails {id} on:close={handleRequestModalClose} />
 	</Modal>
 {/if}
