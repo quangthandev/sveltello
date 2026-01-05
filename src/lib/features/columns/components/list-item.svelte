@@ -99,7 +99,9 @@
 			bind:this={coverEl}
 			class="h-48 bg-cover rounded-t-lg"
 			style:background-image={`url(${cover.url})`}
-			style:view-transition-name={`item_${id}_cover`}
+			style:view-transition-name={pageState.id && pageState.id === id
+				? `item_${id}_cover`
+				: undefined}
 		></div>
 	{/if}
 	<div
@@ -108,7 +110,12 @@
 			cover ? 'rounded-b-lg' : 'rounded-lg'
 		)}
 	>
-		<h3 bind:this={titleEl} style:view-transition-name={`item_${id}_title`}>
+		<h3
+			bind:this={titleEl}
+			style:view-transition-name={pageState.id && pageState.id === id
+				? `item_${id}_title`
+				: undefined}
+		>
 			{title}
 		</h3>
 		{#if content || attachments?.length > 0}
