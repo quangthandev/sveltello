@@ -70,7 +70,9 @@
 				input.select();
 			}}
 		>
-			{value}
+			<slot name="text">
+				{value}
+			</slot>
 		</Button>
 	{/if}
 </div>

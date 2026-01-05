@@ -129,6 +129,9 @@
 				}}
 			>
 				<input type="hidden" name="id" value={board.id} />
+				<span slot="text" style:view-transition-name={`board_${board.id}_name`}>
+					{board.name}
+				</span>
 			</EditableText>
 		</h1>
 		<div class="flex items-start gap-4 px-8 pb-4">

@@ -13,4 +13,11 @@
 	});
 </script>
 
-<ItemDetails id={$page.params.id} initialData={data.item} on:close={() => goto(previousPage)} />
+<ItemDetails
+	id={$page.params.id}
+	initialData={data.item}
+	on:close={() =>
+		goto(previousPage, {
+			state: { id: data.item.id }
+		})}
+/>

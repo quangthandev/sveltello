@@ -28,6 +28,14 @@
 					);
 				}
 			} catch (e) {}
+
+			// Only use [popover] position-try-fallbacks on non-Safari browsers...
+			// ...as there's a bug that causes page to freeze when closing a dialog in modal mode...
+			// ...which contains a popover with position-try-fallbacks
+			const isWebKit = /WebKit/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+			if (!isWebKit) {
+				document.documentElement.classList.add('use-position-try-fallbacks');
+			}
 		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover" class="bg-slate-100 text-slate-900">

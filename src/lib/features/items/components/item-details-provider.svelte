@@ -25,14 +25,14 @@
 	const dispatch = createEventDispatcher<{ close: void }>();
 </script>
 
-<div class="relative">
+<div class="relative isolate">
 	<Button
 		variant="ghost"
 		size="icon"
 		on:click={() => {
 			dispatch('close');
 		}}
-		class="absolute top-4 right-4 text-muted-foreground"
+		class="absolute top-4 right-4 z-10 text-muted-foreground"
 		aria-label="close"
 	>
 		<IconClose />
