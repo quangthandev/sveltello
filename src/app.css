@@ -104,48 +104,13 @@ pre > code {
 	[popover] {
 		position-area: block-end span-inline-end;
 		margin: 4px 0;
+	}
+
+	.use-position-try-fallbacks [popover] {
 		position-try-fallbacks:
 			flip-inline,
 			flip-block,
 			flip-inline flip-block;
-	}
-
-	dialog {
-		/* Exit Stage To */
-		transform: translateY(-20px);
-	}
-
-	dialog,
-	dialog::backdrop {
-		transition:
-			display 300ms allow-discrete,
-			overlay 300ms allow-discrete,
-			opacity 300ms ease,
-			transform 300ms ease;
-
-		/* Exit Stage To */
-		/* TODO: disabled for now since it's not working in Safari */
-		/* opacity: 0; */
-	}
-
-	dialog:open {
-		opacity: 1;
-		transform: translateY(0px);
-	}
-
-	dialog:open::backdrop {
-		opacity: 0.8;
-	}
-
-	@starting-style {
-		dialog:open,
-		dialog:open::backdrop {
-			opacity: 0;
-		}
-
-		dialog:open {
-			transform: translateY(100px);
-		}
 	}
 }
 
