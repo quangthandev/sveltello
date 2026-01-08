@@ -10,6 +10,6 @@ export async function load({ locals }) {
 
 		return { boards };
 	} catch (err) {
-		throw error(500, { message: 'Failed to fetch boards' });
+		error(500, { message: 'Failed to fetch boards' });
 	}
 }

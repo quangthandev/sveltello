@@ -77,7 +77,6 @@ class ImageUploader {
 				}
 			} else {
 				const selection = document.getSelection();
-				// @ts-expect-error
 				const range = document.caretPositionFromPoint(event.clientX, event.clientY);
 				if (selection && range) {
 					selection.setBaseAndExtent(

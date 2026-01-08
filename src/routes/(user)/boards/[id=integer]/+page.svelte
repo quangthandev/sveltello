@@ -4,7 +4,7 @@
 	import List from '$lib/features/columns/components/list.svelte';
 	import EditableText from '$lib/components/shared/editable-text.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { cn } from '$lib/utils';
 	import type { Board, Column, Item } from '$lib/types';
 	import NewList from '$lib/features/columns/components/new-list.svelte';
@@ -13,18 +13,22 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { afterNavigate } from '$app/navigation';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	const queryClient = useQueryClient();
 
-	$: query = useBoard(Number($page.params.id), data.board);
+	let query = $derived(useBoard(Number(page.params.id), data.board));
 
-	$: board = $query.data;
-	$: columns = $query.data?.columns ?? [];
+	let board = $derived($query.data);
+	let columns = $derived($query.data?.columns ?? []);
 
 	let sourceIndex: number | null = null;
 
-	const updateColumn = useUpdateColumnOrder(Number($page.params.id));
+	const updateColumn = useUpdateColumnOrder(Number(page.params.id));
 
 	function handleDndConsider(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
 		// Store source index when user starts dragging for later use
@@ -34,10 +38,10 @@
 
 		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
 			'boards',
-			Number($page.params.id)
+			Number(page.params.id)
 		]);
 		if (prevBoardData) {
-			queryClient.setQueryData(['boards', Number($page.params.id)], {
+			queryClient.setQueryData(['boards', Number(page.params.id)], {
 				...prevBoardData,
 				columns: e.detail.items
 			});
@@ -47,7 +51,7 @@
 	function handleDndFinalize(e: CustomEvent<DndEvent<Column & { items: Item[] }>>) {
 		const prevBoardData = queryClient.getQueryData<Board & { items: Item[]; columns: Column[] }>([
 			'boards',
-			Number($page.params.id)
+			Number(page.params.id)
 		]);
 
 		if (!prevBoardData) return;
@@ -55,7 +59,7 @@
 		const newItems = e.detail.items;
 
 		// Update the items in the query cache
-		queryClient.setQueryData(['boards', Number($page.params.id)], {
+		queryClient.setQueryData(['boards', Number(page.params.id)], {
 			...prevBoardData,
 			columns: newItems
 		});
@@ -113,15 +117,15 @@
 						? 'text-black bg-neutral-300'
 						: 'text-white bg-black/50'
 				)}
-				on:submitting={(event) => {
-					queryClient.setQueryData(['boards', Number($page.params.id)], {
+				onSubmitting={(data) => {
+					queryClient.setQueryData(['boards', Number(page.params.id)], {
 						...board,
-						name: event.detail
+						name: data
 					});
 				}}
-				on:submitted={() => {
+				onSubmitted={() => {
 					queryClient.invalidateQueries({
-						queryKey: ['boards', Number($page.params.id)]
+						queryKey: ['boards', Number(page.params.id)]
 					});
 					queryClient.invalidateQueries({
 						queryKey: ['boards']
@@ -129,9 +133,11 @@
 				}}
 			>
 				<input type="hidden" name="id" value={board.id} />
-				<span slot="text" style:view-transition-name={`board_${board.id}_name`}>
-					{board.name}
-				</span>
+				{#snippet text()}
+					<span style:view-transition-name={`board_${board.id}_name`}>
+						{board.name}
+					</span>
+				{/snippet}
 			</EditableText>
 		</h1>
 		<div class="flex items-start gap-4 px-8 pb-4">
@@ -141,8 +147,8 @@
 					flipDurationMs: 300,
 					type: 'columns'
 				}}
-				on:consider={handleDndConsider}
-				on:finalize={handleDndFinalize}
+				onconsider={handleDndConsider}
+				onfinalize={handleDndFinalize}
 				class="flex min-h-0 h-full items-start gap-4"
 			>
 				{#each columns as column (column.id)}
@@ -155,5 +161,5 @@
 	</div>
 {:else}
 	<p class="text-center mb-4">Something went wrong</p>
-	<Button variant="secondary" on:click={() => $query.refetch()}>Reload</Button>
+	<Button variant="secondary" onclick={() => $query.refetch()}>Reload</Button>
 {/if}

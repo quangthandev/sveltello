@@ -1,44 +1,59 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 
-	export let asChild = false;
-	export let targetId = Math.random().toString(36).substring(2);
-	export let action: 'toggle' | 'show' | 'hide' = 'toggle';
+	type PopoverTargetAction = 'toggle' | 'show' | 'hide';
 
-	let className: string | undefined = '';
-	export { className as class };
+	interface Props<TTargetId extends string = string> {
+		asChild?: boolean;
+		targetId?: TTargetId;
+		node?: HTMLDivElement | null;
+		action?: PopoverTargetAction;
+		class?: string | undefined;
+		children?: Snippet<[{ targetId: TTargetId; action: PopoverTargetAction }]>;
+		content?: Snippet<[{ open: boolean }]>;
+		onToggle?: (open: boolean) => void;
+	}
 
-	let open = false;
+	let {
+		asChild = false,
+		targetId = Math.random().toString(36).substring(2),
+		node = $bindable(),
+		action = 'toggle',
+		class: className = '',
+		children,
+		content,
+		onToggle,
+		...rest
+	}: Props = $props();
 
-	const dispatch = createEventDispatcher<{
-		toggle: boolean;
-	}>();
+	let open = $state(false);
 
 	onMount(() => {
-		const targetElement = document.getElementById(targetId);
-
-		if (!targetElement) return;
-
-		// TODO: research on this type error
-		function handleToggle(event: unknown) {
-			open = (event as ToggleEvent).newState === 'open';
-			dispatch('toggle', open);
+		function handleToggle(event: ToggleEvent) {
+			open = event.newState === 'open';
+			onToggle?.(open);
 		}
 
-		targetElement.addEventListener('toggle', handleToggle);
+		if (node) {
+			node.addEventListener('toggle', handleToggle);
+		}
 
-		return () => targetElement.removeEventListener('toggle', handleToggle);
+		return () => {
+			if (node) {
+				node.removeEventListener('toggle', handleToggle);
+			}
+		};
 	});
 </script>
 
 {#if asChild}
-	<slot {targetId} {action} />
+	{@render children?.({ targetId, action })}
 {:else}
-	<button type="button" {...$$restProps} popovertarget={targetId} popovertargetaction={action}>
-		<slot {targetId} {action} />
+	<button type="button" {...rest} popovertarget={targetId} popovertargetaction={action}>
+		{@render children?.({ targetId, action })}
 	</button>
 {/if}
 
-<div id={targetId} popover="auto" class={className}>
-	<slot name="content" {open} />
+<div id={targetId} popover="auto" bind:this={node} class={className}>
+	{@render content?.({ open })}
 </div>

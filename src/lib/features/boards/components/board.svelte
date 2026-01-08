@@ -9,15 +9,18 @@
 	import type { TypedSubmitFunction } from '$lib/form';
 	import type { ActionData } from '../../../../routes/(user)/boards/$types';
 
-	export let board: Board;
-	let className = '';
-	export { className as class };
+	interface Props {
+		board: Board;
+		class?: string;
+	}
+
+	let { board, class: className = '' }: Props = $props();
 
 	const queryClient = useQueryClient();
 
-	let isDeleting = false;
+	let isDeleting = $state(false);
 
-	$: ({ id, name, color, imageThumbUrl } = board);
+	let { id, name, color, imageThumbUrl } = $derived(board);
 
 	const handleSubmit: TypedSubmitFunction<ActionData> = () => {
 		isDeleting = true;
@@ -61,24 +64,28 @@
 	>
 		{name}
 	</a>
-	<CardPopover title="Delete board" targetId={`board_${board.id}`} let:targetId>
-		<Button
-			variant="ghost"
-			size="icon"
-			popovertarget={targetId}
-			aria-label="Delete board"
-			class="absolute top-2 right-2 text-muted-foreground"
-		>
-			<IconDelete />
-		</Button>
-		<div slot="content" class="space-y-4">
-			<p>Are you sure you want to delete this board?</p>
-			<form method="post" action="?/delete" use:enhance={handleSubmit}>
-				<input type="hidden" name="id" value={id} />
-				<Button type="submit" variant="destructive" class="w-full" disabled={isDeleting}>
-					Delete
-				</Button>
-			</form>
-		</div>
+	<CardPopover title="Delete board" targetId={`board_${board.id}`}>
+		{#snippet children({ targetId })}
+			<Button
+				variant="ghost"
+				size="icon"
+				popovertarget={targetId}
+				aria-label="Delete board"
+				class="absolute top-2 right-2 text-muted-foreground"
+			>
+				<IconDelete />
+			</Button>
+		{/snippet}
+		{#snippet content()}
+			<div class="space-y-4">
+				<p>Are you sure you want to delete this board?</p>
+				<form method="post" action="?/delete" use:enhance={handleSubmit}>
+					<input type="hidden" name="id" value={id} />
+					<Button type="submit" variant="destructive" class="w-full" disabled={isDeleting}>
+						Delete
+					</Button>
+				</form>
+			</div>
+		{/snippet}
 	</CardPopover>
 </div>

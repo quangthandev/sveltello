@@ -1,9 +1,14 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	let el: HTMLElement;
+	let { children }: HTMLAttributes<HTMLDivElement> = $props();
+
+	let el = $state<HTMLElement | null>(null);
 
 	onMount(() => {
+		if (!el) return;
+
 		el.ownerDocument.body.appendChild(el);
 	});
 
@@ -15,5 +20,5 @@
 </script>
 
 <div bind:this={el} class="contents" hidden>
-	<slot />
+	{@render children?.()}
 </div>

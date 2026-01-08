@@ -1,33 +1,42 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import Portal from './portal.svelte';
 	import { cn } from '$lib/utils';
-	import type { HTMLAttributes } from 'svelte/elements';
+	import type { HTMLDialogAttributes } from 'svelte/elements';
 	import { trapFocus } from '$lib/actions/trap-focus';
 	import { escapeKeydown } from '$lib/actions/escape-keydown';
 
-	type $$Props = HTMLAttributes<HTMLDialogElement> & { node: HTMLDialogElement };
+	interface Props extends HTMLDialogAttributes {
+		node: HTMLDialogElement | null;
+		onDismiss: () => void;
+		onClose: () => void;
+	}
 
-	let className: $$Props['class'] = undefined;
-	export { className as class };
-
-	export let node: HTMLDialogElement;
-
-	const dispatch = createEventDispatcher<{
-		close: void;
-		dismiss: void;
-	}>();
+	let {
+		class: className = undefined,
+		node = $bindable(),
+		children,
+		onDismiss,
+		onClose,
+		...rest
+	}: Props = $props();
 
 	onMount(() => {
 		function handleClick(event: PointerEvent) {
 			if (event.target === node) {
-				dispatch('dismiss');
+				onDismiss();
 			}
 		}
 
-		node.addEventListener('click', handleClick);
+		if (node) {
+			node.addEventListener('click', handleClick);
+		}
 
-		return () => node.removeEventListener('click', handleClick);
+		return () => {
+			if (node) {
+				node.removeEventListener('click', handleClick);
+			}
+		};
 	});
 </script>
 
@@ -35,13 +44,13 @@
 	<dialog
 		bind:this={node}
 		class={cn(className)}
-		{...$$restProps}
-		on:close={() => dispatch('close')}
+		{...rest}
+		onclose={onClose}
 		use:trapFocus
 		use:escapeKeydown={{
-			handler: () => dispatch('dismiss')
+			handler: onDismiss
 		}}
 	>
-		<slot />
+		{@render children?.()}
 	</dialog>
 </Portal>

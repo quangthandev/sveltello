@@ -6,7 +6,7 @@ import { createItemSchema, moveItemToColumnSchema } from '$lib/features/items/sc
 
 export async function GET({ locals, params }) {
 	if (!params.id) {
-		throw error(404, 'Item not found');
+		error(404, 'Item not found');
 	}
 
 	checkAuthUser(locals, `/items/${params.id}`);
@@ -15,7 +15,7 @@ export async function GET({ locals, params }) {
 		const item = await getItem(params.id, locals.user.id);
 
 		if (!item) {
-			throw error(404, 'Board not found');
+			error(404, 'Board not found');
 		}
 
 		return json({
@@ -26,7 +26,7 @@ export async function GET({ locals, params }) {
 			}))
 		});
 	} catch (err) {
-		throw error(500, { message: 'Failed to fetch item' });
+		error(500, { message: 'Failed to fetch item' });
 	}
 }
 
@@ -34,7 +34,7 @@ export async function DELETE({ locals, params }) {
 	const id = params.id;
 
 	if (!id) {
-		throw error(422, 'ID is required');
+		error(422, 'ID is required');
 	}
 
 	checkAuthUser(locals, `/items/${params.id}`);
@@ -48,7 +48,7 @@ export async function PUT({ request, locals, params }) {
 	const id = params.id;
 
 	if (!id) {
-		throw error(422, 'ID is required');
+		error(422, 'ID is required');
 	}
 
 	checkAuthUser(locals, `/items/${params.id}`);
@@ -83,7 +83,7 @@ export async function PATCH({ request, locals, params }) {
 	const id = params.id;
 
 	if (!id) {
-		throw error(422, 'ID is required');
+		error(422, 'ID is required');
 	}
 
 	checkAuthUser(locals, `/items/${params.id}`);

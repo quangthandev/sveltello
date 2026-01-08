@@ -15,8 +15,8 @@
 	const board = queryClient.getQueryData<BoardWithColumns>(['boards', $itemDetails.boardId]);
 	const columns = board?.columns ?? [];
 
-	let suggestedColumn: Column | undefined;
-	let isMoving = false;
+	let suggestedColumn: Column | undefined = $state();
+	let isMoving = $state(false);
 
 	if (columns.length > 1) {
 		const columnIndex = columns.findIndex((column) => column.id === $itemDetails.columnId) ?? -1;
@@ -53,7 +53,7 @@
 	<h4>Suggested</h4>
 	<Button
 		variant="secondary"
-		on:click={handleMove}
+		onclick={handleMove}
 		disabled={isMoving}
 		class="flex justify-start items-center gap-2 w-full min-h-[40px]"
 	>

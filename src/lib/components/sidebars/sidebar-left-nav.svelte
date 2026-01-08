@@ -8,7 +8,11 @@
 	import IconPlus from '$lib/components/icons/icon-plus.svelte';
 	import type { Board } from '$lib/types';
 
-	export let initialBoards: Board[];
+	interface Props {
+		initialBoards: Board[];
+	}
+
+	let { initialBoards }: Props = $props();
 
 	const boardsQuery = useBoards(initialBoards);
 </script>
@@ -22,20 +26,22 @@
 		<li>
 			<h2 class="ml-2 mb-4 font-medium flex justify-between items-center">
 				<span>Your boards</span>
-				<NewBoard let:targetId>
-					<Button
-						variant="ghost"
-						size="icon"
-						popovertarget={targetId}
-						aria-label="create new board"
-					>
-						<IconPlus />
-					</Button>
+				<NewBoard>
+					{#snippet children({ targetId })}
+						<Button
+							variant="ghost"
+							size="icon"
+							popovertarget={targetId}
+							aria-label="create new board"
+						>
+							<IconPlus />
+						</Button>
+					{/snippet}
 				</NewBoard>
 			</h2>
 			<ul class="space-y-2">
 				{#each $boardsQuery.data ?? [] as board (board.id)}
-					<NavLink href={`/boards/${board.id}`} title={board.name}>
+					<NavLink href={`/boards/${board.id}`}>
 						<img
 							src={board.imageThumbUrl}
 							alt={board.imageAltDescription || `Photo by ${board.imageUsername} on Unsplash`}

@@ -8,11 +8,16 @@
 	import ItemCover from './item-cover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
 
-	export let id: string;
-	export let initialData: ItemFullPayload | undefined = undefined;
+	interface Props {
+		id: string;
+		initialData?: ItemFullPayload | undefined;
+		onClose: () => void;
+	}
+
+	let { id, initialData = undefined, onClose }: Props = $props();
 </script>
 
-<ItemDetailsProvider {id} {initialData} on:close>
+<ItemDetailsProvider {id} {initialData} {onClose}>
 	<ItemCover />
 	<div class="p-6 bg-gray-100">
 		<ItemTitle />

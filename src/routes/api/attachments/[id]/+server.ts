@@ -6,7 +6,7 @@ export async function DELETE({ params, locals }) {
 	checkAuthUser(locals);
 
 	if (!params.id) {
-		throw error(422, 'Attachment ID is required');
+		error(422, 'Attachment ID is required');
 	}
 
 	const data = await deleteAttachment(params.id, locals.user.id);

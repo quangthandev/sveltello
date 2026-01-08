@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms';
 	import { browser } from '$app/environment';
-	import { navigating, page } from '$app/stores';
-	import NavigatingnIndicator from '$lib/components/shared/navigating-indicator.svelte';
+	import { navigating, page } from '$app/state';
+	import NavigatingIndicator from '$lib/components/shared/navigating-indicator.svelte';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 	import IconLogin from '$lib/components/icons/icon-login.svelte';
@@ -14,7 +14,7 @@
 	import { onNavigate } from '$app/navigation';
 	import { transitionHelper } from '$lib/helpers';
 
-	export let data;
+	let { data, children } = $props();
 
 	const queryClient = new QueryClient({
 		defaultOptions: {
@@ -39,7 +39,7 @@
 </script>
 
 <svelte:head>
-	<title>{$page.data.title ? `${$page.data.title} | Sveltello` : 'Sveltello'}</title>
+	<title>{page.data.title ? `${page.data.title} | Sveltello` : 'Sveltello'}</title>
 	<meta name="description" content="A Trello clone built with SvelteKit" />
 </svelte:head>
 
@@ -51,11 +51,16 @@
 			<div class="flex items-center gap-8">
 				<a href={data.user ? '/boards' : '/'} class="font-black text-white text-2xl"> Sveltello </a>
 				{#if data.user}
-					<NewBoard let:targetId>
-						<Button class="flex gap-2 p-2" aria-label="create new board" popovertarget={targetId}>
-							<IconPlus />
-							<span class="hidden sm:inline">Create</span>
-						</Button>
+					<NewBoard>
+						{#snippet children({ targetId })}
+							<Button class="flex gap-2 p-2" popovertarget={targetId}>
+								<IconPlus />
+								<span class="sr-only sm:not-sr-only">
+									Create
+									<span class="sr-only"> new board</span>
+								</span>
+							</Button>
+						{/snippet}
 					</NewBoard>
 				{/if}
 			</div>
@@ -102,11 +107,11 @@
 
 		<div class="flex-grow min-h-0 h-full">
 			<SvelteQueryDevtools />
-			<slot />
+			{@render children?.()}
 		</div>
 	</div>
 </QueryClientProvider>
 
-{#if $navigating}
-	<NavigatingnIndicator />
+{#if navigating.to}
+	<NavigatingIndicator />
 {/if}

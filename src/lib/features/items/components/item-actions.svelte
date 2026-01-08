@@ -14,8 +14,11 @@
 	import { getItemDetailsContext } from '../contexts/item-details.context';
 
 	const itemDetails = getItemDetailsContext();
-	let className: string | undefined = '';
-	export { className as class };
+	interface Props {
+		class?: string | undefined;
+	}
+
+	let { class: className = '' }: Props = $props();
 
 	const deleteItemMutation = useDeleteItem($itemDetails.boardId);
 </script>
@@ -33,16 +36,17 @@
 						attachment.type.startsWith('image/')
 					)}
 					itemId={$itemDetails.id}
-					let:targetId
 				>
-					<Button
-						variant="secondary"
-						class="flex justify-start items-center gap-2 w-full"
-						popovertarget={targetId}
-					>
-						<IconDockTop />
-						Cover
-					</Button>
+					{#snippet children({ targetId })}
+						<Button
+							variant="secondary"
+							class="flex justify-start items-center gap-2 w-full"
+							popovertarget={targetId}
+						>
+							<IconDockTop />
+							Cover
+						</Button>
+					{/snippet}
 				</ItemCoverPopover>
 			{/if}
 		</div>
@@ -52,56 +56,59 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Actions</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<MoveOrCopyItemPopover let:targetId>
-				<Button
-					variant="secondary"
-					popovertarget={targetId}
-					class="flex justify-start items-center gap-2 w-full"
-				>
-					<IconArrowRight />
-					Move
-				</Button>
-			</MoveOrCopyItemPopover>
-			<MoveOrCopyItemPopover action="copy" let:targetId>
-				<Button
-					variant="secondary"
-					popovertarget={targetId}
-					class="flex justify-start items-center gap-2 w-full"
-				>
-					<IconCopy />
-					Copy
-				</Button>
-			</MoveOrCopyItemPopover>
-			<CardPopover
-				title="Delete Card"
-				targetId={`delete_${$itemDetails.id}`}
-				let:targetId
-				class="w-80"
-			>
-				<Button
-					variant="secondary"
-					popovertarget={targetId}
-					class="flex justify-start items-center gap-2 w-full"
-				>
-					<IconDelete />
-					Delete
-				</Button>
-				<div slot="content" class="space-y-4">
-					<p>Deleting a card is permanent.</p>
-					<p>There is no undo.</p>
+			<MoveOrCopyItemPopover>
+				{#snippet children({ targetId })}
 					<Button
-						variant="destructive"
-						class="w-full"
-						disabled={$deleteItemMutation.isPending}
-						on:click={async () => {
-							await $deleteItemMutation.mutateAsync($itemDetails.id);
-
-							goto(`/boards/${$itemDetails.boardId}`);
-						}}
+						variant="secondary"
+						popovertarget={targetId}
+						class="flex justify-start items-center gap-2 w-full"
 					>
+						<IconArrowRight />
+						Move
+					</Button>
+				{/snippet}
+			</MoveOrCopyItemPopover>
+			<MoveOrCopyItemPopover action="copy">
+				{#snippet children({ targetId })}
+					<Button
+						variant="secondary"
+						popovertarget={targetId}
+						class="flex justify-start items-center gap-2 w-full"
+					>
+						<IconCopy />
+						Copy
+					</Button>
+				{/snippet}
+			</MoveOrCopyItemPopover>
+			<CardPopover title="Delete Card" targetId={`delete_${$itemDetails.id}`} class="w-80">
+				{#snippet children({ targetId })}
+					<Button
+						variant="secondary"
+						popovertarget={targetId}
+						class="flex justify-start items-center gap-2 w-full"
+					>
+						<IconDelete />
 						Delete
 					</Button>
-				</div>
+				{/snippet}
+				{#snippet content()}
+					<div class="space-y-4">
+						<p>Deleting a card is permanent.</p>
+						<p>There is no undo.</p>
+						<Button
+							variant="destructive"
+							class="w-full"
+							disabled={$deleteItemMutation.isPending}
+							onclick={async () => {
+								await $deleteItemMutation.mutateAsync($itemDetails.id);
+
+								goto(`/boards/${$itemDetails.boardId}`);
+							}}
+						>
+							Delete
+						</Button>
+					</div>
+				{/snippet}
 			</CardPopover>
 		</div>
 	</div>

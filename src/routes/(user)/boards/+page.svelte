@@ -5,14 +5,21 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { toast } from 'svelte-sonner';
 	import type { LayoutData } from '../$types';
+	import { run } from 'svelte/legacy';
 
-	export let data: LayoutData;
-
-	$: query = useBoards(data.boards);
-
-	$: if ($query.isError) {
-		toast.error($query.error.message);
+	interface Props {
+		data: LayoutData;
 	}
+
+	let { data }: Props = $props();
+
+	let query = $derived(useBoards(data.boards));
+
+	run(() => {
+		if ($query.isError) {
+			toast.error($query.error.message);
+		}
+	});
 </script>
 
 <div class="flex flex-1 flex-col mt-10">
@@ -25,10 +32,12 @@
 				</li>
 			{/each}
 			<li>
-				<NewBoard let:targetId>
-					<Button variant="secondary" class="w-full h-40" popovertarget={targetId}>
-						Create new board
-					</Button>
+				<NewBoard>
+					{#snippet children({ targetId })}
+						<Button variant="secondary" class="w-full h-40" popovertarget={targetId}>
+							Create new board
+						</Button>
+					{/snippet}
 				</NewBoard>
 			</li>
 		</ul>

@@ -15,7 +15,7 @@ export async function POST({ request, params, locals }) {
 	checkAuthUser(locals);
 
 	if (!params.id) {
-		throw error(422, 'Item ID is required');
+		error(422, 'Item ID is required');
 	}
 
 	let formData: FormData;
@@ -23,13 +23,13 @@ export async function POST({ request, params, locals }) {
 	try {
 		formData = await request.formData();
 	} catch (e) {
-		throw error(422, 'Invalid request');
+		error(422, 'Invalid request');
 	}
 
 	const result = await uploadSchema.safeParseAsync(Object.fromEntries(formData));
 
 	if (!result.success) {
-		throw error(422, 'File is required');
+		error(422, 'File is required');
 	}
 
 	const file = result.data.file;
@@ -60,7 +60,7 @@ export async function POST({ request, params, locals }) {
 	});
 
 	if (!uploadToR2Response.ok) {
-		throw error(500, 'Failed to upload image');
+		error(500, 'Failed to upload image');
 	}
 
 	const url = `${R2_PUBLIC_BUCKET_URL}/${objectKey}`;

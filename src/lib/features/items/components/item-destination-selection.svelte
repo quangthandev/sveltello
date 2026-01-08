@@ -1,54 +1,55 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import { useBoards } from '$lib/features/boards/query-client/queries';
 	import type { BoardWithColumns, ColumnWithItems } from '$lib/types';
 	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import { run } from 'svelte/legacy';
 
-	export let initialPosIndex: number;
+	interface Props {
+		initialPosIndex: number;
+		onValidate: (isValid: boolean) => void;
+	}
+
+	let { initialPosIndex, onValidate }: Props = $props();
 
 	const itemDetails = getItemDetailsContext();
 
 	const { boardId, columnId } = $itemDetails;
 
-	const query = useBoards($page.data.boards);
+	const query = useBoards(page.data.boards);
 
 	// Initialize selected values
-	let selectedBoardId = boardId;
-	let selectedColumnId = columnId;
-	let selectedPosIndex = initialPosIndex;
+	let selectedBoardId = $state(boardId);
+	let selectedColumnId = $state(columnId);
+	let selectedPosIndex = $state(initialPosIndex);
 
-	let boards: BoardWithColumns[] = [];
-	let board: BoardWithColumns | undefined;
-	let columns: ColumnWithItems[] = [];
-	let column: ColumnWithItems | undefined;
+	let boards: BoardWithColumns[] = $state([]);
+	let board: BoardWithColumns | undefined = $state();
+	let columns: ColumnWithItems[] = $state([]);
+	let column: ColumnWithItems | undefined = $state();
 
-	$: {
+	run(() => {
 		boards = $query.data;
 		board = boards.find((board) => board.id === selectedBoardId);
-	}
+	});
 
-	$: {
+	run(() => {
 		columns = board?.columns ?? [];
 		column = columns.find((column) => column.id === selectedColumnId);
-	}
+	});
 
-	$: {
+	run(() => {
 		if (selectedColumnId === columnId) {
 			selectedPosIndex = initialPosIndex;
 		} else {
 			selectedPosIndex = 1;
 		}
-	}
+	});
 
-	const dispatch = createEventDispatcher();
-
-	$: {
-		dispatch('validate', {
-			isValid: !$query.isFetching && !$query.isLoading && !!column
-		});
-	}
+	run(() => {
+		onValidate(!$query.isFetching && !$query.isLoading && !!column);
+	});
 </script>
 
 {#if $query.isLoading}
@@ -63,7 +64,7 @@
 			id="boardId"
 			class="appearance-none bg-transparent w-full absolute inset-0 opacity-0 cursor-pointer"
 			bind:value={selectedBoardId}
-			on:change={() => {
+			onchange={() => {
 				if (selectedBoardId === boardId) {
 					selectedColumnId = columnId;
 				} else {
@@ -93,9 +94,10 @@
 					bind:value={selectedColumnId}
 				>
 					{#each columns as column}
-						<option value={column.id}
-							>{column.name} {column.id === columnId ? '(current)' : ''}</option
-						>
+						<option value={column.id}>
+							{column.name}
+							{column.id === columnId ? '(current)' : ''}
+						</option>
 					{/each}
 				</select>
 			{/if}

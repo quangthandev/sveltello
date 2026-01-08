@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
@@ -7,22 +7,25 @@
 	import ItemDestinationSelection from './item-destination-selection.svelte';
 	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let initialPosIndex: number;
+	interface Props {
+		initialPosIndex: number;
+		onSubmitted?: () => void;
+	}
+
+	let { initialPosIndex, onSubmitted }: Props = $props();
 
 	const itemDetails = getItemDetailsContext();
 
-	let textarea: HTMLTextAreaElement;
+	let textarea = $state<HTMLTextAreaElement | null>(null);
 
 	// Form states
-	let isValid = false;
-	let isSubmitting = false;
-
-	const dispatch = createEventDispatcher();
+	let isValid = $state(false);
+	let isSubmitting = $state(false);
 
 	const queryClient = useQueryClient();
 
 	onMount(() => {
-		textarea.select();
+		textarea?.select();
 	});
 </script>
 
@@ -44,13 +47,13 @@
 			});
 
 			isSubmitting = false;
-			dispatch('close');
+			onSubmitted?.();
 			goto(`/boards/${$itemDetails.boardId}`);
 		};
 	}}
 >
-	<fieldset>
-		<label for="title">Title</label>
+	<label for="title">
+		Title
 		<textarea
 			name="title"
 			id="title"
@@ -59,13 +62,10 @@
 			value={$itemDetails.title}
 			bind:this={textarea}
 		></textarea>
+	</label>
+	<fieldset class="space-y-2">
+		<legend>Copy to...</legend>
+		<ItemDestinationSelection {initialPosIndex} onValidate={(status) => (isValid = status)} />
 	</fieldset>
-	<h4>Copy to...</h4>
-	<ItemDestinationSelection
-		{initialPosIndex}
-		on:validate={(e) => {
-			isValid = e.detail.isValid;
-		}}
-	/>
 	<Button type="submit" class="w-full" disabled={!isValid || isSubmitting}>Create card</Button>
 </form>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { useQueryClient } from '@tanstack/svelte-query';
@@ -7,7 +6,12 @@
 	import ItemDestinationSelection from './item-destination-selection.svelte';
 	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	export let initialPosIndex: number;
+	interface Props {
+		initialPosIndex: number;
+		onSubmitted?: () => void;
+	}
+
+	let { initialPosIndex, onSubmitted }: Props = $props();
 
 	const itemDetails = getItemDetailsContext();
 
@@ -16,10 +20,8 @@
 	const queryClient = useQueryClient();
 
 	// Form states
-	let isValid = false;
-	let isSubmitting = false;
-
-	const dispatch = createEventDispatcher();
+	let isValid = $state(false);
+	let isSubmitting = $state(false);
 </script>
 
 <form
@@ -40,17 +42,15 @@
 			});
 
 			isSubmitting = false;
-			dispatch('close');
+			onSubmitted?.();
 			goto(`/boards/${boardId}`);
 		};
 	}}
 >
 	<input type="title" hidden name="title" value={$itemDetails.title} />
-	<ItemDestinationSelection
-		{initialPosIndex}
-		on:validate={(e) => {
-			isValid = e.detail.isValid;
-		}}
-	/>
+	<fieldset class="space-y-2">
+		<legend>Select destination</legend>
+		<ItemDestinationSelection {initialPosIndex} onValidate={(status) => (isValid = status)} />
+	</fieldset>
 	<Button type="submit" class="w-full" disabled={!isValid || isSubmitting}>Move</Button>
 </form>

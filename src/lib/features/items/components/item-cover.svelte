@@ -21,17 +21,19 @@
 				attachment.type.startsWith('image/')
 			)}
 			itemId={$itemDetails.id}
-			let:targetId
 		>
-			<Button
-				variant="ghost"
-				class="absolute top-36 right-4 flex gap-2"
-				popovertarget={targetId}
-				aria-label="open cover settings"
-			>
-				<IconDockTop />
-				Cover
-			</Button>
+			{#snippet children({ targetId, action })}
+				<Button
+					variant="ghost"
+					class="absolute top-36 right-4 flex gap-2"
+					popovertarget={targetId}
+					popovertargetaction={action}
+					aria-label="open cover settings"
+				>
+					<IconDockTop />
+					Cover
+				</Button>
+			{/snippet}
 		</ItemCoverPopover>
 	</header>
 {/if}

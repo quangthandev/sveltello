@@ -36,17 +36,17 @@
 					value={$itemDetails.title}
 					inputClassName="text-xl w-full font-medium"
 					buttonClassName="text-xl block text-left w-full font-medium"
-					on:submitting={(event) => {
+					onSubmitting={(data) => {
 						const prevItemData = queryClient.getQueryData(['items', $itemDetails.id]);
 
 						if (prevItemData) {
 							queryClient.setQueryData(['items', $itemDetails.id], {
 								...prevItemData,
-								title: event.detail
+								title: data
 							});
 						}
 					}}
-					on:submitted={() => {
+					onSubmitted={() => {
 						queryClient.invalidateQueries({
 							queryKey: ['items', $itemDetails.id]
 						});
@@ -56,9 +56,11 @@
 					}}
 				>
 					<input type="hidden" name="id" value={$itemDetails.id} />
-					<span style:view-transition-name={`item_${$itemDetails.id}_title`} slot="text">
-						{$itemDetails.title}
-					</span>
+					{#snippet text()}
+						<span style:view-transition-name={`item_${$itemDetails.id}_title`}>
+							{$itemDetails.title}
+						</span>
+					{/snippet}
 				</EditableText>
 			</h3>
 			<ItemSubtitle />

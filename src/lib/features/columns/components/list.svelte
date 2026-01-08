@@ -7,13 +7,17 @@
 	import ListActionsMenu from './list-actions-menu.svelte';
 	import ListDropzone from './list-dropzone.svelte';
 
-	export let boardName: string;
-	export let boardId: number;
-	export let column: Column & { items: ItemWithCoverAndAttachments[] };
+	interface Props {
+		boardName: string;
+		boardId: number;
+		column: Column & { items: ItemWithCoverAndAttachments[] };
+	}
 
-	$: ({ id, name, items } = column);
+	let { boardName, boardId, column }: Props = $props();
 
-	let editing: boolean = false;
+	let { id, name, items } = $derived(column);
+
+	let editing: boolean = $state(false);
 </script>
 
 <li
@@ -21,7 +25,7 @@
 >
 	<header class="p-2 flex justify-between items-center">
 		<h2 class="w-full"><ListTitle {id} {name} {boardId} /></h2>
-		<ListActionsMenu {id} {name} {boardId} on:addCard={() => (editing = true)} />
+		<ListActionsMenu {id} {name} {boardId} onAddCard={() => (editing = true)} />
 	</header>
 
 	<ListDropzone {id} {boardName} {boardId} {items} />
@@ -31,13 +35,13 @@
 			{boardId}
 			columnId={id}
 			nextOrder={items.length === 0 ? 1 : items[items.length - 1].order + 1}
-			on:complete={() => (editing = false)}
+			onComplete={() => (editing = false)}
 		/>
 	{:else}
 		<div class="p-2">
 			<Button
 				variant="ghost"
-				on:click={() => (editing = true)}
+				onclick={() => (editing = true)}
 				aria-label="Add a card"
 				class="flex justify-start items-center gap-2 w-full text-muted-foreground"
 			>

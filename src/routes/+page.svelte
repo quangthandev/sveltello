@@ -21,7 +21,7 @@
 		>
 			Sign up
 		</a>
-		<div class="h-full border-r border-slate-500" />
+		<div class="h-full border-r border-slate-500"></div>
 		<a
 			href="/login"
 			class={cn(

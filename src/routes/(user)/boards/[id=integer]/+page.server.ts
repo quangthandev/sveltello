@@ -23,14 +23,14 @@ export async function load({ locals, params }) {
 		const board = await getBoard(Number(params.id), locals.user.id);
 
 		if (!board) {
-			throw error(404, 'Board not found');
+			error(404, 'Board not found');
 		}
 
 		const boards = await getBoardsWithColumns(locals.user.id);
 
 		return { title: board.name, board, boards };
 	} catch (err) {
-		throw error(500, { message: 'Failed to fetch board' });
+		error(500, { message: 'Failed to fetch board' });
 	}
 }
 
@@ -121,7 +121,7 @@ export const actions = {
 		const board = await getBoard(Number(params.id), locals.user.id);
 
 		if (!board) {
-			throw error(404, 'Board not found');
+			error(404, 'Board not found');
 		}
 
 		try {

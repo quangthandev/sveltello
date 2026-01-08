@@ -1,5 +1,5 @@
 import type { Boundary, OffsetOptions } from '@floating-ui/dom';
-import type { Readable } from 'svelte/motion';
+import type { Readable } from 'svelte/store';
 
 /**
  * The floating element configuration.

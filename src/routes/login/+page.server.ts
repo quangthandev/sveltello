@@ -8,7 +8,7 @@ export function load({ locals }) {
 	const user = locals.user;
 
 	if (user) {
-		throw redirect(302, '/boards');
+		redirect(302, '/boards');
 	}
 
 	return { title: 'Login' };
@@ -43,7 +43,7 @@ export const actions = {
 
 			const returnURL = url.searchParams.get('returnURL');
 
-			throw redirect(302, returnURL ? returnURL : '/boards');
+			redirect(302, returnURL ? returnURL : '/boards');
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				return fail(400, {

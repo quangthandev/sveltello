@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 
-	let className: string | undefined = '';
-	export { className as class };
+	let { class: className = '' } = $props();
 </script>
 
 <svg

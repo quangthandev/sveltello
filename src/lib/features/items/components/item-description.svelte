@@ -6,7 +6,7 @@
 
 	const itemDetails = getItemDetailsContext();
 
-	let isEditing = false;
+	let isEditing = $state(false);
 </script>
 
 <section class="relative grid grid-cols-item-section items-start w-full">
@@ -35,17 +35,19 @@
 					id={$itemDetails.id}
 					boardId={$itemDetails.boardId}
 					content={$itemDetails.content}
-					on:close={() => (isEditing = false)}
+					onClose={() => (isEditing = false)}
 				/>
 			{:else}
-				<ItemDescriptionContent content={$itemDetails.content} on:edit={() => (isEditing = true)} />
+				<ItemDescriptionContent content={$itemDetails.content} onEdit={() => (isEditing = true)} />
 
 				{#if $itemDetails.content?.trim() !== ''}
 					<Button
 						variant="secondary"
 						class="absolute top-0 right-2"
-						on:click={() => (isEditing = true)}>Edit</Button
+						onclick={() => (isEditing = true)}
 					>
+						Edit
+					</Button>
 				{/if}
 			{/if}
 		</div>

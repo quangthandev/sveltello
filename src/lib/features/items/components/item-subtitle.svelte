@@ -8,9 +8,11 @@
 
 <p class="text-sm text-muted-foreground px-3">
 	in list
-	<MoveOrCopyItemPopover let:targetId>
-		<Button variant="link" popovertarget={targetId} class="p-0 underline hover:bg-transparent">
-			{$itemDetails.column.name}
-		</Button>
+	<MoveOrCopyItemPopover>
+		{#snippet children({ targetId })}
+			<Button variant="link" popovertarget={targetId} class="p-0 underline hover:bg-transparent">
+				{$itemDetails.column.name}
+			</Button>
+		{/snippet}
 	</MoveOrCopyItemPopover>
 </p>

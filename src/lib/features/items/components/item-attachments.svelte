@@ -79,28 +79,28 @@
 									Added {getRelativeTime(attachment.createdAt)}
 								</span>
 								<span>
-									<CardPopover
-										title="Delete Attachment"
-										targetId={`${$itemDetails.id}_attachment`}
-										let:targetId
-									>
-										<Button
-											variant="ghost"
-											popovertarget={targetId}
-											class="underline hover:bg-transparent">Delete</Button
-										>
-										<div slot="content" class="space-y-4">
-											<p>Deleting an attachment is permanent.</p>
-											<p>There is no undo.</p>
+									<CardPopover title="Delete Attachment" targetId={`${$itemDetails.id}_attachment`}>
+										{#snippet children({ targetId })}
 											<Button
-												variant="destructive"
-												class="w-full"
-												disabled={$deleteAttachmentMutation.isPending}
-												on:click={() => $deleteAttachmentMutation.mutate(attachment.id)}
+												variant="ghost"
+												popovertarget={targetId}
+												class="underline hover:bg-transparent">Delete</Button
 											>
-												Delete
-											</Button>
-										</div>
+										{/snippet}
+										{#snippet content()}
+											<div class="space-y-4">
+												<p>Deleting an attachment is permanent.</p>
+												<p>There is no undo.</p>
+												<Button
+													variant="destructive"
+													class="w-full"
+													disabled={$deleteAttachmentMutation.isPending}
+													onclick={() => $deleteAttachmentMutation.mutate(attachment.id)}
+												>
+													Delete
+												</Button>
+											</div>
+										{/snippet}
 									</CardPopover>
 								</span>
 							</p>

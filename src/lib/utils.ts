@@ -1,5 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
-import type { Readable } from 'svelte/motion';
+import type { Readable } from 'svelte/store';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';

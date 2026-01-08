@@ -10,6 +10,6 @@ export async function GET({ locals }) {
 
 		return json(boards);
 	} catch (err) {
-		throw error(500, { message: 'Failed to fetch boards' });
+		error(500, { message: 'Failed to fetch boards' });
 	}
 }
