@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { onMount, type Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
+	import type { Attachment } from 'svelte/attachments';
 
 	type PopoverTargetAction = 'toggle' | 'show' | 'hide';
 
@@ -28,22 +29,18 @@
 
 	let open = $state(false);
 
-	onMount(() => {
+	function toggleEvent(): Attachment<HTMLDivElement> {
 		function handleToggle(event: ToggleEvent) {
 			open = event.newState === 'open';
 			onToggle?.(open);
 		}
 
-		if (node) {
-			node.addEventListener('toggle', handleToggle);
-		}
+		return (element) => {
+			element.addEventListener('toggle', handleToggle);
 
-		return () => {
-			if (node) {
-				node.removeEventListener('toggle', handleToggle);
-			}
+			return () => element.removeEventListener('toggle', handleToggle);
 		};
-	});
+	}
 </script>
 
 {#if asChild}
@@ -54,6 +51,6 @@
 	</button>
 {/if}
 
-<div id={targetId} popover="auto" bind:this={node} class={className}>
+<div id={targetId} popover="auto" bind:this={node} class={className} {@attach toggleEvent()}>
 	{@render content?.({ open })}
 </div>

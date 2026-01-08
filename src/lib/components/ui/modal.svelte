@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import Portal from './portal.svelte';
 	import { cn } from '$lib/utils';
 	import type { HTMLDialogAttributes } from 'svelte/elements';
 	import { trapFocus } from '$lib/actions/trap-focus';
 	import { escapeKeydown } from '$lib/actions/escape-keydown';
+	import type { Attachment } from 'svelte/attachments';
 
 	interface Props extends HTMLDialogAttributes {
 		node: HTMLDialogElement | null;
@@ -21,23 +21,19 @@
 		...rest
 	}: Props = $props();
 
-	onMount(() => {
+	function click(): Attachment<HTMLDialogElement> {
 		function handleClick(event: PointerEvent) {
 			if (event.target === node) {
 				onDismiss();
 			}
 		}
 
-		if (node) {
-			node.addEventListener('click', handleClick);
-		}
+		return (element) => {
+			element.addEventListener('click', handleClick);
 
-		return () => {
-			if (node) {
-				node.removeEventListener('click', handleClick);
-			}
+			return () => element.removeEventListener('click', handleClick);
 		};
-	});
+	}
 </script>
 
 <Portal>
@@ -50,6 +46,7 @@
 		use:escapeKeydown={{
 			handler: onDismiss
 		}}
+		{@attach click()}
 	>
 		{@render children?.()}
 	</dialog>

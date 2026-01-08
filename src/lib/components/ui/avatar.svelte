@@ -1,7 +1,7 @@
 <!-- Reference: https://svelte.dev/repl/015d1627a7ec49f6a0c070b59d1b4608?version=4.2.12 -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { cn } from '$lib/utils';
+	import type { Attachment } from 'svelte/attachments';
 
 	interface Props {
 		userName: string;
@@ -39,7 +39,7 @@
 		round = true,
 		src = ''
 	}: Props = $props();
-	let avatarImage = $state<HTMLImageElement | null>(null);
+	// let avatarImage = $state<HTMLImageElement | null>(null);
 
 	/*
 	 * LetterAvatar
@@ -95,17 +95,17 @@
 		return dataURI;
 	}
 
-	onMount(() => {
-		if (!avatarImage) return;
-
-		avatarImage.src = src !== '' ? src : LetterAvatar(userName, width);
-	});
+	function imgSrc(): Attachment<HTMLImageElement> {
+		return (element) => {
+			element.src = src !== '' ? src : LetterAvatar(userName, width);
+		};
+	}
 </script>
 
 <img
-	bind:this={avatarImage}
 	class={cn({ 'rounded-full': round })}
 	{width}
 	height={width}
 	alt={userName}
+	{@attach imgSrc()}
 />

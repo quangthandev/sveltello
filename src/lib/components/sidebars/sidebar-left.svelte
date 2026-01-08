@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { cn } from '$lib/utils';
 	import IconChevronLeft from '$lib/components/icons/icon-chevron-left.svelte';
 	import IconChevronRight from '$lib/components/icons/icon-chevron-right.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import SidebarLeftNav from './sidebar-left-nav.svelte';
 	import type { Board } from '$lib/types';
+	import type { Attachment } from 'svelte/attachments';
 
 	interface Props {
 		expanded: boolean;
@@ -16,54 +16,49 @@
 	let { expanded, initialBoards, onToggle }: Props = $props();
 
 	let btnCollapse: Button;
-	let tooltip = $state<HTMLDivElement | null>(null);
 
-	// Toggle the sidebar when the "[" key is pressed...
-	// ..., ignoring the event if the user is typing in an input or textarea field, ...
-	// ... or if the target element or target's parent is content editable.
-	onMount(() => {
-		const handleKeydown = (event: KeyboardEvent) => {
-			const targetElm = event.target as HTMLElement;
+	function tooltip(): Attachment<HTMLDivElement> {
+		return (element) => {
+			const btns = document.querySelectorAll('.sidebar-left-toggler');
 
-			if (
-				event.key === '[' &&
-				!['input', 'textarea'].includes(targetElm.tagName.toLowerCase()) &&
-				!targetElm.isContentEditable &&
-				!targetElm.parentElement?.isContentEditable
-			) {
-				if (!expanded) {
-					onToggle(true);
-					btnCollapse.focus();
+			const supported = Object.hasOwn(HTMLButtonElement.prototype, 'interestForElement');
+			btns.forEach((btn) => {
+				if (supported) {
+					// @ts-expect-error
+					btn.interestForElement = element;
 				} else {
-					onToggle(false);
-					if (document.activeElement instanceof HTMLElement) {
-						document.activeElement.blur();
-					}
+					// TODO
+				}
+			});
+		};
+	}
+</script>
+
+<!-- Toggle the sidebar when the "[" key is pressed... -->
+<!-- ..., ignoring the event if the user is typing in an input or textarea field, ... -->
+<!-- ... or if the target element or target's parent is content editable. -->
+<svelte:window
+	onkeydown={(event) => {
+		const targetElm = event.target as HTMLElement;
+
+		if (
+			event.key === '[' &&
+			!['input', 'textarea'].includes(targetElm.tagName.toLowerCase()) &&
+			!targetElm.isContentEditable &&
+			!targetElm.parentElement?.isContentEditable
+		) {
+			if (!expanded) {
+				onToggle(true);
+				btnCollapse.focus();
+			} else {
+				onToggle(false);
+				if (document.activeElement instanceof HTMLElement) {
+					document.activeElement.blur();
 				}
 			}
-		};
-
-		window.addEventListener('keydown', handleKeydown);
-
-		return () => {
-			window.removeEventListener('keydown', handleKeydown);
-		};
-	});
-
-	// Tooltip
-	onMount(() => {
-		if (!tooltip) return;
-
-		const supported = Object.hasOwn(HTMLButtonElement.prototype, 'interestForElement');
-		if (!supported) return;
-
-		const btns = document.querySelectorAll('.sidebar-left-toggler');
-		btns.forEach((btn) => {
-			// @ts-expect-error
-			btn.interestForElement = tooltip;
-		});
-	});
-</script>
+		}
+	}}
+/>
 
 <Button
 	variant="secondary"
@@ -111,9 +106,9 @@
 </aside>
 
 <p
-	bind:this={tooltip}
 	popover="hint"
 	class="p-2 flex gap-2 justify-center items-center bg-slate-400 rounded-lg"
+	{@attach tooltip()}
 >
 	<span>Toggle Sidebar</span>
 	<code class="grid place-content-center w-6 h-6">[</code>
