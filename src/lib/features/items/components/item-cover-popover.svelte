@@ -26,7 +26,6 @@
 	let attachmentsPicker = $state<ReturnType<typeof PhotosPicker> | null>(null);
 	let unsplashPhotosPicker = $state<ReturnType<typeof UnsplashPhotosPicker> | null>(null);
 
-	let photosCount = 6;
 	let selectedUnsplashPhoto = $state<Photo | null>(null);
 
 	const queryClient = useQueryClient();
@@ -132,7 +131,6 @@
 						bind:this={unsplashPhotosPicker}
 						visible={open}
 						defaultSelectedId={cover?.unsplashPhotoId}
-						count={photosCount}
 						onSelect={(photo) => {
 							selectedUnsplashPhoto = photo;
 							makeCoverFromUnsplashFormElm?.requestSubmit();

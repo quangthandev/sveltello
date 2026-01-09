@@ -5,7 +5,6 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { toast } from 'svelte-sonner';
 	import type { LayoutData } from '../$types';
-	import { run } from 'svelte/legacy';
 
 	interface Props {
 		data: LayoutData;
@@ -15,7 +14,7 @@
 
 	let query = $derived(useBoards(data.boards));
 
-	run(() => {
+	$effect(() => {
 		if ($query.isError) {
 			toast.error($query.error.message);
 		}

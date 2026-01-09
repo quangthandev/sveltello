@@ -5,16 +5,16 @@
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ItemDestinationSelection from './item-destination-selection.svelte';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
 	interface Props {
+		item: ItemFullPayload;
 		initialPosIndex: number;
 		onSubmitted?: () => void;
 	}
 
-	let { initialPosIndex, onSubmitted }: Props = $props();
-
-	const itemDetails = getItemDetailsContext();
+	let { item, initialPosIndex, onSubmitted }: Props = $props();
+	const { id, title, boardId } = $derived(item);
 
 	let textarea = $state<HTMLTextAreaElement | null>(null);
 
@@ -40,15 +40,15 @@
 			await update({ invalidateAll: false });
 
 			queryClient.invalidateQueries({
-				queryKey: ['boards', $itemDetails.boardId]
+				queryKey: ['boards', boardId]
 			});
 			queryClient.invalidateQueries({
-				queryKey: ['items', $itemDetails.id]
+				queryKey: ['items', id]
 			});
 
 			isSubmitting = false;
 			onSubmitted?.();
-			goto(`/boards/${$itemDetails.boardId}`);
+			goto(`/boards/${boardId}`);
 		};
 	}}
 >
@@ -59,13 +59,17 @@
 			id="title"
 			rows="3"
 			class="w-full bg-gray-200 mt-2 px-4 py-2"
-			value={$itemDetails.title}
+			value={title}
 			bind:this={textarea}
 		></textarea>
 	</label>
 	<fieldset class="space-y-2">
 		<legend>Copy to...</legend>
-		<ItemDestinationSelection {initialPosIndex} onValidate={(status) => (isValid = status)} />
+		<ItemDestinationSelection
+			{item}
+			{initialPosIndex}
+			onValidate={(status) => (isValid = status)}
+		/>
 	</fieldset>
 	<Button type="submit" class="w-full" disabled={!isValid || isSubmitting}>Create card</Button>
 </form>

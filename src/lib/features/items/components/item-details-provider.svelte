@@ -5,31 +5,18 @@
 	import IconReload from '$lib/components/icons/icon-reload.svelte';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import { useItem } from '../query-client/queries';
-	import { createItemDetailsContext } from '../contexts/item-details.context';
-	import createItemDetailsStore from '../stores/item-details.store';
-	import { run } from 'svelte/legacy';
-	import type { Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 
 	interface Props {
 		id: string;
 		initialData?: ItemFullPayload | undefined;
-		children?: Snippet;
+		children?: Snippet<[{ item: ItemFullPayload }]>;
 		onClose: () => void;
 	}
 
 	let { id, initialData = undefined, children, onClose }: Props = $props();
 
 	const itemQuery = $derived(useItem(id, initialData));
-
-	const store = createItemDetailsStore();
-	const context = createItemDetailsContext();
-
-	run(() => {
-		if ($itemQuery.data) {
-			store.set($itemQuery.data);
-			context.set(store);
-		}
-	});
 </script>
 
 <div class="relative isolate">
@@ -42,7 +29,17 @@
 	>
 		<IconClose />
 	</Button>
-	{#if $itemQuery.isLoading}
+	{#if $itemQuery.data}
+		{@render children?.({ item: $itemQuery.data })}
+	{:else if $itemQuery.isError}
+		<div class="p-6 min-h-60 grid place-content-center">
+			<p class="text-destructive mb-4">{$itemQuery.error.message}</p>
+			<Button variant="outline" class="flex gap-2" onclick={() => $itemQuery.refetch()}>
+				<IconReload />
+				Reload
+			</Button>
+		</div>
+	{:else}
 		<div class="p-6 bg-gray-100">
 			<div class="flex items-start gap-x-3 mb-6">
 				<Skeleton class="h-6 w-6 mt-1 bg-neutral-200" />
@@ -74,15 +71,5 @@
 				</div>
 			</div>
 		</div>
-	{:else if $itemQuery.isError}
-		<div class="p-6 min-h-60 grid place-content-center">
-			<p class="text-destructive mb-4">{$itemQuery.error.message}</p>
-			<Button variant="outline" class="flex gap-2" onclick={() => $itemQuery.refetch()}>
-				<IconReload />
-				Reload
-			</Button>
-		</div>
-	{:else}
-		{@render children?.()}
 	{/if}
 </div>

@@ -2,54 +2,40 @@
 	import { page } from '$app/state';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import { useBoards } from '$lib/features/boards/query-client/queries';
-	import type { BoardWithColumns, ColumnWithItems } from '$lib/types';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
-	import { run } from 'svelte/legacy';
+	import type { ItemFullPayload } from '$lib/types';
 
 	interface Props {
+		item: ItemFullPayload;
 		initialPosIndex: number;
 		onValidate: (isValid: boolean) => void;
 	}
 
-	let { initialPosIndex, onValidate }: Props = $props();
+	let { item, initialPosIndex, onValidate }: Props = $props();
 
-	const itemDetails = getItemDetailsContext();
-
-	const { boardId, columnId } = $itemDetails;
+	const { boardId, columnId } = $derived(item);
 
 	const query = useBoards(page.data.boards);
 
 	// Initialize selected values
 	let selectedBoardId = $state(boardId);
 	let selectedColumnId = $state(columnId);
-	let selectedPosIndex = $state(initialPosIndex);
 
-	let boards: BoardWithColumns[] = $state([]);
-	let board: BoardWithColumns | undefined = $state();
-	let columns: ColumnWithItems[] = $state([]);
-	let column: ColumnWithItems | undefined = $state();
+	const boards = $derived($query.data);
+	const board = $derived(boards.find((board) => board.id === selectedBoardId));
+	const columns = $derived(board?.columns ?? []);
+	const column = $derived(columns.find((column) => column.id === selectedColumnId));
 
-	run(() => {
-		boards = $query.data;
-		board = boards.find((board) => board.id === selectedBoardId);
-	});
-
-	run(() => {
-		columns = board?.columns ?? [];
-		column = columns.find((column) => column.id === selectedColumnId);
-	});
-
-	run(() => {
-		if (selectedColumnId === columnId) {
-			selectedPosIndex = initialPosIndex;
-		} else {
-			selectedPosIndex = 1;
+	let selectedPosIndex = $derived.by(() => {
+		if (selectedColumnId !== columnId) {
+			return 1;
 		}
+
+		return initialPosIndex;
 	});
 
-	run(() => {
-		onValidate(!$query.isFetching && !$query.isLoading && !!column);
-	});
+	const isValid = $derived(!$query.isFetching && !$query.isLoading && !!column);
+
+	$effect(() => onValidate(isValid));
 </script>
 
 {#if $query.isLoading}

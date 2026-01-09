@@ -5,9 +5,7 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { page } from '$app/state';
 	import { toast } from 'svelte-sonner';
-	import { browser } from '$app/environment';
 	import type { LayoutData } from './$types';
-	import { run } from 'svelte/legacy';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -37,17 +35,13 @@
 	}
 	let expanded = $derived(!!$sidebarPreference?.expanded);
 
-	run(() => {
-		if (page.form) {
-			if (page.status >= 400) {
-				toast.error(page.form.message);
-			}
+	$effect(() => {
+		if (page.form && page.status >= 400) {
+			toast.error(page.form.message);
 		}
 	});
 
-	run(() => {
-		browser && handleToggleSidebar(expanded);
-	});
+	$effect(() => handleToggleSidebar(expanded));
 </script>
 
 <div class="flex flex-grow h-full">

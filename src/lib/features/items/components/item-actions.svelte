@@ -11,16 +11,17 @@
 	import AttachPopover from './attach-popover.svelte';
 	import { useDeleteItem } from '../query-client/mutations';
 	import ItemCoverPopover from './item-cover-popover.svelte';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
-	const itemDetails = getItemDetailsContext();
 	interface Props {
+		item: ItemFullPayload;
 		class?: string | undefined;
 	}
 
-	let { class: className = '' }: Props = $props();
+	let { item, class: className = '' }: Props = $props();
+	const { id, boardId, cover, attachments } = $derived(item);
 
-	const deleteItemMutation = useDeleteItem($itemDetails.boardId);
+	const deleteItemMutation = $derived(useDeleteItem(boardId));
 </script>
 
 <div class="flex flex-col gap-8">
@@ -28,14 +29,12 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Add to card</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<AttachPopover itemId={$itemDetails.id} boardId={$itemDetails.boardId} />
-			{#if !$itemDetails.cover}
+			<AttachPopover itemId={id} {boardId} />
+			{#if !cover}
 				<ItemCoverPopover
-					cover={$itemDetails.cover}
-					attachments={$itemDetails.attachments.filter((attachment) =>
-						attachment.type.startsWith('image/')
-					)}
-					itemId={$itemDetails.id}
+					{cover}
+					attachments={attachments.filter((attachment) => attachment.type.startsWith('image/'))}
+					itemId={id}
 				>
 					{#snippet children({ targetId })}
 						<Button
@@ -56,7 +55,7 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Actions</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<MoveOrCopyItemPopover>
+			<MoveOrCopyItemPopover {item}>
 				{#snippet children({ targetId })}
 					<Button
 						variant="secondary"
@@ -68,7 +67,7 @@
 					</Button>
 				{/snippet}
 			</MoveOrCopyItemPopover>
-			<MoveOrCopyItemPopover action="copy">
+			<MoveOrCopyItemPopover {item} action="copy">
 				{#snippet children({ targetId })}
 					<Button
 						variant="secondary"
@@ -80,7 +79,7 @@
 					</Button>
 				{/snippet}
 			</MoveOrCopyItemPopover>
-			<CardPopover title="Delete Card" targetId={`delete_${$itemDetails.id}`} class="w-80">
+			<CardPopover title="Delete Card" targetId={`delete_${id}`} class="w-80">
 				{#snippet children({ targetId })}
 					<Button
 						variant="secondary"
@@ -100,9 +99,9 @@
 							class="w-full"
 							disabled={$deleteItemMutation.isPending}
 							onclick={async () => {
-								await $deleteItemMutation.mutateAsync($itemDetails.id);
+								await $deleteItemMutation.mutateAsync(id);
 
-								goto(`/boards/${$itemDetails.boardId}`);
+								goto(`/boards/${boardId}`);
 							}}
 						>
 							Delete

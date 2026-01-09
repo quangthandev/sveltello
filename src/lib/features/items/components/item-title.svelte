@@ -2,9 +2,14 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import EditableText from '$lib/components/shared/editable-text.svelte';
 	import ItemSubtitle from './item-subtitle.svelte';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
-	const itemDetails = getItemDetailsContext();
+	interface Props {
+		item: ItemFullPayload;
+	}
+
+	let { item }: Props = $props();
+	const { id, boardId, title } = $derived(item);
 
 	const queryClient = useQueryClient();
 </script>
@@ -33,14 +38,14 @@
 					action="?/updateItemTitle"
 					invalidateAll={false}
 					fieldName="title"
-					value={$itemDetails.title}
+					value={title}
 					inputClassName="text-xl w-full font-medium"
 					buttonClassName="text-xl block text-left w-full font-medium"
 					onSubmitting={(data) => {
-						const prevItemData = queryClient.getQueryData(['items', $itemDetails.id]);
+						const prevItemData = queryClient.getQueryData(['items', id]);
 
 						if (prevItemData) {
-							queryClient.setQueryData(['items', $itemDetails.id], {
+							queryClient.setQueryData(['items', id], {
 								...prevItemData,
 								title: data
 							});
@@ -48,22 +53,22 @@
 					}}
 					onSubmitted={() => {
 						queryClient.invalidateQueries({
-							queryKey: ['items', $itemDetails.id]
+							queryKey: ['items', id]
 						});
 						queryClient.invalidateQueries({
-							queryKey: ['boards', $itemDetails.boardId]
+							queryKey: ['boards', boardId]
 						});
 					}}
 				>
-					<input type="hidden" name="id" value={$itemDetails.id} />
+					<input type="hidden" name="id" value={id} />
 					{#snippet text()}
-						<span style:view-transition-name={`item_${$itemDetails.id}_title`}>
-							{$itemDetails.title}
+						<span style:view-transition-name={`item_${id}_title`}>
+							{title}
 						</span>
 					{/snippet}
 				</EditableText>
 			</h3>
-			<ItemSubtitle />
+			<ItemSubtitle {item} />
 		</div>
 	</div>
 </div>

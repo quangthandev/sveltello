@@ -18,16 +18,18 @@
 </script>
 
 <ItemDetailsProvider {id} {initialData} {onClose}>
-	<ItemCover />
-	<div class="p-6 bg-gray-100">
-		<ItemTitle />
-		<div class="flex flex-col lg:flex-row gap-2">
-			<div class="flex flex-col gap-8 flex-grow">
-				<ItemDescription />
-				<ItemAttachments />
-				<ItemActivity />
+	{#snippet children({ item })}
+		<ItemCover {item} />
+		<div class="p-6 bg-gray-100">
+			<ItemTitle {item} />
+			<div class="flex flex-col lg:flex-row gap-2">
+				<div class="flex flex-col gap-8 flex-grow">
+					<ItemDescription {item} />
+					<ItemAttachments {item} />
+					<ItemActivity {item} />
+				</div>
+				<ItemActions {item} class="min-w-48 translate-y-0 lg:-translate-y-10" />
 			</div>
-			<ItemActions class="min-w-48 translate-y-0 lg:-translate-y-10" />
 		</div>
-	</div>
+	{/snippet}
 </ItemDetailsProvider>
