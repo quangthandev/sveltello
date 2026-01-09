@@ -42,11 +42,15 @@
 			<ul class="space-y-2">
 				{#each $boardsQuery.data ?? [] as board (board.id)}
 					<NavLink href={`/boards/${board.id}`}>
-						<img
-							src={board.imageThumbUrl}
-							alt={board.imageAltDescription || `Photo by ${board.imageUsername} on Unsplash`}
-							class="object-cover aspect-[4/3] h-6 rounded-sm"
-						/>
+						{#if board.imageThumbUrl}
+							<img
+								src={board.imageThumbUrl}
+								alt={board.imageAltDescription || `Photo by ${board.imageUsername} on Unsplash`}
+								class="object-cover aspect-[4/3] h-6 rounded-sm"
+							/>
+						{:else if board.color}
+							<span style:background-color={board.color} class="w-8 h-6 rounded-sm"></span>
+						{/if}
 						<span class="overflow-hidden text-ellipsis">{board.name}</span>
 					</NavLink>
 				{/each}
