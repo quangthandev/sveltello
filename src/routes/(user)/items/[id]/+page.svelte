@@ -10,6 +10,7 @@
 
 	let { data }: Props = $props();
 
+	// svelte-ignore state_referenced_locally
 	let previousPage = $state(`/boards/${data.item.boardId}`);
 
 	afterNavigate(({ from }) => {

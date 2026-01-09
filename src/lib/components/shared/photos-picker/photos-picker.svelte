@@ -15,6 +15,7 @@
 		onSelect
 	}: Props = $props();
 
+	// svelte-ignore state_referenced_locally
 	let selectedImageId = $state(defaultSelectedId ?? '');
 
 	export function resetSelection() {

@@ -34,7 +34,7 @@
 
 	const queryClient = useQueryClient();
 
-	const uploadImageMutation = useUploadImage(id, boardId);
+	const uploadImageMutation = $derived(useUploadImage(id, boardId));
 
 	const handleSubmit: TypedSubmitFunction<ActionData> = async ({ formData }) => {
 		if (!textEditor) return;

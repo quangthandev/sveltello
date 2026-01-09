@@ -14,7 +14,7 @@
 
 	let { initialBoards }: Props = $props();
 
-	const boardsQuery = useBoards(initialBoards);
+	const boardsQuery = $derived(useBoards(initialBoards));
 </script>
 
 <nav class="relative z-10 p-2">

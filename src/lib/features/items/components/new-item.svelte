@@ -24,7 +24,7 @@
 		textareaEl?.focus();
 	});
 
-	const createItemMutation = useCreateItem(boardId);
+	const createItemMutation = $derived(useCreateItem(boardId));
 
 	function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();

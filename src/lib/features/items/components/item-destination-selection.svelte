@@ -17,7 +17,9 @@
 	const query = useBoards(page.data.boards);
 
 	// Initialize selected values
+	// svelte-ignore state_referenced_locally
 	let selectedBoardId = $state(boardId);
+	// svelte-ignore state_referenced_locally
 	let selectedColumnId = $state(columnId);
 
 	const boards = $derived($query.data);

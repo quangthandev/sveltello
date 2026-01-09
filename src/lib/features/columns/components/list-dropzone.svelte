@@ -16,7 +16,7 @@
 
 	let sourceIndex = $state<number | null>(null);
 
-	const updateItemMutation = useUpdateItem(boardId);
+	const updateItemMutation = $derived(useUpdateItem(boardId));
 
 	function handleDndConsider(cId: string, e: CustomEvent<DndEvent<ItemWithCoverAndAttachments>>) {
 		if (id === cId) {
