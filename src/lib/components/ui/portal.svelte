@@ -1,19 +1,22 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import type { Attachment } from 'svelte/attachments';
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	let el: HTMLElement;
+	let { children }: HTMLAttributes<HTMLDivElement> = $props();
 
-	onMount(() => {
-		el.ownerDocument.body.appendChild(el);
-	});
+	function mount(): Attachment {
+		return (element) => {
+			element.ownerDocument.body.appendChild(element);
 
-	onDestroy(() => {
-		if (el?.parentNode) {
-			el.parentNode.removeChild(el);
-		}
-	});
+			return () => {
+				if (element.parentNode) {
+					element.parentNode.removeChild(element);
+				}
+			};
+		};
+	}
 </script>
 
-<div bind:this={el} class="contents" hidden>
-	<slot />
+<div class="contents" hidden {@attach mount()}>
+	{@render children?.()}
 </div>

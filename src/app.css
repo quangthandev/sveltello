@@ -101,12 +101,12 @@ pre > code {
 		@apply bg-background text-foreground;
 	}
 
-	[popover] {
+	:popover-open {
 		position-area: block-end span-inline-end;
 		margin: 4px 0;
 	}
 
-	.use-position-try-fallbacks [popover] {
+	.use-position-try-fallbacks :popover-open {
 		position-try-fallbacks:
 			flip-inline,
 			flip-block,

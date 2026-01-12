@@ -6,41 +6,49 @@
 	import type { Column } from '$lib/types';
 	import type { BoardWithColumns } from '$lib/types';
 	import { useMoveItem } from '../query-client/mutations';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
-	const itemDetails = getItemDetailsContext();
+	interface Props {
+		item: ItemFullPayload;
+	}
+
+	let { item }: Props = $props();
+	const { id, boardId, column, columnId } = $derived(item);
 
 	const queryClient = useQueryClient();
 
-	const board = queryClient.getQueryData<BoardWithColumns>(['boards', $itemDetails.boardId]);
-	const columns = board?.columns ?? [];
+	const board = $derived(queryClient.getQueryData<BoardWithColumns>(['boards', boardId]));
+	const columns = $derived(board?.columns ?? []);
 
-	let suggestedColumn: Column | undefined;
-	let isMoving = false;
+	let isMoving = $state(false);
 
-	if (columns.length > 1) {
-		const columnIndex = columns.findIndex((column) => column.id === $itemDetails.columnId) ?? -1;
+	const suggestedColumn: Column | undefined = $derived.by(() => {
+		if (columns.length > 1) {
+			const columnIndex = columns.findIndex((column) => column.id === columnId) ?? -1;
 
-		if (columnIndex > -1) {
-			const nextColumn = columns[columnIndex + 1];
-			if (nextColumn) {
-				suggestedColumn = nextColumn;
-			} else {
-				suggestedColumn = columns[columnIndex - 1];
+			if (columnIndex > -1) {
+				const nextColumn = columns[columnIndex + 1];
+				if (nextColumn) {
+					return nextColumn;
+				} else {
+					return columns[columnIndex - 1];
+				}
 			}
 		}
-	}
-
-	const moveItemMutation = useMoveItem({
-		id: $itemDetails.id,
-		boardId: $itemDetails.boardId,
-		onMutate: () => {
-			isMoving = true;
-		},
-		onSettled: () => {
-			isMoving = false;
-		}
 	});
+
+	const moveItemMutation = $derived(
+		useMoveItem({
+			id,
+			boardId: boardId,
+			onMutate: () => {
+				isMoving = true;
+			},
+			onSettled: () => {
+				isMoving = false;
+			}
+		})
+	);
 
 	function handleMove() {
 		if (suggestedColumn) {
@@ -53,11 +61,11 @@
 	<h4>Suggested</h4>
 	<Button
 		variant="secondary"
-		on:click={handleMove}
+		onclick={handleMove}
 		disabled={isMoving}
 		class="flex justify-start items-center gap-2 w-full min-h-[40px]"
 	>
-		{#if $itemDetails.column.order < suggestedColumn.order}
+		{#if column.order < suggestedColumn.order}
 			<IconArrowRight />
 		{:else}
 			<IconArrowLeft />

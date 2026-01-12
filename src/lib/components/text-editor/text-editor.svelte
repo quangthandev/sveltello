@@ -1,23 +1,34 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import type { ActionReturn } from 'svelte/action';
 	import type Quill from 'quill';
 	import type { Delta } from 'quill/core';
 	import type { EmitterSource } from 'quill/core/emitter';
 	import type { Range } from 'quill/core/selection';
 	import { initQuill, type Options as TextEditorOptions } from './quill';
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	export let initialContent: string | null = '';
-	export let options: TextEditorOptions = {};
-	export let autofocus: boolean = false;
+	type TextChangeData = { delta: Delta; oldContent: Delta; source: EmitterSource };
+	type SelectionChangeData = { range: Range; oldRange: Range; source: EmitterSource };
+
+	interface Props extends HTMLAttributes<HTMLDivElement> {
+		initialContent?: string | null;
+		options?: TextEditorOptions;
+		autofocus?: boolean;
+		onTextChange?: (data: TextChangeData) => void;
+		onSelectionChange?: (data: SelectionChangeData) => void;
+	}
+
+	let {
+		initialContent = '',
+		options = {},
+		autofocus = false,
+		onTextChange,
+		onSelectionChange,
+		...rest
+	}: Props = $props();
 
 	let quillInstance: Quill;
-	let editor: HTMLDivElement;
-
-	const dispatch = createEventDispatcher<{
-		'text-change': { delta: Delta; oldContent: Delta; source: EmitterSource };
-		'selection-change': { range: Range; oldRange: Range; source: EmitterSource };
-	}>();
+	let editor = $state<HTMLDivElement>();
 
 	interface TextEditorAttributes {}
 
@@ -59,11 +70,11 @@
 		});
 
 		function handleTextChange(delta: Delta, oldContent: Delta, source: EmitterSource) {
-			dispatch('text-change', { delta, oldContent, source });
+			onTextChange?.({ delta, oldContent, source });
 		}
 
 		function handleSelectionChange(range: Range, oldRange: Range, source: EmitterSource) {
-			dispatch('selection-change', { range, oldRange, source });
+			onSelectionChange?.({ range, oldRange, source });
 		}
 
 		return {
@@ -110,7 +121,7 @@
 	}
 </script>
 
-<div bind:this={editor} use:quillEditor={options} {...$$restProps} />
+<div bind:this={editor} use:quillEditor={options} {...rest}></div>
 
 <style>
 	@import url('https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css');

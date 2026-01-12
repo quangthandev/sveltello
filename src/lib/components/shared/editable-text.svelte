@@ -1,28 +1,42 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { createEventDispatcher, tick } from 'svelte';
+	import { tick, type Snippet } from 'svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
 
-	export let value: string;
-	export let fieldName: string;
-	let className: string | undefined = undefined;
-	export { className as class };
-	export let inputClassName: string | undefined = undefined;
-	export let buttonClassName: string | undefined = undefined;
-	export let action: string;
-	export let invalidateAll: boolean | undefined = true;
+	interface Props {
+		value: string;
+		fieldName: string;
+		class?: string | undefined;
+		inputClassName?: string | undefined;
+		buttonClassName?: string | undefined;
+		action: string;
+		invalidateAll?: boolean | undefined;
+		children?: Snippet;
+		text?: Snippet;
+		onSubmitting: (data: FormDataEntryValue | null) => void;
+		onSubmitted: () => void;
+	}
 
-	let isEditing: boolean = false;
+	let {
+		value,
+		fieldName,
+		class: className = undefined,
+		inputClassName = undefined,
+		buttonClassName = undefined,
+		action,
+		invalidateAll = true,
+		children,
+		text,
+		onSubmitting,
+		onSubmitted
+	}: Props = $props();
 
-	let button: Button;
-	let input: Input;
+	let isEditing: boolean = $state(false);
 
-	const dispatch = createEventDispatcher<{
-		submitting: FormDataEntryValue | null;
-		submitted: void;
-	}>();
+	let button = $state<ReturnType<typeof Button> | null>(null);
+	let input = $state<ReturnType<typeof Input> | null>(null);
 </script>
 
 <div class={className}>
@@ -32,16 +46,16 @@
 			{action}
 			use:enhance={({ formData }) => {
 				isEditing = false;
-				dispatch('submitting', formData.get(fieldName));
+				onSubmitting(formData.get(fieldName));
 
 				return async ({ update }) => {
 					await update({ invalidateAll });
 
-					dispatch('submitted');
+					onSubmitted();
 				};
 			}}
 		>
-			<slot />
+			{@render children?.()}
 			<Input
 				bind:this={input}
 				{value}
@@ -49,8 +63,8 @@
 				required
 				name={fieldName}
 				class={cn('px-2 py-1', inputClassName)}
-				on:blur={() => (isEditing = false)}
-				on:keydown={async (event) => {
+				onblur={() => (isEditing = false)}
+				onkeydown={async (event: KeyboardEvent) => {
 					if (event.key === 'Escape') {
 						isEditing = false;
 						await tick();
@@ -64,15 +78,17 @@
 			bind:this={button}
 			variant="ghost"
 			class={cn('px-2 py-1', buttonClassName)}
-			on:click={async () => {
+			onclick={async () => {
 				isEditing = true;
 				await tick();
-				input.select();
+				input?.select();
 			}}
 		>
-			<slot name="text">
+			{#if text}
+				{@render text()}
+			{:else}
 				{value}
-			</slot>
+			{/if}
 		</Button>
 	{/if}
 </div>

@@ -2,39 +2,48 @@
 	import PopoverNative from '../ui/popover-native.svelte';
 	import { cn } from '$lib/utils';
 	import IconClose from '$lib/components/icons/icon-close.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import type { ComponentProps } from 'svelte';
+	import Button from '../ui/button/button.svelte';
 
-	export let targetId: string;
-	let className: string | undefined = '';
-	export { className as class };
+	interface Props extends ComponentProps<typeof PopoverNative> {
+		title: string;
+	}
 
-	export let title: string;
-
-	const dispatch = createEventDispatcher<{
-		toggle: boolean;
-	}>();
+	let {
+		targetId,
+		node = $bindable(),
+		class: className = '',
+		title,
+		children: renderChidren,
+		content: renderContent,
+		onToggle
+	}: Props = $props();
 </script>
 
 <PopoverNative
 	asChild
+	bind:node
 	{targetId}
-	let:targetId
-	on:toggle={(event) => dispatch('toggle', event.detail)}
+	{onToggle}
 	class={cn('space-y-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm', className)}
 >
-	<slot {targetId} />
-	<svelte:fragment slot="content" let:open>
+	{#snippet children({ targetId, action })}
+		{@render renderChidren?.({ targetId, action })}
+	{/snippet}
+	{#snippet content({ open })}
 		<div>
 			<h3 class="font-bold text-center">{title}</h3>
-			<button
-				class="absolute top-2 right-4 text-muted-foreground p-2 rounded-md hover:bg-gray-300"
-				aria-label="close"
+			<Button
+				variant="ghost"
+				size="icon"
 				popovertarget={targetId}
 				popovertargetaction="hide"
+				class="absolute top-2 right-4"
 			>
 				<IconClose />
-			</button>
+				<span class="sr-only">Close</span>
+			</Button>
 		</div>
-		<slot name="content" {open} />
-	</svelte:fragment>
+		{@render renderContent?.({ open })}
+	{/snippet}
 </PopoverNative>

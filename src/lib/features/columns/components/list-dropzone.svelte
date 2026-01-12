@@ -1,35 +1,22 @@
 <script lang="ts">
-	import { dndzone, type DndEvent, TRIGGERS, SHADOW_PLACEHOLDER_ITEM_ID } from 'svelte-dnd-action';
+	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
 	import { useUpdateItem } from '$lib/features/items/query-client/mutations';
 	import type { ItemWithCoverAndAttachments } from '$lib/types';
 	import ListItem from './list-item.svelte';
 	import { cn } from '$lib/utils';
 
-	export let id: string;
-	export let boardName: string;
-	export let boardId: number;
-	export let items: ItemWithCoverAndAttachments[];
-
-	let localItems: ItemWithCoverAndAttachments[] = items;
-	let sourceIndex: number | null = null;
-
-	$: if (items) {
-		dealWithServerUpdate();
+	interface Props {
+		id: string;
+		boardName: string;
+		boardId: number;
+		items: ItemWithCoverAndAttachments[];
 	}
 
-	function dealWithServerUpdate() {
-		const shadowItem = localItems.find((item) => item.id === SHADOW_PLACEHOLDER_ITEM_ID);
+	let { id, boardName, boardId, items }: Props = $props();
 
-		if (!shadowItem) {
-			localItems = items;
-		} else {
-			localItems = items.map((sItem) =>
-				localItems.find((cItem) => sItem.id === cItem.id) ? sItem : shadowItem
-			);
-		}
-	}
+	let sourceIndex = $state<number | null>(null);
 
-	const updateItemMutation = useUpdateItem(boardId);
+	const updateItemMutation = $derived(useUpdateItem(boardId));
 
 	function handleDndConsider(cId: string, e: CustomEvent<DndEvent<ItemWithCoverAndAttachments>>) {
 		if (id === cId) {
@@ -38,7 +25,7 @@
 				sourceIndex = items.findIndex((item) => item.id === e.detail.info.id);
 			}
 
-			localItems = e.detail.items;
+			items = e.detail.items;
 		}
 	}
 
@@ -46,7 +33,7 @@
 		if (id === cId) {
 			const { items: newItems } = e.detail;
 
-			localItems = newItems;
+			items = newItems;
 
 			if (e.detail.info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
 				// Get the index of the item that was dropped
@@ -64,7 +51,7 @@
 				const newOrder = (previousOrder + nextOrder) / 2;
 
 				// Update the item
-				const item = localItems.find((item) => item.id === droppedItemId);
+				const item = items.find((item) => item.id === droppedItemId);
 				if (item) {
 					$updateItemMutation.mutate({ ...item, order: newOrder, columnId: cId });
 				}
@@ -91,15 +78,15 @@
 		'min-h-8': items.length === 0
 	})}
 	use:dndzone={{
-		items: localItems,
+		items: items,
 		flipDurationMs: 300,
 		type: 'items',
 		transformDraggedElement
 	}}
-	on:consider={(e) => handleDndConsider(id, e)}
-	on:finalize={(e) => handleDndFinalize(id, e)}
+	onconsider={(e) => handleDndConsider(id, e)}
+	onfinalize={(e) => handleDndFinalize(id, e)}
 >
-	{#each localItems as item (item.id)}
+	{#each items as item (item.id)}
 		<li>
 			<ListItem {item} {boardName} class="list-item" />
 		</li>

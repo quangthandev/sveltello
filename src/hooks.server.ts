@@ -21,7 +21,7 @@ export const handle = sequence(Sentry.sentryHandle(), async function _handle({ e
 		event.locals.user = null;
 		event.locals.session = null;
 
-		throw redirect(302, `/login?returnURL=${encodeURIComponent(event.url.pathname)}`);
+		redirect(302, `/login?returnURL=${encodeURIComponent(event.url.pathname)}`);
 	} else if (sessionId) {
 		const { session, user } = await lucia.validateSession(sessionId);
 

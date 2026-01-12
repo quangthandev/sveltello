@@ -3,20 +3,24 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { BoardWithColumns } from '$lib/types';
 
-	export let id: string;
-	export let name: string;
-	export let boardId: number;
+	interface Props {
+		id: string;
+		name: string;
+		boardId: number;
+	}
+
+	let { id, name, boardId }: Props = $props();
 
 	const queryClient = useQueryClient();
 
-	const handleSubmit = (event: CustomEvent<FormDataEntryValue | null>) => {
+	const handleSubmit = (data: FormDataEntryValue | null) => {
 		const prevBoardData = queryClient.getQueryData<BoardWithColumns>(['boards', boardId]);
 
-		if (prevBoardData && event.detail) {
+		if (prevBoardData && data) {
 			queryClient.setQueryData(['boards', boardId], {
 				...prevBoardData,
 				columns: prevBoardData.columns.map((column) =>
-					column.id === id ? { ...column, name: event.detail } : column
+					column.id === id ? { ...column, name: data } : column
 				)
 			});
 		}
@@ -30,8 +34,8 @@
 	class="w-full"
 	inputClassName="w-full"
 	buttonClassName="block text-left w-full"
-	on:submitting={handleSubmit}
-	on:submitted={() => {
+	onSubmitting={handleSubmit}
+	onSubmitted={() => {
 		queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 	}}
 >

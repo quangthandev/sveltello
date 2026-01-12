@@ -188,7 +188,7 @@ export const useUploadImage = (itemId: string, boardId: number) => {
 export const useDeleteAttachment = (itemId: string, boardId: number) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<unknown, unknown, string, { prevAttachments: Attachment[] }>({
+	return createMutation<unknown, unknown, string, { prevAttachments: Attachment[] } | null>({
 		mutationFn: async (id) =>
 			(
 				await fetch(`/api/attachments/${id}`, {
@@ -198,7 +198,7 @@ export const useDeleteAttachment = (itemId: string, boardId: number) => {
 		onMutate: async (id) => {
 			const item = queryClient.getQueryData<ItemWithAttachments>(['items', itemId]);
 
-			if (!item) return;
+			if (!item) return null;
 
 			const newAttachments = item.attachments.filter((attachment) => attachment.id !== id);
 

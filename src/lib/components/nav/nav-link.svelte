@@ -1,12 +1,17 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import { page } from '$app/state';
 	import { cn } from '$lib/utils';
+	import type { Snippet } from 'svelte';
+	import { buttonVariants } from '../ui/button';
 
-	export let href: string;
-	export let title: string | undefined = undefined;
+	interface Props {
+		href: string;
+		children: Snippet;
+	}
 
-	$: active = $page.url.pathname === href;
+	let { href, children }: Props = $props();
+
+	let active = $derived(page.url.pathname === href);
 </script>
 
 <li
@@ -14,7 +19,10 @@
 		'bg-slate-500': active
 	})}
 >
-	<Button variant="ghost" {href} class="flex justify-start gap-2" {title}>
-		<slot />
-	</Button>
+	<a
+		{href}
+		class={cn(buttonVariants({ variant: 'ghost' }), 'flex items-center justify-start gap-2')}
+	>
+		{@render children()}
+	</a>
 </li>

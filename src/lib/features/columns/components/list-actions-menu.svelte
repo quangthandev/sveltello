@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { createEventDispatcher, tick } from 'svelte';
+	import { tick } from 'svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { TypedSubmitFunction } from '$lib/form';
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
@@ -11,19 +11,23 @@
 	import type { ActionData } from '../../../../routes/(user)/boards/[id=integer]/$types';
 	import { cn } from '$lib/utils';
 
-	export let id: string;
-	export let name: string;
-	export let boardId: number;
+	interface Props {
+		id: string;
+		name: string;
+		boardId: number;
+		onAddCard: () => void;
+	}
 
-	let isCopying = false;
-	let columnToCopyName: HTMLTextAreaElement;
-	let formElm: HTMLFormElement;
+	let { id, name, boardId, onAddCard }: Props = $props();
 
-	const popoverTargetId = `list_actions_menu_${id}`;
+	let isCopying = $state(false);
+	let columnToCopyName = $state<HTMLTextAreaElement | null>(null);
+	let formElm = $state<HTMLFormElement | null>(null);
+	let popover = $state<HTMLDivElement | null>(null);
+
+	const popoverTargetId = $derived(`list_actions_menu_${id}`);
 
 	const queryClient = useQueryClient();
-
-	const dispatch = createEventDispatcher<{ addCard: void }>();
 
 	const handleCopyList: TypedSubmitFunction<ActionData> = () => {
 		return async ({ update }) => {
@@ -55,12 +59,10 @@
 </script>
 
 <CardPopover
+	bind:node={popover}
 	title={isCopying ? 'Copy List' : 'List actions'}
 	targetId={popoverTargetId}
-	let:targetId
-	on:toggle={(event) => {
-		const open = event.detail;
-
+	onToggle={(open) => {
 		// Reset copying state on close
 		if (!open) {
 			isCopying = false;
@@ -70,21 +72,23 @@
 		'px-0': !isCopying
 	})}
 >
-	<Button
-		variant="ghost"
-		size="icon"
-		class="flex justify-center items-center text-muted-foreground"
-		aria-label="open list actions"
-		popovertarget={targetId}
-	>
-		<IconMore />
-	</Button>
-	<svelte:fragment slot="content">
+	{#snippet children({ targetId })}
+		<Button
+			variant="ghost"
+			size="icon"
+			class="flex justify-center items-center text-muted-foreground"
+			aria-label="open list actions"
+			popovertarget={targetId}
+		>
+			<IconMore />
+		</Button>
+	{/snippet}
+	{#snippet content()}
 		{#if isCopying}
 			<Button
 				variant="ghost"
 				size="icon"
-				on:click={() => (isCopying = false)}
+				onclick={() => (isCopying = false)}
 				class="absolute -top-2 left-2 text-muted-foreground"
 				aria-label="back"
 			>
@@ -95,7 +99,7 @@
 				method="post"
 				action="?/copyColumn"
 				use:enhance={(data) => {
-					close();
+					popover?.hidePopover();
 
 					return handleCopyList(data);
 				}}
@@ -109,15 +113,15 @@
 						required
 						class="border w-full rounded-lg py-1 px-2 mb-6 font-medium text-black"
 						value={name}
-						on:keypress={(e) => {
+						onkeypress={(e) => {
 							if (e.key === 'Enter') {
 								e.preventDefault();
 
-								formElm.requestSubmit();
+								formElm?.requestSubmit();
 								isCopying = false;
 							}
 						}}
-					/>
+					></textarea>
 				</label>
 				<Button type="submit" class="w-full">Create List</Button>
 			</form>
@@ -126,9 +130,9 @@
 				<li>
 					<Button
 						variant="ghost"
-						on:click={() => {
-							dispatch('addCard');
-							close();
+						onclick={() => {
+							popover?.hidePopover();
+							onAddCard();
 						}}
 						class="w-full flex justify-start rounded-none"
 					>
@@ -139,10 +143,10 @@
 					<Button
 						variant="ghost"
 						class="w-full flex justify-start rounded-none"
-						on:click={async () => {
+						onclick={async () => {
 							isCopying = true;
 							await tick();
-							columnToCopyName.select();
+							columnToCopyName?.select();
 						}}
 					>
 						Copy list
@@ -154,18 +158,18 @@
 						method="post"
 						action="?/deleteColumn"
 						use:enhance={(data) => {
-							close();
+							popover?.hidePopover();
 
 							return handleDelete(data);
 						}}
 					>
 						<input hidden name="id" id="id" value={id} />
-						<Button type="submit" variant="ghost" class="w-full flex justify-start rounded-none"
-							>Delete this list</Button
-						>
+						<Button type="submit" variant="ghost" class="w-full flex justify-start rounded-none">
+							Delete this list
+						</Button>
 					</form>
 				</li>
 			</ul>
 		{/if}
-	</svelte:fragment>
+	{/snippet}
 </CardPopover>

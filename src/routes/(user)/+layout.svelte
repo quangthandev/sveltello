@@ -3,22 +3,17 @@
 	import { sidebarPreference } from '$lib/stores/sidebar-preference';
 	import { cn } from '$lib/utils';
 	import { Toaster } from '$lib/components/ui/sonner';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { toast } from 'svelte-sonner';
-	import { browser } from '$app/environment';
 	import type { LayoutData } from './$types';
+	import type { Snippet } from 'svelte';
 
-	export let data: LayoutData;
-
-	$: expanded = !!$sidebarPreference?.expanded;
-
-	$: if ($page.form) {
-		if ($page.status >= 400) {
-			toast.error($page.form.message);
-		}
+	interface Props {
+		data: LayoutData;
+		children?: Snippet;
 	}
 
-	$: browser && handleToggleSidebar(expanded);
+	let { data, children }: Props = $props();
 
 	function handleToggleSidebar(expanded: boolean) {
 		const root = document.documentElement;
@@ -38,18 +33,27 @@
 			);
 		}
 	}
+	let expanded = $derived(!!$sidebarPreference?.expanded);
+
+	$effect(() => {
+		if (page.form && page.status >= 400) {
+			toast.error(page.form.message);
+		}
+	});
+
+	$effect(() => handleToggleSidebar(expanded));
 </script>
 
 <div class="flex flex-grow h-full">
 	<SidebarLeft
 		{expanded}
 		initialBoards={data.boards}
-		on:toggle={(event) => {
-			sidebarPreference.set({ expanded: event.detail });
+		onToggle={(expanded) => {
+			sidebarPreference.set({ expanded });
 		}}
 	/>
 	<main class={cn('w-full h-full main-content')}>
-		<slot />
+		{@render children?.()}
 	</main>
 </div>
 

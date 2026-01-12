@@ -2,7 +2,7 @@ import { lucia } from '$lib/server/auth';
 import { fail, redirect } from '@sveltejs/kit';
 
 export function load() {
-	throw redirect(308, '/');
+	redirect(308, '/');
 }
 
 export const actions = {
@@ -17,6 +17,6 @@ export const actions = {
 			path: '.',
 			...sessionCookie.attributes
 		});
-		throw redirect(302, '/');
+		redirect(302, '/');
 	}
 };

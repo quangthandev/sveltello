@@ -24,7 +24,7 @@ import { safeParseAsyncFormData } from '$lib/form.js';
 
 export async function load({ locals, params }) {
 	if (!params.id) {
-		throw error(404, 'Item not found');
+		error(404, 'Item not found');
 	}
 
 	checkAuthUser(locals, `/items/${params.id}`);
@@ -33,7 +33,7 @@ export async function load({ locals, params }) {
 		const item = await getItem(params.id, locals.user.id);
 
 		if (!item || !item.board) {
-			throw error(404, 'Item not found');
+			error(404, 'Item not found');
 		}
 
 		return {
@@ -47,7 +47,7 @@ export async function load({ locals, params }) {
 			}
 		};
 	} catch (err) {
-		throw error(500, { message: 'Failed to fetch item' });
+		error(500, { message: 'Failed to fetch item' });
 	}
 }
 
@@ -56,7 +56,7 @@ export const actions = {
 		const id = params.id;
 
 		if (!id) {
-			throw error(422, 'ID is required');
+			error(422, 'ID is required');
 		}
 
 		checkAuthUser(locals, `/items/${params.id}`);
@@ -78,7 +78,7 @@ export const actions = {
 		const id = params.id;
 
 		if (!id) {
-			throw error(422, 'ID is required');
+			error(422, 'ID is required');
 		}
 
 		checkAuthUser(locals, `/items/${params.id}`);
@@ -100,7 +100,7 @@ export const actions = {
 		const id = params.id;
 
 		if (!id) {
-			throw error(422, 'ID is required');
+			error(422, 'ID is required');
 		}
 
 		checkAuthUser(locals, `/items/${params.id}`);
@@ -118,11 +118,11 @@ export const actions = {
 			const column = await getColumn(columnId, locals.user.id);
 
 			if (!column) {
-				throw error(404, 'Column not found');
+				error(404, 'Column not found');
 			}
 
 			if (!column) {
-				throw error(404, 'Column not found');
+				error(404, 'Column not found');
 			}
 
 			// Calculate order from position index
@@ -158,7 +158,7 @@ export const actions = {
 		const id = params.id;
 
 		if (!id) {
-			throw error(422, 'ID is required');
+			error(422, 'ID is required');
 		}
 
 		checkAuthUser(locals, `/items/${params.id}`);
@@ -177,7 +177,7 @@ export const actions = {
 			const column = await getColumn(columnId, locals.user.id);
 
 			if (!column) {
-				throw error(404, 'Column not found');
+				error(404, 'Column not found');
 			}
 
 			// Calculate order from position index
@@ -249,7 +249,7 @@ export const actions = {
 		const id = params.id;
 
 		if (!id) {
-			throw error(422, 'ID is required');
+			error(422, 'ID is required');
 		}
 
 		checkAuthUser(locals, `/items/${params.id}`);
@@ -264,7 +264,7 @@ export const actions = {
 		const { attachmentId } = result.data;
 
 		if (!attachmentId) {
-			throw error(422, 'Attachment ID is required');
+			error(422, 'Attachment ID is required');
 		}
 
 		try {
@@ -280,7 +280,7 @@ export const actions = {
 		const id = params.id;
 
 		if (!id) {
-			throw error(422, 'ID is required');
+			error(422, 'ID is required');
 		}
 
 		checkAuthUser(locals, `/items/${params.id}`);
@@ -309,7 +309,7 @@ export const actions = {
 		const id = params.id;
 
 		if (!id) {
-			throw error(422, 'ID is required');
+			error(422, 'ID is required');
 		}
 
 		checkAuthUser(locals, `/items/${params.id}`);

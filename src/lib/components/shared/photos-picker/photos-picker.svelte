@@ -1,15 +1,22 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import type { Photo } from './types';
 
-	export let photos: Photo[];
-	let className: string | undefined = undefined;
-	export { className as class };
-	export let defaultSelectedId: string | null | undefined = undefined;
+	interface Props {
+		photos: Photo[];
+		class?: string | undefined;
+		defaultSelectedId?: string | null | undefined;
+		onSelect?: (photo: Photo) => void;
+	}
 
-	let selectedImageId = defaultSelectedId ?? '';
+	let {
+		photos,
+		class: className = undefined,
+		defaultSelectedId = undefined,
+		onSelect
+	}: Props = $props();
 
-	const dispatch = createEventDispatcher<{ select: Photo }>();
+	// svelte-ignore state_referenced_locally
+	let selectedImageId = $state(defaultSelectedId ?? '');
 
 	export function resetSelection() {
 		selectedImageId = '';
@@ -34,7 +41,7 @@
 					class="opacity-0"
 					value={photo.id}
 					bind:group={selectedImageId}
-					on:change={() => dispatch('select', photo)}
+					onchange={() => onSelect?.(photo)}
 				/>
 			</label>
 			{#if photo.htmlLink && photo.username}

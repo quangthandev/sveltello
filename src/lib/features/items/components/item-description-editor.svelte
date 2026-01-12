@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import { enhance } from '$app/forms';
 	import TextEditor from '$lib/components/text-editor/text-editor.svelte';
 	import type { TypedSubmitFunction } from '$lib/form';
@@ -12,14 +11,17 @@
 	import { useUploadImage } from '../query-client/mutations';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
 
-	export let id: string;
-	export let boardId: number;
-	export let content: string | null;
+	interface Props {
+		id: string;
+		boardId: number;
+		content: string | null;
+		onClose: () => void;
+	}
 
-	let isSubmitting = false;
-	let textEditor: TextEditor;
+	let { id, boardId, content, onClose }: Props = $props();
 
-	const dispatch = createEventDispatcher();
+	let isSubmitting = $state(false);
+	let textEditor = $state<ReturnType<typeof TextEditor> | null>(null);
 
 	const turndownService = new TurndownService({ codeBlockStyle: 'fenced' });
 	turndownService.addRule('codeblock', {
@@ -32,9 +34,11 @@
 
 	const queryClient = useQueryClient();
 
-	const uploadImageMutation = useUploadImage(id, boardId);
+	const uploadImageMutation = $derived(useUploadImage(id, boardId));
 
 	const handleSubmit: TypedSubmitFunction<ActionData> = async ({ formData }) => {
+		if (!textEditor) return;
+
 		isSubmitting = true;
 
 		let html = textEditor.getHTML();
@@ -47,7 +51,7 @@
 			await update({ invalidateAll: false });
 
 			isSubmitting = false;
-			dispatch('close');
+			onClose();
 
 			queryClient.invalidateQueries({
 				queryKey: ['items', id]
@@ -64,16 +68,16 @@
 	method="POST"
 	use:enhance={handleSubmit}
 	use:escapeKeydown={{
-		handler: () => dispatch('close')
+		handler: onClose
 	}}
 	use:clickOutside={{
 		handler: (e) => {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (textEditor.hasFocus()) return;
+			if (textEditor?.hasFocus()) return;
 
-			dispatch('close');
+			onClose();
 		}
 	}}
 >
@@ -98,7 +102,7 @@
 		<Button type="submit" disabled={isSubmitting || $uploadImageMutation.isPending}>Save</Button>
 		<Button
 			variant="ghost"
-			on:click={() => dispatch('close')}
+			onclick={onClose}
 			class="px-4 py-2 font-medium rounded-md hover:bg-gray-300">Cancel</Button
 		>
 	</div>

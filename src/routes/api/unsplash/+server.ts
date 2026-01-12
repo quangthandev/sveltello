@@ -11,7 +11,7 @@ export async function GET({ url }) {
 	});
 
 	if (result.errors) {
-		throw error(500);
+		error(500);
 	}
 
 	const photos = Array.isArray(result.response) ? result.response : [result.response];

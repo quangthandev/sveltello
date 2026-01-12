@@ -10,29 +10,27 @@
 	import { useDeleteAttachment } from '../query-client/mutations';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
 	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
 
-	const itemDetails = getItemDetailsContext();
+	interface Props {
+		item: ItemFullPayload;
+	}
+
+	let { item }: Props = $props();
+	const { id, boardId, attachments } = $derived(item);
 
 	const queryClient = useQueryClient();
 
-	const deleteAttachmentMutation = useDeleteAttachment($itemDetails.id, $itemDetails.boardId);
+	const deleteAttachmentMutation = $derived(useDeleteAttachment(id, boardId));
 
 	const handleMakeOrRemoveCover: TypedSubmitFunction<ActionData> = ({ formData }) => {
 		const attachmentId = formData.get('attachmentId');
 
-		const item = queryClient.getQueryData<ItemFullPayload>(['items', $itemDetails.id]);
-
-		if (!item) {
-			return;
-		}
-
-		const newAttachments = item.attachments.map((attachment) => ({
+		const newAttachments = attachments.map((attachment) => ({
 			...attachment,
 			isCover: attachment.id === attachmentId
 		}));
 
-		queryClient.setQueryData(['items', item.id], {
+		queryClient.setQueryData(['items', id], {
 			...item,
 			attachments: newAttachments
 		});
@@ -40,19 +38,19 @@
 		return async ({ update }) => {
 			await update({ invalidateAll: false });
 
-			queryClient.invalidateQueries({ queryKey: ['items', item.id] });
-			queryClient.invalidateQueries({ queryKey: ['boards', item.boardId] });
+			queryClient.invalidateQueries({ queryKey: ['items', id] });
+			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		};
 	};
 </script>
 
-{#if $itemDetails.attachments?.length > 0}
+{#if attachments?.length > 0}
 	<section class="grid grid-cols-item-section items-start">
 		<IconAttachment />
 		<div class="px-2 w-full">
 			<h3 class="text-xl font-medium mb-4">Attachments</h3>
 			<ul class="flex flex-col gap-2">
-				{#each $itemDetails.attachments as attachment (attachment.id)}
+				{#each attachments as attachment (attachment.id)}
 					<li
 						class="grid items-center grid-cols-1 sm:grid-cols-attachment gap-4 p-2 bg-gray-50 rounded-md"
 					>
@@ -79,28 +77,28 @@
 									Added {getRelativeTime(attachment.createdAt)}
 								</span>
 								<span>
-									<CardPopover
-										title="Delete Attachment"
-										targetId={`${$itemDetails.id}_attachment`}
-										let:targetId
-									>
-										<Button
-											variant="ghost"
-											popovertarget={targetId}
-											class="underline hover:bg-transparent">Delete</Button
-										>
-										<div slot="content" class="space-y-4">
-											<p>Deleting an attachment is permanent.</p>
-											<p>There is no undo.</p>
+									<CardPopover title="Delete Attachment" targetId={`${id}_attachment`}>
+										{#snippet children({ targetId })}
 											<Button
-												variant="destructive"
-												class="w-full"
-												disabled={$deleteAttachmentMutation.isPending}
-												on:click={() => $deleteAttachmentMutation.mutate(attachment.id)}
+												variant="ghost"
+												popovertarget={targetId}
+												class="underline hover:bg-transparent">Delete</Button
 											>
-												Delete
-											</Button>
-										</div>
+										{/snippet}
+										{#snippet content()}
+											<div class="space-y-4">
+												<p>Deleting an attachment is permanent.</p>
+												<p>There is no undo.</p>
+												<Button
+													variant="destructive"
+													class="w-full"
+													disabled={$deleteAttachmentMutation.isPending}
+													onclick={() => $deleteAttachmentMutation.mutate(attachment.id)}
+												>
+													Delete
+												</Button>
+											</div>
+										{/snippet}
 									</CardPopover>
 								</span>
 							</p>
@@ -133,6 +131,7 @@
 	.attachment-name {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
+		line-clamp: 2;
 		-webkit-line-clamp: 2;
 		overflow: hidden;
 	}

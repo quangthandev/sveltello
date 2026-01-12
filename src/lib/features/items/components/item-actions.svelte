@@ -11,13 +11,17 @@
 	import AttachPopover from './attach-popover.svelte';
 	import { useDeleteItem } from '../query-client/mutations';
 	import ItemCoverPopover from './item-cover-popover.svelte';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
-	const itemDetails = getItemDetailsContext();
-	let className: string | undefined = '';
-	export { className as class };
+	interface Props {
+		item: ItemFullPayload;
+		class?: string | undefined;
+	}
 
-	const deleteItemMutation = useDeleteItem($itemDetails.boardId);
+	let { item, class: className = '' }: Props = $props();
+	const { id, boardId, cover, attachments } = $derived(item);
+
+	const deleteItemMutation = $derived(useDeleteItem(boardId));
 </script>
 
 <div class="flex flex-col gap-8">
@@ -25,24 +29,23 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Add to card</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<AttachPopover itemId={$itemDetails.id} boardId={$itemDetails.boardId} />
-			{#if !$itemDetails.cover}
+			<AttachPopover itemId={id} {boardId} />
+			{#if !cover}
 				<ItemCoverPopover
-					cover={$itemDetails.cover}
-					attachments={$itemDetails.attachments.filter((attachment) =>
-						attachment.type.startsWith('image/')
-					)}
-					itemId={$itemDetails.id}
-					let:targetId
+					{cover}
+					attachments={attachments.filter((attachment) => attachment.type.startsWith('image/'))}
+					itemId={id}
 				>
-					<Button
-						variant="secondary"
-						class="flex justify-start items-center gap-2 w-full"
-						popovertarget={targetId}
-					>
-						<IconDockTop />
-						Cover
-					</Button>
+					{#snippet children({ targetId })}
+						<Button
+							variant="secondary"
+							class="flex justify-start items-center gap-2 w-full"
+							popovertarget={targetId}
+						>
+							<IconDockTop />
+							Cover
+						</Button>
+					{/snippet}
 				</ItemCoverPopover>
 			{/if}
 		</div>
@@ -52,56 +55,59 @@
 	<div class={cn('space-y-4', className)}>
 		<h4>Actions</h4>
 		<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-2">
-			<MoveOrCopyItemPopover let:targetId>
-				<Button
-					variant="secondary"
-					popovertarget={targetId}
-					class="flex justify-start items-center gap-2 w-full"
-				>
-					<IconArrowRight />
-					Move
-				</Button>
-			</MoveOrCopyItemPopover>
-			<MoveOrCopyItemPopover action="copy" let:targetId>
-				<Button
-					variant="secondary"
-					popovertarget={targetId}
-					class="flex justify-start items-center gap-2 w-full"
-				>
-					<IconCopy />
-					Copy
-				</Button>
-			</MoveOrCopyItemPopover>
-			<CardPopover
-				title="Delete Card"
-				targetId={`delete_${$itemDetails.id}`}
-				let:targetId
-				class="w-80"
-			>
-				<Button
-					variant="secondary"
-					popovertarget={targetId}
-					class="flex justify-start items-center gap-2 w-full"
-				>
-					<IconDelete />
-					Delete
-				</Button>
-				<div slot="content" class="space-y-4">
-					<p>Deleting a card is permanent.</p>
-					<p>There is no undo.</p>
+			<MoveOrCopyItemPopover {item}>
+				{#snippet children({ targetId })}
 					<Button
-						variant="destructive"
-						class="w-full"
-						disabled={$deleteItemMutation.isPending}
-						on:click={async () => {
-							await $deleteItemMutation.mutateAsync($itemDetails.id);
-
-							goto(`/boards/${$itemDetails.boardId}`);
-						}}
+						variant="secondary"
+						popovertarget={targetId}
+						class="flex justify-start items-center gap-2 w-full"
 					>
+						<IconArrowRight />
+						Move
+					</Button>
+				{/snippet}
+			</MoveOrCopyItemPopover>
+			<MoveOrCopyItemPopover {item} action="copy">
+				{#snippet children({ targetId })}
+					<Button
+						variant="secondary"
+						popovertarget={targetId}
+						class="flex justify-start items-center gap-2 w-full"
+					>
+						<IconCopy />
+						Copy
+					</Button>
+				{/snippet}
+			</MoveOrCopyItemPopover>
+			<CardPopover title="Delete Card" targetId={`delete_${id}`} class="w-80">
+				{#snippet children({ targetId })}
+					<Button
+						variant="secondary"
+						popovertarget={targetId}
+						class="flex justify-start items-center gap-2 w-full"
+					>
+						<IconDelete />
 						Delete
 					</Button>
-				</div>
+				{/snippet}
+				{#snippet content()}
+					<div class="space-y-4">
+						<p>Deleting a card is permanent.</p>
+						<p>There is no undo.</p>
+						<Button
+							variant="destructive"
+							class="w-full"
+							disabled={$deleteItemMutation.isPending}
+							onclick={async () => {
+								await $deleteItemMutation.mutateAsync(id);
+
+								goto(`/boards/${boardId}`);
+							}}
+						>
+							Delete
+						</Button>
+					</div>
+				{/snippet}
 			</CardPopover>
 		</div>
 	</div>

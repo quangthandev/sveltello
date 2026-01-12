@@ -4,7 +4,7 @@ import { getBoard } from '$lib/features/boards/db-queries';
 
 export async function GET({ params, locals }) {
 	if (!params.id) {
-		throw error(422, 'Board ID is required');
+		error(422, 'Board ID is required');
 	}
 
 	checkAuthUser(locals, `/boards/${params.id}`);
@@ -13,11 +13,11 @@ export async function GET({ params, locals }) {
 		const board = await getBoard(Number(params.id), locals.user.id);
 
 		if (!board) {
-			throw error(404, 'Board not found');
+			error(404, 'Board not found');
 		}
 
 		return json(board);
 	} catch (err) {
-		throw error(500, { message: 'Failed to fetch board' });
+		error(500, { message: 'Failed to fetch board' });
 	}
 }

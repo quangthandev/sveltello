@@ -51,9 +51,9 @@ export function checkAuthUser(
 ): asserts locals is { user: import('lucia').User; session: import('lucia').Session } {
 	if (!locals.user) {
 		if (returnUrl) {
-			throw redirect(302, `/login?returnURL=${encodeURIComponent(returnUrl)}`);
+			redirect(302, `/login?returnURL=${encodeURIComponent(returnUrl)}`);
 		}
 
-		throw redirect(302, '/login');
+		redirect(302, '/login');
 	}
 }

@@ -2,8 +2,8 @@
 	import { cn } from '$lib/utils';
 	import { onMount } from 'svelte';
 
-	let p = 0;
-	let visible = false;
+	let p = $state(0);
+	let visible = $state(false);
 
 	onMount(() => {
 		function next() {
@@ -23,12 +23,12 @@
 		<div
 			class="absolute left-0 top-0 h-full bg-cyan-500 transition-width"
 			style="width: {p * 100}%"
-		/>
+		></div>
 	</div>
 {/if}
 
 {#if p >= 0.4}
-	<div class="fixed w-full h-full bg-black opacity-30 pointer-events-none z-40 animate-fade" />
+	<div class="fixed w-full h-full bg-black opacity-30 pointer-events-none z-40 animate-fade"></div>
 {/if}
 
 <style>

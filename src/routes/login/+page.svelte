@@ -1,16 +1,15 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms';
 	import IconLoading from '$lib/components/icons/icon-loading.svelte';
 	import IconLogin from '$lib/components/icons/icon-login.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-	import Label from '$lib/components/ui/label/label.svelte';
 
-	export let form;
+	let { form } = $props();
 
-	$: error = form?.error;
+	let error = $derived(form?.error);
 
-	let isLoading = false;
+	let isLoading = $state(false);
 </script>
 
 <div class="flex min-h-full flex-1 flex-col mt-20 sm:px-6 lg:px-8">
@@ -35,12 +34,12 @@
 				}}
 			>
 				<div>
-					<Label for="email">Email</Label>
+					<label for="email">Email</label>
 					<Input id="email" name="email" type="email" autocomplete="email" required />
 				</div>
 
 				<div>
-					<Label for="password">Password</Label>
+					<label for="password">Password</label>
 					<Input
 						id="password"
 						name="password"

@@ -9,18 +9,24 @@
 	import type { Attachment, Cover } from '$lib/types';
 	import type { Photo } from '$lib/components/shared/photos-picker/types';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
+	import type { ComponentProps } from 'svelte';
+	import PopoverNative from '$lib/components/ui/popover-native.svelte';
 
-	export let itemId: string;
-	export let cover: Cover | null;
-	export let attachments: Attachment[];
+	interface Props {
+		itemId: string;
+		cover: Cover | null;
+		attachments: Attachment[];
+		children: ComponentProps<typeof PopoverNative>['children'];
+	}
 
-	let makeCoverFromUnsplashFormElm: HTMLFormElement;
-	let makeCoverFromAttachmentFormElm: HTMLFormElement;
-	let attachmentsPicker: PhotosPicker | null;
-	let unsplashPhotosPicker: UnsplashPhotosPicker | null;
+	let { itemId, cover, attachments, children: renderChildren }: Props = $props();
 
-	let photosCount = 6;
-	let selectedUnsplashPhoto: Photo;
+	let makeCoverFromUnsplashFormElm = $state<HTMLFormElement | null>(null);
+	let makeCoverFromAttachmentFormElm = $state<HTMLFormElement | null>(null);
+	let attachmentsPicker = $state<ReturnType<typeof PhotosPicker> | null>(null);
+	let unsplashPhotosPicker = $state<ReturnType<typeof UnsplashPhotosPicker> | null>(null);
+
+	let selectedUnsplashPhoto = $state<Photo | null>(null);
 
 	const queryClient = useQueryClient();
 
@@ -81,52 +87,57 @@
 	};
 </script>
 
-<CardPopover title="Cover" targetId={`${itemId}_cover`} let:targetId>
-	<slot {targetId} />
-	<div slot="content" class="w-80 space-y-4" let:open>
-		{#if cover}
-			<form method="post" action="?/removeCover" use:enhance={handleRemoveCover}>
-				<Button type="submit" variant="secondary" class="w-full">Remove cover</Button>
-			</form>
-		{/if}
-		{#if attachments.length > 0}
+<CardPopover title="Cover" targetId={`${itemId}_cover`}>
+	{#snippet children({ targetId, action })}
+		{@render renderChildren?.({ targetId, action })}
+	{/snippet}
+	{#snippet content({ open })}
+		<div class="w-80 space-y-4">
+			{#if cover}
+				<form method="post" action="?/removeCover" use:enhance={handleRemoveCover}>
+					<Button type="submit" variant="secondary" class="w-full">Remove cover</Button>
+				</form>
+			{/if}
+			{#if attachments.length > 0}
+				<form
+					bind:this={makeCoverFromAttachmentFormElm}
+					method="post"
+					action="?/makeCoverFromAttachment"
+					use:enhance={handleMakeCoverFromAttachment}
+				>
+					<h6 class="text-sm font-medium leading-6 text-gray-900 mb-2">Attachments</h6>
+					<PhotosPicker
+						bind:this={attachmentsPicker}
+						class="grid grid-cols-3 gap-2"
+						photos={attachments.map((attachment) => ({
+							id: attachment.id,
+							thumbUrl: attachment.url,
+							alt: attachment.name
+						}))}
+						defaultSelectedId={cover?.attachmentId}
+						onSelect={() => makeCoverFromAttachmentFormElm?.requestSubmit()}
+					/>
+				</form>
+			{/if}
 			<form
-				bind:this={makeCoverFromAttachmentFormElm}
+				bind:this={makeCoverFromUnsplashFormElm}
 				method="post"
-				action="?/makeCoverFromAttachment"
-				use:enhance={handleMakeCoverFromAttachment}
+				action="?/makeCoverFromUnsplash"
+				use:enhance={handleMakeCoverFromUnsplash}
 			>
-				<h6 class="text-sm font-medium leading-6 text-gray-900 mb-2">Attachments</h6>
-				<PhotosPicker
-					bind:this={attachmentsPicker}
-					class="grid grid-cols-3 gap-2"
-					photos={attachments.map((attachment) => ({
-						id: attachment.id,
-						thumbUrl: attachment.url,
-						alt: attachment.name
-					}))}
-					defaultSelectedId={cover?.attachmentId}
-					on:select={() => makeCoverFromAttachmentFormElm.requestSubmit()}
-				/>
+				<fieldset class="space-y-2">
+					<legend class="text-sm font-medium">Photos from Unsplash</legend>
+					<UnsplashPhotosPicker
+						bind:this={unsplashPhotosPicker}
+						visible={open}
+						defaultSelectedId={cover?.unsplashPhotoId}
+						onSelect={(photo) => {
+							selectedUnsplashPhoto = photo;
+							makeCoverFromUnsplashFormElm?.requestSubmit();
+						}}
+					/>
+				</fieldset>
 			</form>
-		{/if}
-		<form
-			bind:this={makeCoverFromUnsplashFormElm}
-			method="post"
-			action="?/makeCoverFromUnsplash"
-			use:enhance={handleMakeCoverFromUnsplash}
-		>
-			<UnsplashPhotosPicker
-				bind:this={unsplashPhotosPicker}
-				title="Photos from Unsplash"
-				visible={open}
-				defaultSelectedId={cover?.unsplashPhotoId}
-				count={photosCount}
-				on:select={(event) => {
-					selectedUnsplashPhoto = event.detail;
-					makeCoverFromUnsplashFormElm.requestSubmit();
-				}}
-			/>
-		</form>
-	</div>
+		</div>
+	{/snippet}
 </CardPopover>

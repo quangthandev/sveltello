@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pushState } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Modal from '$lib/components/ui/modal.svelte';
 	import { cn } from '$lib/utils';
 	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
@@ -11,19 +11,21 @@
 	import { tick } from 'svelte';
 	import { transitionHelper } from '$lib/helpers';
 
-	export let item: ItemWithCoverAndAttachments;
-	export let boardName: string;
-	let className: string | undefined = undefined;
-	export { className as class };
+	interface Props {
+		item: ItemWithCoverAndAttachments;
+		boardName: string;
+		class?: string | undefined;
+	}
 
-	$: ({ id, title, content, attachments, cover } = item);
+	let { item, boardName, class: className = undefined }: Props = $props();
 
-	let pageState: App.PageState & { id?: string };
-	$: pageState = $page.state;
+	let { id, title, content, attachments, cover } = $derived(item);
 
-	let titleEl: HTMLHeadingElement;
-	let coverEl: HTMLDivElement | null;
-	let modal: HTMLDialogElement;
+	let pageState: App.PageState & { id?: string } = $derived(page.state);
+
+	let titleEl = $state<HTMLHeadingElement | null>(null);
+	let coverEl = $state<HTMLDivElement | null>(null);
+	let modal = $state<HTMLDialogElement | null>(null);
 
 	const queryClient = useQueryClient();
 
@@ -48,9 +50,13 @@
 
 		transitionHelper({
 			update() {
+				if (!modal) return;
+
 				modal.showModal();
 
-				titleEl.style.viewTransitionName = '';
+				if (titleEl) {
+					titleEl.style.viewTransitionName = '';
+				}
 				if (coverEl) {
 					coverEl.style.viewTransitionName = '';
 				}
@@ -61,11 +67,15 @@
 	function handleRequestModalClose() {
 		transitionHelper({
 			update() {
+				if (!modal) return;
+
 				modal.requestClose();
 
 				const titleViewTransitionName = `item_${id}_title`;
 				const coverViewTransitionName = `item_${id}_cover`;
-				titleEl.style.viewTransitionName = titleViewTransitionName;
+				if (titleEl) {
+					titleEl.style.viewTransitionName = titleViewTransitionName;
+				}
 				if (coverEl) {
 					coverEl.style.viewTransitionName = coverViewTransitionName;
 				}
@@ -83,8 +93,8 @@
 <!-- and manually prefetch client-side on hover instead -->
 <a
 	data-sveltekit-preload-data="off"
-	on:mouseenter={handleMouseEnter}
-	on:touchstart={handleMouseEnter}
+	onmouseenter={handleMouseEnter}
+	ontouchstart={handleMouseEnter}
 	href="/items/{id}"
 	class={cn(
 		'relative border-t-2 border-b-2 -mb-[2px] last:mb-0 px-2 py-1 border-t-transparent border-b-transparent',
@@ -92,7 +102,7 @@
 		'hover:before:border-2 hover:before:border-cyan-500',
 		className
 	)}
-	on:click={handleNavigate}
+	onclick={handleNavigate}
 >
 	{#if cover}
 		<div
@@ -148,10 +158,10 @@
 {#if pageState.id && pageState.id === id}
 	<Modal
 		bind:node={modal}
-		on:dismiss={handleRequestModalClose}
-		on:close={handleModalClose}
+		onDismiss={handleRequestModalClose}
+		onClose={handleModalClose}
 		class={cn('w-11/12 md:w-9/12 lg:w-[768px] overflow-y-scroll no-scrollbar rounded-2xl')}
 	>
-		<ItemDetails {id} on:close={handleRequestModalClose} />
+		<ItemDetails {id} onClose={handleRequestModalClose} />
 	</Modal>
 {/if}

@@ -1,28 +1,31 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ItemDestinationSelection from './item-destination-selection.svelte';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
-	export let initialPosIndex: number;
+	interface Props {
+		item: ItemFullPayload;
+		initialPosIndex: number;
+		onSubmitted?: () => void;
+	}
 
-	const itemDetails = getItemDetailsContext();
+	let { item, initialPosIndex, onSubmitted }: Props = $props();
+	const { id, title, boardId } = $derived(item);
 
-	let textarea: HTMLTextAreaElement;
+	let textarea = $state<HTMLTextAreaElement | null>(null);
 
 	// Form states
-	let isValid = false;
-	let isSubmitting = false;
-
-	const dispatch = createEventDispatcher();
+	let isValid = $state(false);
+	let isSubmitting = $state(false);
 
 	const queryClient = useQueryClient();
 
 	onMount(() => {
-		textarea.select();
+		textarea?.select();
 	});
 </script>
 
@@ -37,35 +40,36 @@
 			await update({ invalidateAll: false });
 
 			queryClient.invalidateQueries({
-				queryKey: ['boards', $itemDetails.boardId]
+				queryKey: ['boards', boardId]
 			});
 			queryClient.invalidateQueries({
-				queryKey: ['items', $itemDetails.id]
+				queryKey: ['items', id]
 			});
 
 			isSubmitting = false;
-			dispatch('close');
-			goto(`/boards/${$itemDetails.boardId}`);
+			onSubmitted?.();
+			goto(`/boards/${boardId}`);
 		};
 	}}
 >
-	<fieldset>
-		<label for="title">Title</label>
+	<label for="title">
+		Title
 		<textarea
 			name="title"
 			id="title"
 			rows="3"
 			class="w-full bg-gray-200 mt-2 px-4 py-2"
-			value={$itemDetails.title}
+			value={title}
 			bind:this={textarea}
 		></textarea>
+	</label>
+	<fieldset class="space-y-2">
+		<legend>Copy to...</legend>
+		<ItemDestinationSelection
+			{item}
+			{initialPosIndex}
+			onValidate={(status) => (isValid = status)}
+		/>
 	</fieldset>
-	<h4>Copy to...</h4>
-	<ItemDestinationSelection
-		{initialPosIndex}
-		on:validate={(e) => {
-			isValid = e.detail.isValid;
-		}}
-	/>
 	<Button type="submit" class="w-full" disabled={!isValid || isSubmitting}>Create card</Button>
 </form>

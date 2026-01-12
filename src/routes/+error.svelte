@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 </script>
 
 <div class="w-full flex justify-center items-center gap-8 wrapper">
-	<h1 class="font-bold text-xl pr-8 border-r-2 border-neutral-500">{$page.status}</h1>
-	<p>{$page.error?.message || 'Not found'}</p>
+	<h1 class="font-bold text-xl pr-8 border-r-2 border-neutral-500">{page.status}</h1>
+	<p>{page.error?.message || 'Not found'}</p>
 </div>
 
 <style>

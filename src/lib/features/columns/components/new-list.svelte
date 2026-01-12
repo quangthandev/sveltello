@@ -7,14 +7,20 @@
 	import { insertColumnSchema } from '../schemas';
 	import Button from '$lib/components/ui/button/button.svelte';
 
-	export let boardId: number;
+	interface Props {
+		boardId: number;
+	}
 
-	let inputEl: HTMLInputElement;
-	let editing: boolean;
+	let { boardId }: Props = $props();
 
-	$: createColumnMutation = useCreateColumn(boardId);
+	let inputEl = $state<HTMLInputElement | null>(null);
+	let editing = $state<boolean>();
+
+	let createColumnMutation = $derived(useCreateColumn(boardId));
 
 	const handleSubmit = (e: SubmitEvent) => {
+		e.preventDefault();
+
 		const formData = new FormData(e.target as HTMLFormElement);
 		const id = generateId(15);
 
@@ -34,14 +40,16 @@
 
 		$createColumnMutation.mutate(result.data);
 
-		inputEl.value = '';
+		if (inputEl) {
+			inputEl.value = '';
+		}
 	};
 </script>
 
 {#if editing}
 	<form
 		class="p-2 flex-shrink-0 flex flex-col gap-5 overflow-hidden max-h-full w-80 border rounded-xl shadow bg-slate-100"
-		on:submit|preventDefault={handleSubmit}
+		onsubmit={handleSubmit}
 		use:clickOutside={{ handler: () => (editing = false) }}
 	>
 		<input type="hidden" name="boardId" value={boardId} />
@@ -52,7 +60,7 @@
 			name="name"
 			placeholder="Enter column name..."
 			class="border border-slate-400 w-full rounded-lg py-1 px-2 font-medium text-black"
-			on:keydown={(event) => {
+			onkeydown={(event) => {
 				if (event.key === 'Escape') {
 					editing = false;
 				}
@@ -60,7 +68,7 @@
 		/>
 		<div class="flex justify-between">
 			<Button type="submit">Add Column</Button>
-			<Button variant="ghost" on:click={() => (editing = false)}>Cancel</Button>
+			<Button variant="ghost" onclick={() => (editing = false)}>Cancel</Button>
 		</div>
 	</form>
 {:else}
@@ -68,10 +76,10 @@
 		size="lg"
 		aria-label="Add new column"
 		class="w-80 flex-shrink-0 justify-start gap-2 bg-black bg-opacity-60 hover:bg-black hover:bg-opacity-80 rounded-xl"
-		on:click={async () => {
+		onclick={async () => {
 			editing = true;
 			await tick();
-			inputEl.focus();
+			inputEl?.focus();
 		}}
 	>
 		<span>

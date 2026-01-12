@@ -2,11 +2,16 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ItemDescriptionEditor from './item-description-editor.svelte';
 	import ItemDescriptionContent from './item-description-content.svelte';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
-	const itemDetails = getItemDetailsContext();
+	interface Props {
+		item: ItemFullPayload;
+	}
 
-	let isEditing = false;
+	let { item }: Props = $props();
+	const { id, boardId, content } = $derived(item);
+
+	let isEditing = $state(false);
 </script>
 
 <section class="relative grid grid-cols-item-section items-start w-full">
@@ -31,21 +36,18 @@
 		<h3 class="text-xl font-medium mb-3">Description</h3>
 		<div class="min-h-[60px] font-medium rounded-md item-description py-2">
 			{#if isEditing}
-				<ItemDescriptionEditor
-					id={$itemDetails.id}
-					boardId={$itemDetails.boardId}
-					content={$itemDetails.content}
-					on:close={() => (isEditing = false)}
-				/>
+				<ItemDescriptionEditor {id} {boardId} {content} onClose={() => (isEditing = false)} />
 			{:else}
-				<ItemDescriptionContent content={$itemDetails.content} on:edit={() => (isEditing = true)} />
+				<ItemDescriptionContent {content} onEdit={() => (isEditing = true)} />
 
-				{#if $itemDetails.content?.trim() !== ''}
+				{#if content?.trim() !== ''}
 					<Button
 						variant="secondary"
 						class="absolute top-0 right-2"
-						on:click={() => (isEditing = true)}>Edit</Button
+						onclick={() => (isEditing = true)}
 					>
+						Edit
+					</Button>
 				{/if}
 			{/if}
 		</div>

@@ -1,10 +1,14 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Avatar from '$lib/components/ui/avatar.svelte';
 	import { formatTimestamp } from '$lib/utils';
-	import { getItemDetailsContext } from '../contexts/item-details.context';
+	import type { ItemFullPayload } from '$lib/types';
 
-	const itemDetails = getItemDetailsContext();
+	interface Props {
+		item: ItemFullPayload;
+	}
+
+	let { item }: Props = $props();
 </script>
 
 <section class="grid grid-cols-item-section items-start w-full">
@@ -26,14 +30,14 @@
 		<h3 class="text-xl font-medium mb-4">Activity</h3>
 		<ol class="mt-2 space-y-4">
 			<li class="flex items-start gap-x-2">
-				<Avatar userName={$page.data.user.email} />
+				<Avatar userName={page.data.user.email} />
 				<div>
 					<p class="hyphens-auto">
-						<span class="font-bold">{$page.data.user.email}</span> added this card to
-						<span class="font-medium">{$itemDetails.column.name}</span>
+						<span class="font-bold">{page.data.user.email}</span> added this card to
+						<span class="font-medium">{item.column.name}</span>
 					</p>
 					<p class="text-sm text-muted-foreground">
-						{formatTimestamp($itemDetails.createdAt)}
+						{formatTimestamp(item.createdAt)}
 					</p>
 				</div>
 			</li>

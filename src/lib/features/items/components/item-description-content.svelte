@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import markdownit from 'markdown-it';
 	import Button from '$lib/components/ui/button/button.svelte';
 
-	export let content: string | null;
+	interface Props {
+		content: string | null;
+		onEdit: () => void;
+	}
 
-	const dispatch = createEventDispatcher();
+	let { content, onEdit }: Props = $props();
 
 	const md = markdownit();
 </script>
@@ -17,11 +19,11 @@
 		variant="secondary"
 		class="w-full h-[60px] flex justify-start"
 		aria-label="Edit description"
-		on:click={(e) => {
+		onclick={(e: MouseEvent) => {
 			e.preventDefault();
-			dispatch('edit');
+			onEdit();
 		}}
 	>
-		{'Add a more detailed description...'}
+		Add a more detailed description...
 	</Button>
 {/if}

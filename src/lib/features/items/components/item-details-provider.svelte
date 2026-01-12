@@ -1,43 +1,45 @@
 <script lang="ts">
 	import type { ItemFullPayload } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { createEventDispatcher } from 'svelte';
 	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import IconReload from '$lib/components/icons/icon-reload.svelte';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import { useItem } from '../query-client/queries';
-	import { createItemDetailsContext } from '../contexts/item-details.context';
-	import createItemDetailsStore from '../stores/item-details.store';
+	import { type Snippet } from 'svelte';
 
-	export let id: string;
-	export let initialData: ItemFullPayload | undefined = undefined;
-
-	const itemQuery = useItem(id, initialData);
-
-	const store = createItemDetailsStore();
-	const context = createItemDetailsContext();
-
-	$: if ($itemQuery.data) {
-		store.set($itemQuery.data);
-		context.set(store);
+	interface Props {
+		id: string;
+		initialData?: ItemFullPayload | undefined;
+		children?: Snippet<[{ item: ItemFullPayload }]>;
+		onClose: () => void;
 	}
 
-	const dispatch = createEventDispatcher<{ close: void }>();
+	let { id, initialData = undefined, children, onClose }: Props = $props();
+
+	const itemQuery = $derived(useItem(id, initialData));
 </script>
 
 <div class="relative isolate">
 	<Button
 		variant="ghost"
 		size="icon"
-		on:click={() => {
-			dispatch('close');
-		}}
+		onclick={onClose}
 		class="absolute top-4 right-4 z-10 text-muted-foreground"
 		aria-label="close"
 	>
 		<IconClose />
 	</Button>
-	{#if $itemQuery.isLoading}
+	{#if $itemQuery.data}
+		{@render children?.({ item: $itemQuery.data })}
+	{:else if $itemQuery.isError}
+		<div class="p-6 min-h-60 grid place-content-center">
+			<p class="text-destructive mb-4">{$itemQuery.error.message}</p>
+			<Button variant="outline" class="flex gap-2" onclick={() => $itemQuery.refetch()}>
+				<IconReload />
+				Reload
+			</Button>
+		</div>
+	{:else}
 		<div class="p-6 bg-gray-100">
 			<div class="flex items-start gap-x-3 mb-6">
 				<Skeleton class="h-6 w-6 mt-1 bg-neutral-200" />
@@ -69,15 +71,5 @@
 				</div>
 			</div>
 		</div>
-	{:else if $itemQuery.isError}
-		<div class="p-6 min-h-60 grid place-content-center">
-			<p class="text-destructive mb-4">{$itemQuery.error.message}</p>
-			<Button variant="outline" class="flex gap-2" on:click={() => $itemQuery.refetch()}>
-				<IconReload />
-				Reload
-			</Button>
-		</div>
-	{:else}
-		<slot />
 	{/if}
 </div>
