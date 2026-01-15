@@ -1,12 +1,15 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { Attachment } from 'svelte/attachments';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import { type Attachment } from 'svelte/attachments';
 
-	type PopoverTargetAction = 'toggle' | 'show' | 'hide';
+	type PopoverTargetAction = HTMLButtonAttributes['popovertargetaction'];
+	type PopoverType = HTMLButtonAttributes['popover'];
 
 	interface Props<TTargetId extends string = string> {
 		asChild?: boolean;
 		targetId?: TTargetId;
+		popoverType?: PopoverType;
 		node?: HTMLDivElement | null;
 		action?: PopoverTargetAction;
 		class?: string | undefined;
@@ -18,6 +21,7 @@
 	let {
 		asChild = false,
 		targetId = Math.random().toString(36).substring(2),
+		popoverType = 'auto',
 		node = $bindable(),
 		action = 'toggle',
 		class: className = '',
@@ -29,7 +33,7 @@
 
 	let open = $state(false);
 
-	function toggleEvent(): Attachment<HTMLDivElement> {
+	function toggle(): Attachment<HTMLDivElement> {
 		function handleToggle(event: ToggleEvent) {
 			open = event.newState === 'open';
 			onToggle?.(open);
@@ -51,6 +55,13 @@
 	</button>
 {/if}
 
-<div id={targetId} popover="auto" bind:this={node} class={className} {@attach toggleEvent()}>
+<div
+	id={targetId}
+	popover={popoverType}
+	bind:this={node}
+	class={className}
+	{@attach toggle()}
+	{...rest}
+>
 	{@render content?.({ open })}
 </div>
