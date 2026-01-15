@@ -64,7 +64,7 @@
 	>
 		{name}
 	</a>
-	<CardPopover title="Delete board" targetId={`board_${board.id}`}>
+	<CardPopover title="Delete board" targetId={`board_${board.id}`} class="min-w-72">
 		{#snippet children({ targetId })}
 			<Button
 				variant="ghost"

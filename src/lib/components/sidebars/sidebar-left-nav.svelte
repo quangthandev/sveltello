@@ -23,9 +23,9 @@
 			<IconBoards />
 			Boards
 		</NavLink>
-		<li>
-			<h2 class="ml-2 mb-4 font-medium flex justify-between items-center">
-				<span>Your boards</span>
+		<li class="space-y-4">
+			<div class="flex items-center justify-between">
+				<h2 class="font-medium">Your boards</h2>
 				<NewBoard>
 					{#snippet children({ targetId })}
 						<Button
@@ -38,7 +38,7 @@
 						</Button>
 					{/snippet}
 				</NewBoard>
-			</h2>
+			</div>
 			<ul class="space-y-2">
 				{#each $boardsQuery.data ?? [] as board (board.id)}
 					<NavLink href={`/boards/${board.id}`}>
