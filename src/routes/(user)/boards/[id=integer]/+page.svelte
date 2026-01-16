@@ -23,8 +23,8 @@
 
 	let query = $derived(useBoard(Number(page.params.id), data.board));
 
-	let board = $derived($query.data);
-	let columns = $derived($query.data?.columns ?? []);
+	let board = $derived(query.data);
+	let columns = $derived(query.data?.columns ?? []);
 
 	let sourceIndex: number | null = null;
 
@@ -77,7 +77,7 @@
 		const newOrder = (prevOrder + nextOrder) / 2;
 
 		// Update the order of the dropped item
-		$updateColumn.mutate({ id: droppedColumnId, order: newOrder });
+		updateColumn.mutate({ id: droppedColumnId, order: newOrder });
 
 		// Reset source index
 		sourceIndex = null;
@@ -161,5 +161,5 @@
 	</div>
 {:else}
 	<p class="text-center mb-4">Something went wrong</p>
-	<Button variant="secondary" onclick={() => $query.refetch()}>Reload</Button>
+	<Button variant="secondary" onclick={() => query.refetch()}>Reload</Button>
 {/if}

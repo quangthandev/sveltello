@@ -38,7 +38,7 @@
 			return;
 		}
 
-		$createColumnMutation.mutate(result.data);
+		createColumnMutation.mutate(result.data);
 
 		if (inputEl) {
 			inputEl.value = '';

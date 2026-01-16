@@ -15,8 +15,8 @@
 	let query = $derived(useBoards(data.boards));
 
 	$effect(() => {
-		if ($query.isError) {
-			toast.error($query.error.message);
+		if (query.isError) {
+			toast.error(query.error.message);
 		}
 	});
 </script>
@@ -25,7 +25,7 @@
 	<div class="p-8">
 		<h2 class="font-bold mb-2 text-xl">Boards</h2>
 		<ul class="grid-container">
-			{#each $query.data as board (board.id)}
+			{#each query.data as board (board.id)}
 				<li>
 					<Board {board} class="w-full h-40" />
 				</li>

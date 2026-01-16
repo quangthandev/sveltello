@@ -86,7 +86,7 @@
 		options={{
 			placeholder: 'Add a more detailed description...',
 			imageUploader: async (file) => {
-				const res = await $uploadImageMutation.mutateAsync(file);
+				const res = await uploadImageMutation.mutateAsync(file);
 
 				queryClient.invalidateQueries({ queryKey: ['items', id] });
 
@@ -99,7 +99,7 @@
 	/>
 	<input type="hidden" name="id" value={id} />
 	<div class="flex items-center gap-x-2 mt-2">
-		<Button type="submit" disabled={isSubmitting || $uploadImageMutation.isPending}>Save</Button>
+		<Button type="submit" disabled={isSubmitting || uploadImageMutation.isPending}>Save</Button>
 		<Button
 			variant="ghost"
 			onclick={onClose}

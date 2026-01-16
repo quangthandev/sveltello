@@ -4,7 +4,7 @@ import type { Board, BoardWithColumns } from '$lib/types';
 const BASE_URL = '/boards';
 
 export const useBoards = (initialData: Board[] = []) =>
-	createQuery<BoardWithColumns[]>({
+	createQuery<BoardWithColumns[]>(() => ({
 		queryKey: ['boards'],
 		queryFn: async () => {
 			const res = await fetch(BASE_URL);
@@ -16,7 +16,7 @@ export const useBoards = (initialData: Board[] = []) =>
 			return await res.json();
 		},
 		initialData: initialData.map((board) => ({ ...board, columns: [] }))
-	});
+	}));
 
 export const useBoard = (id: number, initialData?: BoardWithColumns) => {
 	const queryFn = async () => {
@@ -30,15 +30,15 @@ export const useBoard = (id: number, initialData?: BoardWithColumns) => {
 	};
 
 	if (!initialData) {
-		return createQuery<BoardWithColumns>({
+		return createQuery<BoardWithColumns>(() => ({
 			queryKey: ['boards', id],
 			queryFn
-		});
+		}));
 	}
 
-	return createQuery<BoardWithColumns>({
+	return createQuery<BoardWithColumns>(() => ({
 		queryKey: ['boards', id],
 		queryFn,
 		initialData
-	});
+	}));
 };

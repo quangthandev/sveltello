@@ -40,7 +40,7 @@
 				</NewBoard>
 			</div>
 			<ul class="space-y-2">
-				{#each $boardsQuery.data ?? [] as board (board.id)}
+				{#each boardsQuery.data ?? [] as board (board.id)}
 					<NavLink href={`/boards/${board.id}`}>
 						{#if board.imageThumbUrl}
 							<img

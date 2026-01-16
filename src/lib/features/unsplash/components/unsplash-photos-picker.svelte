@@ -33,7 +33,7 @@
 
 	const hasDefaultSelectedPhoto = $derived(
 		!!defaultSelectedId &&
-			$randomPhotosQuery.data?.findIndex((photo) => photo.id === defaultSelectedId) === -1
+			randomPhotosQuery.data?.findIndex((photo) => photo.id === defaultSelectedId) === -1
 	);
 
 	const defaultPhotoQuery = $derived(
@@ -45,18 +45,18 @@
 	);
 
 	const isLoading = $derived(
-		$randomPhotosQuery.isLoading ||
-			$randomPhotosQuery.isFetching ||
-			$defaultPhotoQuery.isLoading ||
-			$defaultPhotoQuery.isFetching
+		randomPhotosQuery.isLoading ||
+			randomPhotosQuery.isFetching ||
+			defaultPhotoQuery.isLoading ||
+			defaultPhotoQuery.isFetching
 	);
 
 	const photos: Photo[] | undefined = $derived.by(() => {
-		let randomPhotos = $randomPhotosQuery.data;
+		let randomPhotos = randomPhotosQuery.data;
 
 		// Add default selected photo on top of the collection if existed
-		if ($defaultPhotoQuery.data) {
-			const defaultPhoto = $defaultPhotoQuery.data;
+		if (defaultPhotoQuery.data) {
+			const defaultPhoto = defaultPhotoQuery.data;
 			randomPhotos = randomPhotos?.filter((photo) => photo.id !== defaultPhoto.id);
 			randomPhotos?.unshift(defaultPhoto);
 		}
@@ -90,17 +90,17 @@
 		{defaultSelectedId}
 		{onSelect}
 	/>
-{:else if $randomPhotosQuery.error}
+{:else if randomPhotosQuery.error}
 	<div class={cn('flex flex-col items-center justify-center w-full h-32 bg-neutral-200')}>
 		<p class="text-red-600">
-			{$randomPhotosQuery.error.message}
+			{randomPhotosQuery.error.message}
 		</p>
 		<Button
 			variant="ghost"
 			size="icon"
 			class="text-muted-foreground"
 			aria-label="reload"
-			onclick={() => $randomPhotosQuery.refetch()}
+			onclick={() => randomPhotosQuery.refetch()}
 		>
 			<IconReload />
 		</Button>

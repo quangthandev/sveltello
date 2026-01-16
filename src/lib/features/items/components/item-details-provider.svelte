@@ -16,7 +16,7 @@
 
 	let { id, initialData = undefined, children, onClose }: Props = $props();
 
-	const itemQuery = $derived(useItem(id, initialData));
+	const query = $derived(useItem(id, initialData));
 </script>
 
 <div class="relative isolate">
@@ -29,12 +29,12 @@
 	>
 		<IconClose />
 	</Button>
-	{#if $itemQuery.data}
-		{@render children?.({ item: $itemQuery.data })}
-	{:else if $itemQuery.isError}
+	{#if query.data}
+		{@render children?.({ item: query.data })}
+	{:else if query.isError}
 		<div class="p-6 min-h-60 grid place-content-center">
-			<p class="text-destructive mb-4">{$itemQuery.error.message}</p>
-			<Button variant="outline" class="flex gap-2" onclick={() => $itemQuery.refetch()}>
+			<p class="text-destructive mb-4">{query.error.message}</p>
+			<Button variant="outline" class="flex gap-2" onclick={() => query.refetch()}>
 				<IconReload />
 				Reload
 			</Button>

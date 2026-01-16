@@ -52,7 +52,7 @@
 
 	function handleMove() {
 		if (suggestedColumn) {
-			$moveItemMutation.mutate(suggestedColumn.id);
+			moveItemMutation.mutate(suggestedColumn.id);
 		}
 	}
 </script>

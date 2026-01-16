@@ -72,36 +72,34 @@
 
 						<div class="flex flex-col gap-1 items-start">
 							<p class="font-bold attachment-name">{attachment.name}</p>
-							<p class="flex items-baseline gap-2 text-sm text-muted-foreground">
+							<div class="flex items-baseline gap-2 text-sm text-muted-foreground">
 								<span>
 									Added {getRelativeTime(attachment.createdAt)}
 								</span>
-								<span>
-									<CardPopover title="Delete Attachment" targetId={`${id}_attachment`}>
-										{#snippet children({ targetId })}
+								<CardPopover title="Delete Attachment" targetId={`${id}_attachment`}>
+									{#snippet children({ targetId })}
+										<Button
+											variant="ghost"
+											popovertarget={targetId}
+											class="underline hover:bg-transparent">Delete</Button
+										>
+									{/snippet}
+									{#snippet content()}
+										<div class="space-y-4">
+											<p>Deleting an attachment is permanent.</p>
+											<p>There is no undo.</p>
 											<Button
-												variant="ghost"
-												popovertarget={targetId}
-												class="underline hover:bg-transparent">Delete</Button
+												variant="destructive"
+												class="w-full"
+												disabled={deleteAttachmentMutation.isPending}
+												onclick={() => deleteAttachmentMutation.mutate(attachment.id)}
 											>
-										{/snippet}
-										{#snippet content()}
-											<div class="space-y-4">
-												<p>Deleting an attachment is permanent.</p>
-												<p>There is no undo.</p>
-												<Button
-													variant="destructive"
-													class="w-full"
-													disabled={$deleteAttachmentMutation.isPending}
-													onclick={() => $deleteAttachmentMutation.mutate(attachment.id)}
-												>
-													Delete
-												</Button>
-											</div>
-										{/snippet}
-									</CardPopover>
-								</span>
-							</p>
+												Delete
+											</Button>
+										</div>
+									{/snippet}
+								</CardPopover>
+							</div>
 							{#if attachment.type.startsWith('image/')}
 								<form
 									action={attachment.isCover ? '?/removeCover' : '?/makeCoverFromAttachment'}

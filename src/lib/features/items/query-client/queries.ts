@@ -5,13 +5,13 @@ export const useItem = (id: string, initialData?: ItemFullPayload) => {
 	const queryOptions = useItemQueryOptions(id);
 
 	if (!initialData) {
-		return createQuery<ItemFullPayload>(queryOptions);
+		return createQuery<ItemFullPayload>(() => queryOptions);
 	}
 
-	return createQuery<ItemFullPayload>({
+	return createQuery<ItemFullPayload>(() => ({
 		...queryOptions,
 		initialData
-	});
+	}));
 };
 
 export const useItemQueryOptions = (id: string) =>

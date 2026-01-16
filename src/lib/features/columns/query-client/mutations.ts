@@ -13,7 +13,7 @@ export const useCreateColumn = (boardId: number) => {
 		unknown,
 		ColumnMutation,
 		{ prevBoardData: BoardWithColumns | undefined }
-	>({
+	>(() => ({
 		mutationFn: async (data) => {
 			await fetch('/api/columns', {
 				method: 'POST',
@@ -53,13 +53,13 @@ export const useCreateColumn = (boardId: number) => {
 				queryKey: ['boards', boardId]
 			});
 		}
-	});
+	}));
 };
 
 export const useUpdateColumnOrder = (boardId: number) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<unknown, unknown, ColumnMutationData>({
+	return createMutation<unknown, unknown, ColumnMutationData>(() => ({
 		mutationFn: async (data) => {
 			const res = await fetch(`/columns/${data.id}`, {
 				method: 'PATCH',
@@ -73,5 +73,5 @@ export const useUpdateColumnOrder = (boardId: number) => {
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
-	});
+	}));
 };

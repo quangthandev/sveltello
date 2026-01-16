@@ -19,7 +19,7 @@
 
 		if (!file) return;
 
-		$uploadImageMutation.mutate(file);
+		uploadImageMutation.mutate(file);
 	}
 </script>
 
@@ -39,7 +39,7 @@
 					for="item-attachment-file-picker"
 					class={cn(
 						'flex items-center justify-center w-full p-2 rounded-md bg-gray-300 hover:bg-gray-300/80 cursor-pointer',
-						{ 'opacity-50 cursor-not-allowed': $uploadImageMutation.isPending }
+						{ 'opacity-50 cursor-not-allowed': uploadImageMutation.isPending }
 					)}
 				>
 					Choose a file
@@ -50,7 +50,7 @@
 					type="file"
 					accept="image/*, application/pdf"
 					hidden
-					disabled={$uploadImageMutation.isPending}
+					disabled={uploadImageMutation.isPending}
 					onchange={handleFileChange}
 				/>
 			</div>

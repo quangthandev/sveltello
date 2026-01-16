@@ -53,7 +53,7 @@
 				// Update the item
 				const item = items.find((item) => item.id === droppedItemId);
 				if (item) {
-					$updateItemMutation.mutate({ ...item, order: newOrder, columnId: cId });
+					updateItemMutation.mutate({ ...item, order: newOrder, columnId: cId });
 				}
 
 				// Reset the source index
