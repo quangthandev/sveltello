@@ -10,7 +10,7 @@ export const useUnsplashRandomPhotos = ({
 	count: number;
 	enabled?: boolean;
 }) =>
-	createQuery<Random[]>({
+	createQuery<Random[]>(() => ({
 		queryKey: ['unsplash-random-photos', count],
 		queryFn: async () => {
 			const res = await fetch(`${BASE_URL}?count=${count}`);
@@ -23,13 +23,13 @@ export const useUnsplashRandomPhotos = ({
 		},
 		enabled,
 		staleTime: Infinity // store the data indefinitely until users manually refetch
-	});
+	}));
 
 export const useUnsplashPhoto = (
 	id: string | null | undefined,
 	{ enabled }: { enabled: boolean }
 ) =>
-	createQuery<Random>({
+	createQuery<Random>(() => ({
 		queryKey: ['unsplash-photo', id],
 		queryFn: async () => {
 			const res = await fetch(`${BASE_URL}/${id}`);
@@ -42,4 +42,4 @@ export const useUnsplashPhoto = (
 		},
 		enabled,
 		staleTime: Infinity
-	});
+	}));

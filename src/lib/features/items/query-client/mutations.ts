@@ -9,7 +9,7 @@ export const useCreateItem = (boardId: number) => {
 		Error,
 		ItemMutation,
 		{ prevBoardData: BoardWithColumns | undefined }
-	>({
+	>(() => ({
 		mutationFn: async (data) =>
 			(
 				await fetch(`/items`, {
@@ -59,13 +59,13 @@ export const useCreateItem = (boardId: number) => {
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
-	});
+	}));
 };
 
 export const useUpdateItem = (boardId: number) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<unknown, Error, ItemMutation>({
+	return createMutation<unknown, Error, ItemMutation>(() => ({
 		mutationFn: async (data) => {
 			const response = await fetch(`/items/${data.id}`, {
 				method: 'PUT',
@@ -83,43 +83,45 @@ export const useUpdateItem = (boardId: number) => {
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
-	});
+	}));
 };
 
 export const useDeleteItem = (boardId: number) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<unknown, Error, string, { prevBoardData: BoardWithColumns | undefined }>({
-		mutationFn: async (id) =>
-			(
-				await fetch(`/items/${id}`, {
-					method: 'DELETE'
-				})
-			).json(),
-		onMutate: async (id) => {
-			const prevBoardData = queryClient.getQueryData<BoardWithColumns>(['boards', boardId]);
+	return createMutation<unknown, Error, string, { prevBoardData: BoardWithColumns | undefined }>(
+		() => ({
+			mutationFn: async (id) =>
+				(
+					await fetch(`/items/${id}`, {
+						method: 'DELETE'
+					})
+				).json(),
+			onMutate: async (id) => {
+				const prevBoardData = queryClient.getQueryData<BoardWithColumns>(['boards', boardId]);
 
-			if (prevBoardData) {
-				queryClient.setQueryData(['boards', boardId], {
-					...prevBoardData,
-					columns: prevBoardData.columns.map((column) => ({
-						...column,
-						items: column.items.filter((item) => item.id !== id)
-					}))
-				});
-			}
+				if (prevBoardData) {
+					queryClient.setQueryData(['boards', boardId], {
+						...prevBoardData,
+						columns: prevBoardData.columns.map((column) => ({
+							...column,
+							items: column.items.filter((item) => item.id !== id)
+						}))
+					});
+				}
 
-			return { prevBoardData };
-		},
-		onError: (_err, _variables, context) => {
-			if (context?.prevBoardData) {
-				queryClient.setQueryData(['boards', boardId], context.prevBoardData);
+				return { prevBoardData };
+			},
+			onError: (_err, _variables, context) => {
+				if (context?.prevBoardData) {
+					queryClient.setQueryData(['boards', boardId], context.prevBoardData);
+				}
+			},
+			onSettled: () => {
+				queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 			}
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
-		}
-	});
+		})
+	);
 };
 
 export const useMoveItem = ({
@@ -135,7 +137,7 @@ export const useMoveItem = ({
 }) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<unknown, unknown, string>({
+	return createMutation<unknown, unknown, string>(() => ({
 		mutationFn: async (columnId) => {
 			const res = await fetch(`/items/${id}`, {
 				method: 'PATCH',
@@ -154,13 +156,13 @@ export const useMoveItem = ({
 				queryKey: ['boards', boardId]
 			});
 		}
-	});
+	}));
 };
 
 export const useUploadImage = (itemId: string, boardId: number) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<{ url: string }, unknown, File>({
+	return createMutation<{ url: string }, unknown, File>(() => ({
 		mutationFn: async (file) => {
 			// Limit file size to 4.5MB due to Vercel's serverless function payload limit
 			if (file.size > 4.5 * 1024 * 1024) {
@@ -182,13 +184,13 @@ export const useUploadImage = (itemId: string, boardId: number) => {
 			// TODO: find a more efficient way to invalidate board items' attachments, instead of invalidating the whole board
 			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
-	});
+	}));
 };
 
 export const useDeleteAttachment = (itemId: string, boardId: number) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<unknown, unknown, string, { prevAttachments: Attachment[] } | null>({
+	return createMutation<unknown, unknown, string, { prevAttachments: Attachment[] } | null>(() => ({
 		mutationFn: async (id) =>
 			(
 				await fetch(`/api/attachments/${id}`, {
@@ -224,5 +226,5 @@ export const useDeleteAttachment = (itemId: string, boardId: number) => {
 			// TODO: find a more efficient way to invalidate board items' attachments, instead of invalidating the whole board
 			queryClient.invalidateQueries({ queryKey: ['boards', boardId] });
 		}
-	});
+	}));
 };

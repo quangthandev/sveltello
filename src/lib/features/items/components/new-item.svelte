@@ -44,7 +44,7 @@
 
 		try {
 			const parsedData = createItemSchema.parse(data);
-			$createItemMutation.mutate(parsedData);
+			createItemMutation.mutate(parsedData);
 			if (textareaEl) {
 				textareaEl.value = '';
 			}

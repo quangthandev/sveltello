@@ -18,7 +18,7 @@
 	const { id, boardId, columnId } = $derived(item);
 
 	const boardQuery = $derived(useBoard(boardId));
-	let column = $derived(($boardQuery.data?.columns ?? []).find((column) => column.id === columnId));
+	let column = $derived((boardQuery.data?.columns ?? []).find((column) => column.id === columnId));
 
 	const initialPosIndex = $derived.by(() => {
 		if (!column) {

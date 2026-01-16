@@ -22,7 +22,7 @@
 	// svelte-ignore state_referenced_locally
 	let selectedColumnId = $state(columnId);
 
-	const boards = $derived($query.data);
+	const boards = $derived(query.data);
 	const board = $derived(boards.find((board) => board.id === selectedBoardId));
 	const columns = $derived(board?.columns ?? []);
 	const column = $derived(columns.find((column) => column.id === selectedColumnId));
@@ -35,12 +35,12 @@
 		return initialPosIndex;
 	});
 
-	const isValid = $derived(!$query.isFetching && !$query.isLoading && !!column);
+	const isValid = $derived(!query.isFetching && !query.isLoading && !!column);
 
 	$effect(() => onValidate(isValid));
 </script>
 
-{#if $query.isLoading}
+{#if query.isLoading}
 	<Skeleton class="h-16 rounded-md bg-gray-200" />
 {:else}
 	<div class="relative min-h-[48px] px-4 py-2 rounded-md bg-secondary">
@@ -66,7 +66,7 @@
 		</select>
 	</div>
 {/if}
-{#if $query.isLoading}
+{#if query.isLoading}
 	<Skeleton class="h-16 rounded-md bg-secondary" />
 {:else}
 	<div class="flex justify-between gap-2">

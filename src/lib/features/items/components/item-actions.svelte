@@ -97,9 +97,9 @@
 						<Button
 							variant="destructive"
 							class="w-full"
-							disabled={$deleteItemMutation.isPending}
+							disabled={deleteItemMutation.isPending}
 							onclick={async () => {
-								await $deleteItemMutation.mutateAsync(id);
+								await deleteItemMutation.mutateAsync(id);
 
 								goto(`/boards/${boardId}`);
 							}}

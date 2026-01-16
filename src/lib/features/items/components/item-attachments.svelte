@@ -92,8 +92,8 @@
 												<Button
 													variant="destructive"
 													class="w-full"
-													disabled={$deleteAttachmentMutation.isPending}
-													onclick={() => $deleteAttachmentMutation.mutate(attachment.id)}
+													disabled={deleteAttachmentMutation.isPending}
+													onclick={() => deleteAttachmentMutation.mutate(attachment.id)}
 												>
 													Delete
 												</Button>
