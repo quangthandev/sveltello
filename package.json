@@ -32,7 +32,7 @@
 		"autoprefixer": "^10.4.17",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.21.1",
-		"eslint": "^8.56.0",
+		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^3.14.0",
 		"parchment": "^3.0.0-alpha.2",
