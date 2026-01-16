@@ -10,7 +10,7 @@
 	let { item }: Props = $props();
 </script>
 
-<p class="text-sm text-muted-foreground px-3">
+<div class="text-sm text-muted-foreground px-3">
 	in list
 	<MoveOrCopyItemPopover {item}>
 		{#snippet children({ targetId })}
@@ -19,4 +19,4 @@
 			</Button>
 		{/snippet}
 	</MoveOrCopyItemPopover>
-</p>
+</div>
