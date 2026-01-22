@@ -17,9 +17,7 @@ const adapter = new LibSQLAdapter(dbClient, adapterOptions);
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {
 		attributes: {
-			// set to `true` when using HTTPS
-			// secure: !dev
-			secure: false
+			secure: !dev
 		}
 	},
 	getUserAttributes: (attributes) => {
