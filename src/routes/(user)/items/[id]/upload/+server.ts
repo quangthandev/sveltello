@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import s3Client from '$lib/server/s3';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { R2_BUCKET_NAME, R2_PUBLIC_BUCKET_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { createAttachment, getItem, makeCover } from '$lib/features/items/db-queries';
 import { checkAuthUser } from '$lib/server/auth';
 
@@ -41,7 +41,7 @@ export async function POST({ request, params, locals }) {
 	const presignedUrl = await getSignedUrl(
 		s3Client,
 		new PutObjectCommand({
-			Bucket: R2_BUCKET_NAME,
+			Bucket: env.R2_BUCKET_NAME,
 			Key: objectKey,
 			ContentType: fileType,
 			ACL: 'public-read'
@@ -63,7 +63,7 @@ export async function POST({ request, params, locals }) {
 		error(500, 'Failed to upload image');
 	}
 
-	const url = `${R2_PUBLIC_BUCKET_URL}/${objectKey}`;
+	const url = `${env.R2_PUBLIC_BUCKET_URL}/${objectKey}`;
 
 	await createAttachment(params.id, fileName, fileType, url);
 

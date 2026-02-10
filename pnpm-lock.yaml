@@ -81,6 +81,9 @@ importers:
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
         version: 3.3.1(@sveltejs/kit@2.49.5(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.46.4)(vite@5.4.21(@types/node@25.0.9)))(svelte@5.46.4)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.9)))
+      '@sveltejs/adapter-node':
+        specifier: ^5.5.1
+        version: 5.5.1(@sveltejs/kit@2.49.5(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.46.4)(vite@5.4.21(@types/node@25.0.9)))(svelte@5.46.4)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.9)))
       '@sveltejs/kit':
         specifier: ^2.5.27
         version: 2.49.5(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.46.4)(vite@5.4.21(@types/node@25.0.9)))(svelte@5.46.4)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.9))
@@ -1534,6 +1537,42 @@ packages:
     peerDependencies:
       '@opentelemetry/api': ^1.8
 
+  '@rollup/plugin-commonjs@28.0.9':
+    resolution: {integrity: sha512-PIR4/OHZ79romx0BVVll/PkwWpJ7e5lsqFa3gFfcrFPWwLXLV39JVUzQV9RKjWerE7B845Hqjj9VYlQeieZ2dA==}
+    engines: {node: '>=16.0.0 || 14 >= 14.17'}
+    peerDependencies:
+      rollup: ^2.68.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/plugin-json@6.1.0':
+    resolution: {integrity: sha512-EGI2te5ENk1coGeADSIwZ7G2Q8CJS2sF120T7jLw4xFw9n7wIOXHo+kIYRAoVpJAN+kmqZSoO3Fp4JtoNF4ReA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/plugin-node-resolve@16.0.3':
+    resolution: {integrity: sha512-lUYM3UBGuM93CnMPG1YocWu7X802BrNF3jW2zny5gQyLQgRFJhV1Sq0Zi74+dh/6NBx1DxFC4b4GXg9wUCG5Qg==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.78.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/pluginutils@5.3.0':
+    resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
   '@rollup/rollup-android-arm-eabi@4.55.1':
     resolution: {integrity: sha512-9R0DM/ykwfGIlNu6+2U09ga0WXeZ9MRC2Ter8jnz8415VbuIykVuc6bhdrbORFZANDmTDvq26mJrEVTl8TdnDg==}
     cpu: [arm]
@@ -2030,6 +2069,11 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
 
+  '@sveltejs/adapter-node@5.5.1':
+    resolution: {integrity: sha512-VpZdPNRPQuZRtgfAMETPWWKpZx9JwXmUUsgz/+eSpw/Oh7+2O1uZHlsQTuyfxydJHPrRzjfu/ItcJjY4oscCiQ==}
+    peerDependencies:
+      '@sveltejs/kit': ^2.4.0
+
   '@sveltejs/kit@2.49.5':
     resolution: {integrity: sha512-dCYqelr2RVnWUuxc+Dk/dB/SjV/8JBndp1UovCyCZdIQezd8TRwFLNZctYkzgHxRJtaNvseCSRsuuHPeUgIN/A==}
     engines: {node: '>=18.13'}
@@ -2122,6 +2166,9 @@ packages:
 
   '@types/pg@8.15.6':
     resolution: {integrity: sha512-NoaMtzhxOrubeL/7UZuNTrejB4MPAJ0RpxZqXQf2qXuVlTPuG6Y8p4u9dKRaue4yjmC7ZhzVO2/Yyyn25znrPQ==}
+
+  '@types/resolve@1.20.2':
+    resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
 
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
@@ -2398,6 +2445,9 @@ packages:
   commander@9.5.0:
     resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
     engines: {node: ^12.20.0 || >=14}
+
+  commondir@1.0.1:
+    resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -2739,6 +2789,9 @@ packages:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
     engines: {node: '>=4.0'}
 
+  estree-walker@2.0.2:
+    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
+
   estree-walker@3.0.3:
     resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
 
@@ -2994,6 +3047,9 @@ packages:
     resolution: {integrity: sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==}
     engines: {node: '>=0.10.0'}
 
+  is-module@1.0.0:
+    resolution: {integrity: sha512-51ypPSPCoTEIN9dy5Oy+h4pShgJmPCygKfyRCISBI+JoWT/2oJvK8QPxmwv7b/p239jXrm9M1mlQbyKJ5A152g==}
+
   is-number@7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
@@ -3004,6 +3060,9 @@ packages:
 
   is-promise@2.2.2:
     resolution: {integrity: sha512-+lP4/6lKUBfQjZ2pdxThZvLUAafmZb8OAxFb8XXtiQmS35INgr85hdOGoEs124ez1FCnZJt6jau/T+alh58QFQ==}
+
+  is-reference@1.2.1:
+    resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
 
   is-reference@3.0.3:
     resolution: {integrity: sha512-ixkJoqQvAP88E6wLydLGGqCJsrFUnqoH6HnaczB8XmDH1oaWU+xxdptvikTgaEhtZ53Ky6YXiBuUI2WXLMCwjw==}
@@ -5483,6 +5542,42 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@rollup/plugin-commonjs@28.0.9(rollup@4.55.1)':
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.55.1)
+      commondir: 1.0.1
+      estree-walker: 2.0.2
+      fdir: 6.5.0(picomatch@4.0.3)
+      is-reference: 1.2.1
+      magic-string: 0.30.21
+      picomatch: 4.0.3
+    optionalDependencies:
+      rollup: 4.55.1
+
+  '@rollup/plugin-json@6.1.0(rollup@4.55.1)':
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.55.1)
+    optionalDependencies:
+      rollup: 4.55.1
+
+  '@rollup/plugin-node-resolve@16.0.3(rollup@4.55.1)':
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.55.1)
+      '@types/resolve': 1.20.2
+      deepmerge: 4.3.1
+      is-module: 1.0.0
+      resolve: 1.22.11
+    optionalDependencies:
+      rollup: 4.55.1
+
+  '@rollup/pluginutils@5.3.0(rollup@4.55.1)':
+    dependencies:
+      '@types/estree': 1.0.8
+      estree-walker: 2.0.2
+      picomatch: 4.0.3
+    optionalDependencies:
+      rollup: 4.55.1
+
   '@rollup/rollup-android-arm-eabi@4.55.1':
     optional: true
 
@@ -6102,6 +6197,14 @@ snapshots:
       '@sveltejs/kit': 2.49.5(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.46.4)(vite@5.4.21(@types/node@25.0.9)))(svelte@5.46.4)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.9))
       import-meta-resolve: 4.2.0
 
+  '@sveltejs/adapter-node@5.5.1(@sveltejs/kit@2.49.5(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.46.4)(vite@5.4.21(@types/node@25.0.9)))(svelte@5.46.4)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.9)))':
+    dependencies:
+      '@rollup/plugin-commonjs': 28.0.9(rollup@4.55.1)
+      '@rollup/plugin-json': 6.1.0(rollup@4.55.1)
+      '@rollup/plugin-node-resolve': 16.0.3(rollup@4.55.1)
+      '@sveltejs/kit': 2.49.5(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.46.4)(vite@5.4.21(@types/node@25.0.9)))(svelte@5.46.4)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.9))
+      rollup: 4.55.1
+
   '@sveltejs/kit@2.49.5(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.46.4)(vite@5.4.21(@types/node@25.0.9)))(svelte@5.46.4)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.9))':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -6215,6 +6318,8 @@ snapshots:
       '@types/node': 25.0.9
       pg-protocol: 1.11.0
       pg-types: 2.2.0
+
+  '@types/resolve@1.20.2': {}
 
   '@types/semver@7.7.1': {}
 
@@ -6522,6 +6627,8 @@ snapshots:
   commander@4.1.1: {}
 
   commander@9.5.0: {}
+
+  commondir@1.0.1: {}
 
   concat-map@0.0.1: {}
 
@@ -6904,6 +7011,8 @@ snapshots:
 
   estraverse@5.3.0: {}
 
+  estree-walker@2.0.2: {}
+
   estree-walker@3.0.3:
     dependencies:
       '@types/estree': 1.0.8
@@ -7175,11 +7284,17 @@ snapshots:
     dependencies:
       is-extglob: 2.1.1
 
+  is-module@1.0.0: {}
+
   is-number@7.0.0: {}
 
   is-path-inside@3.0.3: {}
 
   is-promise@2.2.2: {}
+
+  is-reference@1.2.1:
+    dependencies:
+      '@types/estree': 1.0.8
 
   is-reference@3.0.3:
     dependencies:

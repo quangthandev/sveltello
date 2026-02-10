@@ -21,6 +21,7 @@
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-node": "^5.5.1",
 		"@sveltejs/kit": "^2.5.27",
 		"@sveltejs/vite-plugin-svelte": "^4.0.4",
 		"@types/bcryptjs": "^2.4.6",
