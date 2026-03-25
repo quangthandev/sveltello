@@ -1,4 +1,6 @@
-import { lucia } from '$lib/server/auth';
+import { dev } from '$app/environment';
+import { AUTH_SESSION_COOKIE_NAME } from '$lib/features/auth/auth.constants';
+import { invalidateSession } from '$lib/features/auth/auth.services.js';
 import { fail, redirect } from '@sveltejs/kit';
 
 export function load() {
@@ -11,12 +13,14 @@ export const actions = {
 			return fail(401);
 		}
 
-		await lucia.invalidateSession(locals.session.id);
-		const sessionCookie = lucia.createBlankSessionCookie();
-		cookies.set(sessionCookie.name, sessionCookie.value, {
+		await invalidateSession(locals.session.id);
+		cookies.set(AUTH_SESSION_COOKIE_NAME, '', {
+			httpOnly: true,
 			path: '.',
-			...sessionCookie.attributes
+			secure: !dev,
+			sameSite: 'lax'
 		});
+
 		redirect(302, '/');
 	}
 };

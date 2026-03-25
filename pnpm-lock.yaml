@@ -20,9 +20,12 @@ importers:
       '@libsql/client':
         specifier: ^0.3.6
         version: 0.3.6
-      '@lucia-auth/adapter-sqlite':
-        specifier: ^3.0.1
-        version: 3.0.2(@libsql/client@0.3.6)(lucia@3.2.2)
+      '@oslojs/crypto':
+        specifier: ^1.0.1
+        version: 1.0.1
+      '@oslojs/encoding':
+        specifier: ^1.1.0
+        version: 1.1.0
       '@sentry/svelte':
         specifier: ^10.32.1
         version: 10.34.0(svelte@5.46.4)
@@ -44,14 +47,11 @@ importers:
       drizzle-zod:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.30.10(@libsql/client@0.3.6)(@opentelemetry/api@1.9.0)(@types/pg@8.15.6))(zod@3.25.76)
-      lucia:
-        specifier: ^3.1.1
-        version: 3.2.2
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
       oslo:
-        specifier: ^1.1.1
+        specifier: ^1.2.1
         version: 1.2.1
       quill:
         specifier: ^2.0.0
@@ -1112,19 +1112,6 @@ packages:
     resolution: {integrity: sha512-jnv0qfVMnrVv00r+wUOe6DHrHuao9y1w1lN543cV2J1JdQNJT/eSZzhyZFSlS3T2ZUvXfZfZ5GeL8U18IAID6w==}
     cpu: [x64]
     os: [win32]
-
-  '@lucia-auth/adapter-sqlite@3.0.2':
-    resolution: {integrity: sha512-UlXpF+2UoFEdm1AsriJii5BOARwqko6SX29rQ8T8Za7rnjj9KLXLaRVQUgBhGmggAyvzCtguJ2+XOZDsfWm6Sw==}
-    deprecated: This package has been deprecated. Please see https://lucia-auth.com/lucia-v3/migrate.
-    peerDependencies:
-      '@libsql/client': ^0.3.0
-      better-sqlite3: 8.x - 11.x
-      lucia: 3.x
-    peerDependenciesMeta:
-      '@libsql/client':
-        optional: true
-      better-sqlite3:
-        optional: true
 
   '@mixmark-io/domino@2.2.0':
     resolution: {integrity: sha512-Y28PR25bHXUg88kCV7nivXrP2Nj2RueZ3/l/jdx6J9f8J4nsEGcgX0Qe6lt7Pa+J79+kPiJU3LguR6O/6zrLOw==}
@@ -3189,10 +3176,6 @@ packages:
   lru-queue@0.1.0:
     resolution: {integrity: sha512-BpdYkt9EvGl8OfWHDQPISVpcl5xZthb+XPsbELj5AQXxIC8IriDZIQYjBJPEm5rS420sjZ0TLEzRcq5KdBhYrQ==}
 
-  lucia@3.2.2:
-    resolution: {integrity: sha512-P1FlFBGCMPMXu+EGdVD9W4Mjm0DqsusmKgO7Xc33mI5X1bklmsQb0hfzPhXomQr9waWIBDsiOjvr1e6BTaUqpA==}
-    deprecated: This package has been deprecated. Please see https://lucia-auth.com/lucia-v3/migrate.
-
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -5126,12 +5109,6 @@ snapshots:
 
   '@libsql/win32-x64-msvc@0.1.34':
     optional: true
-
-  '@lucia-auth/adapter-sqlite@3.0.2(@libsql/client@0.3.6)(lucia@3.2.2)':
-    dependencies:
-      lucia: 3.2.2
-    optionalDependencies:
-      '@libsql/client': 0.3.6
 
   '@mixmark-io/domino@2.2.0': {}
 
@@ -7408,11 +7385,6 @@ snapshots:
   lru-queue@0.1.0:
     dependencies:
       es5-ext: 0.10.64
-
-  lucia@3.2.2:
-    dependencies:
-      '@oslojs/crypto': 1.0.1
-      '@oslojs/encoding': 1.1.0
 
   magic-string@0.30.21:
     dependencies:

@@ -1,25 +1,7 @@
 import { db } from '$lib/drizzle/db';
-import { user } from '$lib/drizzle/schema';
+import { session, user, type InsertSessionData } from '$lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
-
-export async function login(email: string, password: string) {
-	const existingUser = await db.query.user.findFirst({
-		where: eq(user.email, email)
-	});
-
-	if (!existingUser) {
-		return false;
-	}
-
-	const validPassword = await new Argon2id().verify(existingUser.password, password);
-
-	if (!validPassword) {
-		return false;
-	}
-
-	return existingUser.id;
-}
 
 export async function userExists(email: string) {
 	const existingUser = await db
@@ -46,4 +28,44 @@ export async function createUser(email: string, password: string) {
 		.get();
 
 	return newUser;
+}
+
+export async function getSessionById(sessionId: string) {
+	return await db.query.session.findFirst({
+		where: eq(session.id, sessionId)
+	});
+}
+
+export async function createSession(data: InsertSessionData) {
+	return await db.insert(session).values(data).returning().get();
+}
+
+export async function updateSessionExpiresAt(
+	sessionId: string,
+	expiresAt: InsertSessionData['expiresAt']
+) {
+	return await db
+		.update(session)
+		.set({ expiresAt })
+		.where(eq(session.id, sessionId))
+		.returning()
+		.get();
+}
+
+export async function deleteSession(sessionId: string) {
+	await db.delete(session).where(eq(session.id, sessionId));
+}
+
+export async function getUserById(userId: string) {
+	return db.query.user.findFirst({
+		where: eq(user.id, userId)
+	});
+}
+
+export async function getUserByEmail(email: string) {
+	const existingUser = db.query.user.findFirst({
+		where: eq(user.email, email)
+	});
+
+	return existingUser;
 }

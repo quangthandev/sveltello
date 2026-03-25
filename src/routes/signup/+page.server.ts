@@ -1,8 +1,10 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { lucia } from '$lib/server/auth';
+import { dev } from '$app/environment';
 import { z } from 'zod';
 import { createUser, userExists } from '$lib/features/auth/db-queries';
 import { authCredentialsSchema } from '$lib/features/auth/schemas';
+import { createSession } from '$lib/features/auth/auth.services.js';
+import { AUTH_SESSION_COOKIE_NAME } from '$lib/features/auth/auth.constants.js';
 
 export function load() {
 	return { title: 'Sign Up' };
@@ -25,14 +27,14 @@ export const actions = {
 
 			const user = await createUser(email, password);
 
-			const session = await lucia.createSession(user.id, {
-				created_at: new Date(),
-				updated_at: new Date()
-			});
-			const sessionCookie = lucia.createSessionCookie(session.id);
-			cookies.set(sessionCookie.name, sessionCookie.value, {
+			const [session, token] = await createSession(user.id);
+
+			cookies.set(AUTH_SESSION_COOKIE_NAME, token, {
+				httpOnly: true,
 				path: '.',
-				...sessionCookie.attributes
+				secure: !dev,
+				sameSite: 'lax',
+				expires: new Date(session.expiresAt)
 			});
 
 			redirect(302, '/boards');

@@ -1,4 +1,4 @@
-import { generateId } from 'lucia';
+import { generateId } from '$lib/utils';
 import { checkAuthUser } from '$lib/server/auth';
 import { error, fail } from '@sveltejs/kit';
 import {

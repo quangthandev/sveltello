@@ -1,6 +1,6 @@
 import { sqliteTable, text, real, integer, uniqueIndex, numeric } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
-import { generateId } from 'lucia';
+import { generateId } from '$lib/utils';
 
 export const session = sqliteTable('Session', {
 	id: text('id')
@@ -18,6 +18,9 @@ export const session = sqliteTable('Session', {
 		.notNull()
 		.$defaultFn(() => new Date().toISOString())
 });
+
+export type Session = typeof session.$inferSelect;
+export type InsertSessionData = typeof session.$inferInsert;
 
 export const column = sqliteTable('Column', {
 	id: text('id')
@@ -52,6 +55,9 @@ export const user = sqliteTable(
 		};
 	}
 );
+
+export type User = typeof user.$inferSelect;
+export type UserDto = Omit<User, 'password'>;
 
 export const item = sqliteTable('Item', {
 	id: text('id')

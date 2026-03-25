@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { generateId } from 'lucia';
+	import { generateId } from '$lib/utils';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { ZodError } from 'zod';

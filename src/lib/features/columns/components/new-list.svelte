@@ -2,7 +2,7 @@
 	import { tick } from 'svelte';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import type { ColumnMutation } from '$lib/types';
-	import { generateId } from 'lucia';
+	import { generateId } from '$lib/utils';
 	import { useCreateColumn } from '../query-client/mutations';
 	import { insertColumnSchema } from '../schemas';
 	import Button from '$lib/components/ui/button/button.svelte';

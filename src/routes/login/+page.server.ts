@@ -1,8 +1,9 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
-import { lucia } from '$lib/server/auth';
-import { login } from '$lib/features/auth/db-queries';
+import { dev } from '$app/environment';
 import { authCredentialsSchema } from '$lib/features/auth/schemas';
+import { createSession, login } from '$lib/features/auth/auth.services';
+import { AUTH_SESSION_COOKIE_NAME } from '$lib/features/auth/auth.constants';
 
 export function load({ locals }) {
 	const user = locals.user;
@@ -23,22 +24,22 @@ export const actions = {
 				Object.fromEntries(formData)
 			);
 
-			const userId = await login(email, password);
+			const user = await login(email, password);
 
-			if (userId === false) {
+			if (user == null) {
 				return fail(400, {
 					error: 'Invalid Credentials'
 				});
 			}
 
-			const session = await lucia.createSession(userId, {
-				created_at: new Date(),
-				updated_at: new Date()
-			});
-			const sessionCookie = lucia.createSessionCookie(session.id);
-			cookies.set(sessionCookie.name, sessionCookie.value, {
+			const [session, token] = await createSession(user.id);
+
+			cookies.set(AUTH_SESSION_COOKIE_NAME, token, {
+				httpOnly: true,
 				path: '.',
-				...sessionCookie.attributes
+				secure: !dev,
+				sameSite: 'lax',
+				expires: new Date(session.expiresAt)
 			});
 
 			const returnURL = url.searchParams.get('returnURL');
