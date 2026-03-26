@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import ItemDetails from '$lib/features/items/components/item-details.svelte';
+	import ItemDetails from '$lib/features/item/components/item-details.svelte';
 	import type { PageData } from './$types';
 
 	interface Props {

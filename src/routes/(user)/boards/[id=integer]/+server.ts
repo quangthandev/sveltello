@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { checkAuthUser } from '$lib/server/auth';
-import { getBoard } from '$lib/features/boards/db-queries';
+import { getBoard } from '$lib/features/board/board.repository';
 
 export async function GET({ params, locals }) {
 	if (!params.id) {

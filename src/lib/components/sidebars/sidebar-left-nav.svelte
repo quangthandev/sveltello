@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
-	import { useBoards } from '$lib/features/boards/query-client/queries';
+	import { useBoards } from '$lib/features/board/query-client/board.queries';
 	import IconBoards from '$lib/components/icons/icon-boards.svelte';
 	import NavLink from '$lib/components/nav/nav-link.svelte';
-	import NewBoard from '$lib/features/boards/components/new-board.svelte';
+	import NewBoard from '$lib/features/board/components/new-board.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import IconPlus from '$lib/components/icons/icon-plus.svelte';
 	import type { Board } from '$lib/types';

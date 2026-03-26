@@ -8,7 +8,7 @@
 	import IconLogin from '$lib/components/icons/icon-login.svelte';
 	import IconLogout from '$lib/components/icons/icon-logout.svelte';
 	import IconPlus from '$lib/components/icons/icon-plus.svelte';
-	import NewBoard from '$lib/features/boards/components/new-board.svelte';
+	import NewBoard from '$lib/features/board/components/new-board.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import '../app.css';
 	import { onNavigate } from '$app/navigation';

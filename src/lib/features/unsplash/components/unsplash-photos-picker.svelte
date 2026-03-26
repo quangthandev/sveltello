@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { useUnsplashPhoto, useUnsplashRandomPhotos } from '$lib/features/unsplash/query-client';
+	import {
+		useUnsplashPhoto,
+		useUnsplashRandomPhotos
+	} from '$lib/features/unsplash/unsplash.queries';
 	import { cn } from '$lib/utils';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import PhotosPicker from '$lib/components/shared/photos-picker/photos-picker.svelte';
 	import IconReload from '$lib/components/icons/icon-reload.svelte';
 	import type { Photo } from '$lib/components/shared/photos-picker/types';
-	import { RANDOM_PHOTOS_COUNT } from '../constants';
+	import { RANDOM_PHOTOS_COUNT } from '../unsplash.constants';
 
 	interface Props {
 		visible?: boolean;

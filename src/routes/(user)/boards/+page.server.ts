@@ -1,7 +1,7 @@
 import { checkAuthUser } from '$lib/server/auth';
-import { createBoard, deleteBoard } from '$lib/features/boards/db-queries';
+import { createBoard, deleteBoard } from '$lib/features/board/board.repository';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { createBoardSchema, deleteBoardSchema } from '$lib/features/boards/schemas';
+import { createBoardSchema, deleteBoardSchema } from '$lib/features/board/board.schemas';
 import { safeParseAsyncFormData } from '$lib/form';
 
 export async function load({ locals }) {

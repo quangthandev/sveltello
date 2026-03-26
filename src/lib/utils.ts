@@ -3,6 +3,7 @@ import type { Readable } from 'svelte/store';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
+import { generateRandomString, type RandomReader } from '@oslojs/crypto/random';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -174,4 +175,23 @@ export const flyAndScale = (
  */
 export function capitalize(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+const random: RandomReader = {
+	read(bytes: Uint8Array) {
+		crypto.getRandomValues(bytes);
+	}
+};
+
+export function generateId(length: number) {
+	const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	return generateRandomString(
+		{
+			read(bytes: Uint8Array) {
+				crypto.getRandomValues(bytes);
+			}
+		},
+		alphabet,
+		length
+	);
 }

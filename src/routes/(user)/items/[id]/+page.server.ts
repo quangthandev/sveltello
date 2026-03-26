@@ -1,4 +1,4 @@
-import { generateId } from 'lucia';
+import { generateId } from '$lib/utils';
 import { checkAuthUser } from '$lib/server/auth';
 import { error, fail } from '@sveltejs/kit';
 import {
@@ -10,16 +10,16 @@ import {
 	removeCover,
 	updateItemContent,
 	updateItemTitle
-} from '$lib/features/items/db-queries';
-import { getColumn } from '$lib/features/columns/db-queries';
-import { upsertItem } from '$lib/features/boards/db-queries';
+} from '$lib/features/item/item.repository';
+import { getColumn } from '$lib/features/column/column.repository';
+import { upsertItem } from '$lib/features/board/board.repository';
 import {
 	makeCoverFromUnsplashSchema,
 	makeCoverFromAttachmentSchema,
 	moveOrCopyItemToDestinationSchema,
 	updateItemContentSchema,
 	updateItemTitleSchema
-} from '$lib/features/items/schemas';
+} from '$lib/features/item/item.schemas';
 import { safeParseAsyncFormData } from '$lib/form.js';
 
 export async function load({ locals, params }) {

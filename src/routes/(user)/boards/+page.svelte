@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Board from '$lib/features/boards/components/board.svelte';
-	import NewBoard from '$lib/features/boards/components/new-board.svelte';
-	import { useBoards } from '$lib/features/boards/query-client/queries';
+	import Board from '$lib/features/board/components/board.svelte';
+	import NewBoard from '$lib/features/board/components/new-board.svelte';
+	import { useBoards } from '$lib/features/board/query-client/board.queries';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { toast } from 'svelte-sonner';
 	import type { LayoutData } from '../$types';

@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
 	import type { PageData } from './$types';
-	import List from '$lib/features/columns/components/list.svelte';
+	import List from '$lib/features/column/components/list.svelte';
 	import EditableText from '$lib/components/shared/editable-text.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { page } from '$app/state';
 	import { cn } from '$lib/utils';
 	import type { Board, Column, Item } from '$lib/types';
-	import NewList from '$lib/features/columns/components/new-list.svelte';
-	import { useBoard } from '$lib/features/boards/query-client/queries';
-	import { useUpdateColumnOrder } from '$lib/features/columns/query-client/mutations';
+	import NewList from '$lib/features/column/components/new-list.svelte';
+	import { useBoard } from '$lib/features/board/query-client/board.queries';
+	import { useUpdateColumnOrder } from '$lib/features/column/query-client/column.mutations';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { afterNavigate } from '$app/navigation';
 

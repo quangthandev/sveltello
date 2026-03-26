@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { getBoards } from '$lib/features/boards/db-queries';
+import { getBoards } from '$lib/features/board/board.repository';
 import { checkAuthUser } from '$lib/server/auth/index';
 
 export async function load({ locals }) {
