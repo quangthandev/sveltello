@@ -3,7 +3,7 @@
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { cn } from '$lib/utils';
-	import { useUploadImage } from '$lib/features/items/query-client/mutations';
+	import { useUploadImage } from '$lib/features/item/query-client/item.mutations';
 
 	interface Props {
 		itemId: string;

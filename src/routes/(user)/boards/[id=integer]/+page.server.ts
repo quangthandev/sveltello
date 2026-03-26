@@ -6,14 +6,14 @@ import {
 	getBoardsWithColumns,
 	updateBoardName,
 	updateColumnName
-} from '$lib/features/boards/db-queries';
+} from '$lib/features/board/board.repository';
 import { checkAuthUser } from '$lib/server/auth';
-import { updateBoardNameSchema } from '$lib/features/boards/schemas';
+import { updateBoardNameSchema } from '$lib/features/board/board.schemas';
 import {
 	copyColumnSchema,
 	deleteColumnSchema,
 	updateColumnNameSchema
-} from '$lib/features/columns/schemas';
+} from '$lib/features/column/column.schemas';
 import { safeParseAsyncFormData } from '$lib/form.js';
 
 export async function load({ locals, params }) {

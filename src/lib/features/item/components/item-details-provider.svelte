@@ -4,7 +4,7 @@
 	import IconClose from '$lib/components/icons/icon-close.svelte';
 	import IconReload from '$lib/components/icons/icon-reload.svelte';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
-	import { useItem } from '../query-client/queries';
+	import { useItem } from '../query-client/item.queries';
 	import { type Snippet } from 'svelte';
 
 	interface Props {

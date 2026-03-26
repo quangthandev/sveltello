@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconPlus from '$lib/components/icons/icon-plus.svelte';
 	import type { Column, ItemWithCoverAndAttachments } from '$lib/types';
-	import NewItem from '$lib/features/items/components/new-item.svelte';
+	import NewItem from '$lib/features/item/components/new-item.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import ListTitle from './list-title.svelte';
 	import ListActionsMenu from './list-actions-menu.svelte';

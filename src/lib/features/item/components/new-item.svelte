@@ -4,8 +4,8 @@
 	import { clickOutside } from '$lib/actions/click-outside';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { ZodError } from 'zod';
-	import { useCreateItem } from '../query-client/mutations';
-	import { createItemSchema } from '../schemas';
+	import { useCreateItem } from '../query-client/item.mutations';
+	import { createItemSchema } from '../item.schemas';
 
 	interface Props {
 		boardId: number;

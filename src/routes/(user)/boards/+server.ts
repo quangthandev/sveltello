@@ -1,4 +1,4 @@
-import { getBoardsWithColumns } from '$lib/features/boards/db-queries';
+import { getBoardsWithColumns } from '$lib/features/board/board.repository';
 import { checkAuthUser } from '$lib/server/auth';
 import { error, json } from '@sveltejs/kit';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
-	import { useBoard } from '$lib/features/boards/query-client/queries';
+	import { useBoard } from '$lib/features/board/query-client/board.queries';
 	import MoveItemSuggestion from './move-item-suggestion.svelte';
 	import MoveItemForm from './move-item-form.svelte';
 	import CopyItemForm from './copy-item-form.svelte';

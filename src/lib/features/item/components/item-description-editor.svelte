@@ -8,7 +8,7 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { clickOutside } from '$lib/actions/click-outside';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { useUploadImage } from '../query-client/mutations';
+	import { useUploadImage } from '../query-client/item.mutations';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
 
 	interface Props {

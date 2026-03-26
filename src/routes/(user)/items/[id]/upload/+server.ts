@@ -4,7 +4,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import s3Client from '$lib/server/s3';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { env } from '$env/dynamic/private';
-import { createAttachment, getItem, makeCover } from '$lib/features/items/db-queries';
+import { createAttachment, getItem, makeCover } from '$lib/features/item/item.repository';
 import { checkAuthUser } from '$lib/server/auth';
 
 const uploadSchema = z.object({

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Skeleton from '$lib/components/ui/skeleton.svelte';
-	import { useBoards } from '$lib/features/boards/query-client/queries';
+	import { useBoards } from '$lib/features/board/query-client/board.queries';
 	import type { ItemFullPayload } from '$lib/types';
 
 	interface Props {

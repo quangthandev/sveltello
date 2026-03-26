@@ -7,7 +7,7 @@
 	import Input from '$lib/components/ui/input/input.svelte';
 	import type { TypedSubmitFunctionWithCallback } from '$lib/form';
 	import type { Photo } from '$lib/components/shared/photos-picker/types';
-	import { createBoardSchema } from '../schemas';
+	import { createBoardSchema } from '../board.schemas';
 	import type { ActionData } from '../../../../routes/(user)/boards/$types';
 
 	interface Props {

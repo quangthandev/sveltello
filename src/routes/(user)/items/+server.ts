@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { checkAuthUser } from '$lib/server/auth';
-import { upsertItem } from '$lib/features/boards/db-queries';
-import { createItemSchema } from '$lib/features/items/schemas';
+import { upsertItem } from '$lib/features/board/board.repository';
+import { createItemSchema } from '$lib/features/item/item.schemas';
 import { z } from 'zod';
 
 export async function POST({ request, locals }) {

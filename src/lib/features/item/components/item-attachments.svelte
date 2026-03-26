@@ -7,7 +7,7 @@
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import type { ItemFullPayload } from '$lib/types';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { useDeleteAttachment } from '../query-client/mutations';
+	import { useDeleteAttachment } from '../query-client/item.mutations';
 	import type { ActionData } from '../../../../routes/(user)/items/[id]/$types';
 	import IconDockTop from '$lib/components/icons/icon-dock-top.svelte';
 

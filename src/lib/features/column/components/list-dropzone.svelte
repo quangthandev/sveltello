@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { dndzone, type DndEvent, TRIGGERS } from 'svelte-dnd-action';
-	import { useUpdateItem } from '$lib/features/items/query-client/mutations';
+	import { useUpdateItem } from '$lib/features/item/query-client/item.mutations';
 	import type { ItemWithCoverAndAttachments } from '$lib/types';
 	import ListItem from './list-item.svelte';
 	import { cn } from '$lib/utils';

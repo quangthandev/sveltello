@@ -1,26 +1,15 @@
-import * as AuthRepository from './auth.db-queries';
+import * as AuthRepository from './auth.repository';
+import * as UserRepository from '$lib/features/user/user.repository';
 import { generateSessionToken, encodeSessionToken } from '$lib/server/auth/session';
 import {
 	SESSION_EXPIRATION_TIME,
 	SESSION_EXPIRATION_TIME_EXTENSION_THRESHOLD
 } from './auth.constants';
-import type { Session, UserDto } from '$lib/drizzle/schema';
+import type { Session } from '$lib/drizzle/schema';
 import type { SessionValidationResult } from './auth.types';
 import { Argon2id } from '$lib/server/auth/password';
 import { UserTransformer } from '../user/user.transformer';
-
-export async function createSession(userId: string): Promise<[Session, string]> {
-	const token = generateSessionToken();
-	const sessionId = encodeSessionToken(token);
-
-	const session = await AuthRepository.createSession({
-		id: sessionId,
-		userId,
-		expiresAt: new Date(Date.now() + SESSION_EXPIRATION_TIME).toISOString()
-	});
-
-	return [session, token];
-}
+import { EmailAlreadyExistsError, InvalidCredentialsError } from '$lib/errors';
 
 export async function validateSession(
 	token: string
@@ -31,7 +20,7 @@ export async function validateSession(
 		return { session: null, user: null, sessionExtended: false };
 	}
 
-	const user = await AuthRepository.getUserById(session.userId);
+	const user = await UserRepository.getUserById(session.userId);
 	if (!user) {
 		return { session: null, user: null, sessionExtended: false };
 	}
@@ -69,17 +58,40 @@ export async function invalidateSession(sessionId: string) {
 	await AuthRepository.deleteSession(sessionId);
 }
 
-export async function login(email: string, password: string): Promise<UserDto | null> {
-	const existingUser = await AuthRepository.getUserByEmail(email);
+export async function login(email: string, password: string) {
+	const existingUser = await UserRepository.getUserByEmail(email);
 	if (!existingUser) {
-		return null;
+		throw new InvalidCredentialsError();
 	}
 
 	const validPassword = await new Argon2id().verify(existingUser.password, password);
-
 	if (!validPassword) {
-		return null;
+		throw new InvalidCredentialsError();
 	}
 
-	return UserTransformer.toDto(existingUser);
+	return await createSession(existingUser.id);
+}
+
+export async function signup(email: string, password: string) {
+	const existingUser = await UserRepository.getUserByEmail(email);
+	if (existingUser) {
+		throw new EmailAlreadyExistsError();
+	}
+
+	const user = await UserRepository.createUser(email, password);
+
+	return await createSession(user.id);
+}
+
+async function createSession(userId: string): Promise<[Session, string]> {
+	const token = generateSessionToken();
+	const sessionId = encodeSessionToken(token);
+
+	const session = await AuthRepository.createSession({
+		id: sessionId,
+		userId,
+		expiresAt: new Date(Date.now() + SESSION_EXPIRATION_TIME).toISOString()
+	});
+
+	return [session, token];
 }

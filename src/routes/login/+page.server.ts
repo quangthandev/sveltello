@@ -2,8 +2,9 @@ import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import { dev } from '$app/environment';
 import { authCredentialsSchema } from '$lib/features/auth/auth.schemas';
-import { createSession, login } from '$lib/features/auth/auth.services';
+import { login } from '$lib/features/auth/auth.services';
 import { AUTH_SESSION_COOKIE_NAME } from '$lib/features/auth/auth.constants';
+import { InvalidCredentialsError } from '$lib/errors';
 
 export function load({ locals }) {
 	const user = locals.user;
@@ -24,15 +25,7 @@ export const actions = {
 				Object.fromEntries(formData)
 			);
 
-			const user = await login(email, password);
-
-			if (user == null) {
-				return fail(400, {
-					error: 'Invalid Credentials'
-				});
-			}
-
-			const [session, token] = await createSession(user.id);
+			const [session, token] = await login(email, password);
 
 			cookies.set(AUTH_SESSION_COOKIE_NAME, token, {
 				httpOnly: true,
@@ -46,6 +39,12 @@ export const actions = {
 
 			redirect(302, returnURL ? returnURL : '/boards');
 		} catch (error) {
+			if (error instanceof InvalidCredentialsError) {
+				return fail(400, {
+					error: error.message
+				});
+			}
+
 			if (error instanceof z.ZodError) {
 				return fail(400, {
 					error: error.errors[0].message

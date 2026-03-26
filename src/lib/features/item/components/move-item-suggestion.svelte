@@ -5,7 +5,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import type { Column } from '$lib/types';
 	import type { BoardWithColumns } from '$lib/types';
-	import { useMoveItem } from '../query-client/mutations';
+	import { useMoveItem } from '../query-client/item.mutations';
 	import type { ItemFullPayload } from '$lib/types';
 
 	interface Props {

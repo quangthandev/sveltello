@@ -9,7 +9,7 @@
 	import CardPopover from '$lib/components/shared/card-popover.svelte';
 	import MoveOrCopyItemPopover from './move-or-copy-item-popover.svelte';
 	import AttachPopover from './attach-popover.svelte';
-	import { useDeleteItem } from '../query-client/mutations';
+	import { useDeleteItem } from '../query-client/item.mutations';
 	import ItemCoverPopover from './item-cover-popover.svelte';
 	import type { ItemFullPayload } from '$lib/types';
 

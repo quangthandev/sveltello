@@ -1,5 +1,5 @@
 import { createMutation, useQueryClient } from '@tanstack/svelte-query';
-import type { ColumnMutationData } from '../types';
+import type { ColumnUpdateOrderData } from '../column.types';
 import type { Board, Column, ColumnMutation } from '$lib/types';
 import type { WithOptional } from '$lib/utils';
 
@@ -59,7 +59,7 @@ export const useCreateColumn = (boardId: number) => {
 export const useUpdateColumnOrder = (boardId: number) => {
 	const queryClient = useQueryClient();
 
-	return createMutation<unknown, unknown, ColumnMutationData>(() => ({
+	return createMutation<unknown, unknown, ColumnUpdateOrderData>(() => ({
 		mutationFn: async (data) => {
 			const res = await fetch(`/columns/${data.id}`, {
 				method: 'PATCH',

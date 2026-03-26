@@ -5,9 +5,9 @@
 	import { cn } from '$lib/utils';
 	import IconAttachment from '$lib/components/icons/icon-attachment.svelte';
 	import type { ItemFullPayload, ItemWithCoverAndAttachments } from '$lib/types';
-	import ItemDetails from '$lib/features/items/components/item-details.svelte';
+	import ItemDetails from '$lib/features/item/components/item-details.svelte';
 	import { useQueryClient } from '@tanstack/svelte-query';
-	import { useItemQueryOptions } from '$lib/features/items/query-client/queries';
+	import { useItemQueryOptions } from '$lib/features/item/query-client/item.queries';
 	import { tick } from 'svelte';
 	import { transitionHelper } from '$lib/helpers';
 
