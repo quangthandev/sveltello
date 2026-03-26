@@ -37,7 +37,7 @@ export const handle = sequence(Sentry.sentryHandle(), async function _handle({ e
 				});
 			}
 		} else {
-			event.cookies.set(AUTH_SESSION_COOKIE_NAME, '', {
+			event.cookies.delete(AUTH_SESSION_COOKIE_NAME, {
 				httpOnly: true,
 				path: '.',
 				secure: process.env.NODE_ENV === 'production',

@@ -14,7 +14,7 @@ export const actions = {
 		}
 
 		await invalidateSession(locals.session.id);
-		cookies.set(AUTH_SESSION_COOKIE_NAME, '', {
+		cookies.delete(AUTH_SESSION_COOKIE_NAME, {
 			httpOnly: true,
 			path: '.',
 			secure: !dev,
