@@ -1,7 +1,7 @@
 import { db } from '$lib/drizzle/db';
 import { session, user, type InsertSessionData } from '$lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
-import { Argon2id } from 'oslo/password';
+import { Argon2id } from '$lib/server/auth/password';
 
 export async function userExists(email: string) {
 	const existingUser = await db

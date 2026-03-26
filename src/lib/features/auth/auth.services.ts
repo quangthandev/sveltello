@@ -6,7 +6,7 @@ import {
 } from './auth.constants';
 import type { Session, UserDto } from '$lib/drizzle/schema';
 import type { SessionValidationResult } from './auth.types';
-import { Argon2id } from 'oslo/password';
+import { Argon2id } from '$lib/server/auth/password';
 import { UserTransformer } from '../user/user.transformer';
 
 export async function createSession(userId: string): Promise<[Session, string]> {
