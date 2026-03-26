@@ -1,4 +1,4 @@
-import * as AuthRepository from './db-queries';
+import * as AuthRepository from './auth.db-queries';
 import { generateSessionToken, encodeSessionToken } from '$lib/server/auth/session';
 import {
 	SESSION_EXPIRATION_TIME,

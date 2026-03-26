@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import { dev } from '$app/environment';
-import { authCredentialsSchema } from '$lib/features/auth/schemas';
+import { authCredentialsSchema } from '$lib/features/auth/auth.schemas';
 import { createSession, login } from '$lib/features/auth/auth.services';
 import { AUTH_SESSION_COOKIE_NAME } from '$lib/features/auth/auth.constants';
 
