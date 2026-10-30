@@ -38,51 +38,54 @@ export async function POST({ request, params, locals }) {
 
 	const objectKey = `${Date.now().toString()}-${crypto.randomUUID()}-${slugifyString(fileName)}`;
 
-	const presignedUrl = await getSignedUrl(
-		s3Client,
-		new PutObjectCommand({
-			Bucket: env.R2_BUCKET_NAME,
+	try {
+		const command = new PutObjectCommand({
+			Bucket: env.S3_BUCKET_NAME,
 			Key: objectKey,
 			ContentType: fileType,
 			ACL: 'public-read'
-		}),
-		{
-			expiresIn: 60 * 5 // 5 minutes
-		}
-	);
-
-	const uploadToR2Response = await fetch(presignedUrl, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': file.type
-		},
-		body: file
-	});
-
-	if (!uploadToR2Response.ok) {
-		error(500, 'Failed to upload image');
-	}
-
-	const url = `${env.R2_PUBLIC_BUCKET_URL}/${objectKey}`;
-
-	await createAttachment(params.id, fileName, fileType, url);
-
-	// Make the attachment as cover if it's the first attachment, ...
-	// ... and the item doesn't have a cover yet, and the file is an image
-	const item = await getItem(params.id, locals.user.id);
-	if (
-		item &&
-		item.attachments.length === 1 &&
-		item.cover === null &&
-		fileType.startsWith('image/')
-	) {
-		await makeCover(params.id, locals.user.id, {
-			source: 'attachment',
-			attachmentId: item.attachments[0].id
 		});
-	}
 
-	return json({ url });
+		const presignedUrl = await getSignedUrl(s3Client, command, {
+			expiresIn: 300
+		});
+
+		const response = await fetch(presignedUrl, {
+			method: 'PUT',
+			headers: { 'Content-Type': fileType },
+			body: file
+		});
+
+		if (!response.ok) {
+			const details = await response.text();
+			console.error('Garage upload failed', response.status, details, presignedUrl);
+			error(500, 'Failed to upload image');
+		}
+
+		const url = `${env.S3_PUBLIC_BUCKET_URL}/${objectKey}`;
+
+		await createAttachment(params.id, fileName, fileType, url);
+
+		// Make the attachment as cover if it's the first attachment, ...
+		// ... and the item doesn't have a cover yet, and the file is an image
+		const item = await getItem(params.id, locals.user.id);
+		if (
+			item &&
+			item.attachments.length === 1 &&
+			item.cover === null &&
+			fileType.startsWith('image/')
+		) {
+			await makeCover(params.id, locals.user.id, {
+				source: 'attachment',
+				attachmentId: item.attachments[0].id
+			});
+		}
+
+		return json({ url });
+	} catch (e) {
+		console.log(e);
+		error(500, 'Server error');
+	}
 }
 
 const slugifyString = (str: string) => {
